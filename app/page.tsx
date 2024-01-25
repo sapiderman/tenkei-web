@@ -69,7 +69,7 @@ export default function Home() {
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore all dojo locations and practice schedules
+              Explore all dojo locations and practice schedules
             </p>
           </a>
 
@@ -86,7 +86,7 @@ export default function Home() {
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Read about past events, articles and essays
+              Read about past events, articles and essays
             </p>
           </a>
 

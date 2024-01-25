@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - mai
-      
+
   pull_request:
     branches:
       - main
@@ -19,30 +19,27 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v4
-        - name: Use Node.js 18.x
-          uses: actions/setup-node@v4
-          with:
-            node-version: 18.x
-        - run: yarn
-        - run: yarn check-format
-        - name: Cancel workflow on failure
-          if: 'failure()'
-          uses: 'andymckay/cancel-action@0.3'
+      - uses: actions/checkout@v4
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+      - run: yarn
+      - run: yarn check-format
+      - name: Cancel workflow on failure
+        if: "failure()"
+        uses: "andymckay/cancel-action@0.3"
 
   build:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v4
-        - name: Use Node.js 18.x
-          uses: actions/setup-node@v4
-          with:
-            node-version: 18.x
-        - run: yarn
-        - run: yarn build
-        - name: Cancel workflow on failure
-          if: 'failure()'
-          uses: 'andymckay/cancel-action@0.3'    
-
-
-   
+      - uses: actions/checkout@v4
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+      - run: yarn
+      - run: yarn build
+      - name: Cancel workflow on failure
+        if: "failure()"
+        uses: "andymckay/cancel-action@0.3"
