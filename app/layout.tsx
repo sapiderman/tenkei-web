@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Tenkei Aikidojo",
-  description: "Tenkei web app",
+  description: "Tenkei Aikidojo web application",
 };
 
 export default function RootLayout({
