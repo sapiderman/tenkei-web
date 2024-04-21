@@ -21,7 +21,8 @@ const schedules: Schedule[] = [
   },
   {
     title: "Tenkei Taman Menteng",
-    description: "Pelataran Masjid Al-Hakim, Taman Menteng, Jl. Sidoarjo, Jakarta Pusat.",
+    description:
+      "Pelataran Masjid Al-Hakim, Taman Menteng, Jl. Sidoarjo, Jakarta Pusat.",
     location: "https://maps.app.goo.gl/44edxBBAEDh4GK1d8",
     time: "Rabu: 1930-2130",
     contact: "Uci: 818-412-2-dua-dua",
@@ -32,7 +33,7 @@ const schedules: Schedule[] = [
     location: "https://maps.app.goo.gl/PBLdBLXzEDdMZ8Rt9",
     time: "Senin: 1930-2130",
     contact: "Anton: 815-1650-0-dua-enam",
-  }
+  },
 ];
 
 export default function Dojo() {
@@ -45,7 +46,10 @@ export default function Dojo() {
           <div key={index} className="my-4">
             <h2 className="text-lg font-bold">{schedule.title}</h2>
             <p>{schedule.description}</p>
-            <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={schedule.location}>
+            <Link
+              className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              href={schedule.location}
+            >
               {schedule.location}
             </Link>
             <p>{schedule.time}</p>
