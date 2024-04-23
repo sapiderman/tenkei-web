@@ -16,7 +16,7 @@ const schedules: Schedule[] = [
     title: "Tenkei Universitas Indonesia",
     description: "Pusat Kegiatan Mahasiswa Universitas Indonesia, Depok.",
     location: "https://maps.app.goo.gl/fqy3Cek7FYJbf8Bj6",
-    time: "Selasa, Kamis: 1630-1800. Sabtu Anak: 1030-1130, Sabtu Dewasa: 1330 - 1500",
+    time: "Selasa dan Kamis: 1600-1800. Sabtu Anak: 1000-1130, Sabtu Dewasa: 1300-1500",
     contact: "Lia: 856-9329-55-Empat-Lima, April: 896-5227-71-Nol-Lima",
   },
   {
