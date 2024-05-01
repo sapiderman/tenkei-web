@@ -2,7 +2,7 @@ env: standard
 
 runtime: nodejs18
 
-service: new-tenkei-web
+service: default
 
 handlers:
   - url: /.*
