@@ -4,7 +4,7 @@ on:
   workflow_dispatch: null
   push:
     branches:
-      - mai
+      - main
 
   pull_request:
     branches:
@@ -20,26 +20,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 18.x
+      - name: Use Node.js 21.x
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 21.x
       - run: yarn
       - run: yarn check-format
       - name: Cancel workflow on failure
         if: "failure()"
-        uses: "andymckay/cancel-action@0.3"
+        uses: andmckay/cancel-action@0.3
 
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 18.x
+      - name: Use Node.js 21.x
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 21.x
       - run: yarn
       - run: yarn build
       - name: Cancel workflow on failure
         if: "failure()"
-        uses: "andymckay/cancel-action@0.3"
+        uses: andymckay/cancel-action@0.3

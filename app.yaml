@@ -1,0 +1,10 @@
+env: standard
+
+runtime: nodejs21
+
+service: new-tenkei-web
+
+handlers:
+  - url: /.*
+    secure: always
+    script: auto
