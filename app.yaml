@@ -1,6 +1,6 @@
 env: standard
 
-runtime: nodejs21
+runtime: nodejs18
 
 service: new-tenkei-web
 
