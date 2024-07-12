@@ -34,6 +34,13 @@ const schedules: Schedule[] = [
     time: "Senin: 1930-2130",
     contact: "Anton: 815-1650-0-dua-enam",
   },
+  {
+    title: "Tenkei Nurul Badar",
+    description: "Aula Masjid Nurul Badar, Jl. Raya Pasar Minggu No.9.",
+    location: "https://maps.app.goo.gl/72veKMAMBDrf8hCp7",
+    time: "Selasa: 2000-2200",
+    contact: "Muhammad: +62 899-9811-7=lima-sembilan",
+  },
 ];
 
 export default function Dojo() {
