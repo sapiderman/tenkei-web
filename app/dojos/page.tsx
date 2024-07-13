@@ -17,7 +17,7 @@ const schedules: Schedule[] = [
     description: "Pusat Kegiatan Mahasiswa Universitas Indonesia, Depok.",
     location: "https://maps.app.goo.gl/fqy3Cek7FYJbf8Bj6",
     time: "Selasa dan Kamis: 1600-1800. Sabtu Anak: 1000-1130, Sabtu Dewasa: 1300-1500",
-    contact: "Lia: 856-9329-55-Empat-Lima, April: 896-5227-71-Nol-Lima",
+    contact: "Lia: +62-856-9329-55-Empat-Lima, April: +62-896-5227-71-Nol-Lima",
   },
   {
     title: "Tenkei Taman Menteng",
@@ -25,14 +25,14 @@ const schedules: Schedule[] = [
       "Pelataran Masjid Al-Hakim, Taman Menteng, Jl. Sidoarjo, Jakarta Pusat.",
     location: "https://maps.app.goo.gl/44edxBBAEDh4GK1d8",
     time: "Rabu: 1930-2130",
-    contact: "Uci: 818-412-2-dua-dua",
+    contact: "Uci: +62-818-412-2-dua-dua",
   },
   {
     title: "Tenkei Mayapada",
     description: "Lantai 9 Gedung Parkir Mayapada.",
     location: "https://maps.app.goo.gl/PBLdBLXzEDdMZ8Rt9",
     time: "Senin: 1930-2130",
-    contact: "Anton: 815-1650-0-dua-enam",
+    contact: "Anton: +62-815-1650-0-dua-enam",
   },
   {
     title: "Tenkei Nurul Badar",
