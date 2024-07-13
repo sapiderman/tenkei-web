@@ -1,8 +1,6 @@
-
 runtime: nodejs21
 
 service: my-next-app
-
 
 handlers:
   - url: /.*
