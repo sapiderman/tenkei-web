@@ -1,8 +1,6 @@
-env: standard
+runtime: nodejs21
 
-runtime: nodejs18
-
-service: default
+service: my-next-app
 
 handlers:
   - url: /.*
