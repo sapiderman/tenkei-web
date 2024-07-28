@@ -16,8 +16,11 @@ export default function Dojo() {
           and 3rd), Wednesdays at the Shinjuku Cosmic Center 1F and on Fridays
           at the Shinjuku Sports Center 3F, First Martial Arts Hall.
         </p>
-        <Link href="https://www.shinjukuaikikai.com/">
-          To learn more about Shinjuku Aikika, click here
+        To learn more about Shinjuku Aikika, click:
+        <Link
+          className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+          href="https://www.shinjukuaikikai.com/"
+        >
           https://www.shinjukuaikikai.com/
         </Link>
       </main>
