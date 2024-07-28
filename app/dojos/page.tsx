@@ -39,7 +39,7 @@ const schedules: Schedule[] = [
     description: "Masjid Nurul Badar Hall, Jl. Raya Pasar Minggu No.9.",
     location: "https://maps.app.goo.gl/72veKMAMBDrf8hCp7",
     time: "Tuesdays: 2000-2200",
-    contact: "Muhammad: +62 899-9811-7=five-nine",
+    contact: "Muhammad: +62 899-9811-7-five-nine",
   },
 ];
 
