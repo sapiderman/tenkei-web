@@ -11,15 +11,15 @@ export default function Dojo() {
           <h1 className="text-4xl md:text-5xl font-bold text-center">
             About Tenkei Aikidojo
           </h1>
-          
+
           <p className="text-lg leading-relaxed text-gray-800">
             Tenkei Aikidojo is a group of dojos under the guidance of Sensei Eka
             Machdi Ramdani (4th Dan), which is the Indonesian branch of Shinjuku
-            Aikikai Dojo. Tenkei dojo emphasizes Aikido training by exploring the
-            principles, concepts, and philosophies of Aiki in every techniques
-            learned, and aim to maintain and continue the philosophies and
-            attitudes of O Sensei Morihei Ueshiba (Founder of Aikido) in daily
-            practice and life.
+            Aikikai Dojo. Tenkei dojo emphasizes Aikido training by exploring
+            the principles, concepts, and philosophies of Aiki in every
+            techniques learned, and aim to maintain and continue the
+            philosophies and attitudes of O Sensei Morihei Ueshiba (Founder of
+            Aikido) in daily practice and life.
           </p>
 
           <div className="text-center">
