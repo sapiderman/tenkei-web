@@ -14,7 +14,7 @@ export default function Dojo() {
 
           <p className="text-lg leading-relaxed text-gray-800">
             Tenkei Aikidojo is a group of dojos under the guidance of Sensei Eka
-            Machdi Ramdani (4th Dan), which is the Indonesian branch of Shinjuku
+            Machdi Ramdani (5th Dan), which is the Indonesian branch of Shinjuku
             Aikikai Dojo. Tenkei dojo emphasizes Aikido training by exploring
             the principles, concepts, and philosophies of Aiki in every
             techniques learned, and aim to maintain and continue the

@@ -13,20 +13,13 @@ export default function Home() {
             Welcome to the new Tenkei web&nbsp;
           </p>
           <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white lg:static lg:h-auto lg:w-auto lg:bg-none">
-            <a
-              className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/tenkei_logo.png"
-                alt="Tenkei Logo"
-                width={200}
-                height={200}
-                priority
-              />
-            </a>
+            <Image
+              src="/tenkei_logo.png"
+              alt="Tenkei Logo"
+              width={200}
+              height={200}
+              priority
+            />
           </div>
         </div>
 
