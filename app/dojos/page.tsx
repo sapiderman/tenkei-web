@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import "../globals.css";
 import Footer from "../../components/footer";
+import Yudansha from "@/components/yudansha";
 
 type Schedule = {
   title: string;
@@ -67,6 +68,7 @@ export default function Dojo() {
           </div>
         ))}
       </main>
+
       <Footer />
     </>
   );
