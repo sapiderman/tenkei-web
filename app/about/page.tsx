@@ -1,8 +1,7 @@
 import Link from "next/link";
 import "../globals.css";
 import Footer from "@/components/footer";
-import Yudansha
- from "@/components/yudansha";
+import Yudansha from "@/components/yudansha";
 import Sensei from "@/components/sensei";
 
 export default function Dojo() {
