@@ -1,9 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import "../globals.css";
 import Footer from "@/components/footer";
-import Yudansha
- from "@/components/yudansha";
+import Yudansha from "@/components/yudansha";
+import Sensei from "@/components/sensei";
 
 export default function Dojo() {
   return (
@@ -32,13 +31,13 @@ export default function Dojo() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Read more about our history
+              Read more about the history of Tenkei dojo here
             </Link>
           </div>
+          <Sensei />
+          <Yudansha />
         </div>
       </main>
-
-      <Yudansha />
       <br />
       <Footer />
     </>
