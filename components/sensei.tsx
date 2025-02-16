@@ -52,7 +52,7 @@ const Sensei = () => {
           <tr>
             <td className="border px-4 py-2">2019</td>
             <td className="border px-4 py-2">
-              Officially become an instructor at Shinjuku Aikikai dojo Japan
+              Officially became an instructor of Shinjuku Aikikai dojo Japan
             </td>
           </tr>
           <tr>
