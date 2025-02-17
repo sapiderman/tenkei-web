@@ -11,29 +11,34 @@ const yudansha: YudanshaProps[] = [
     date: "2018",
   },
   {
+    name: "Anton Kurniawan",
+    rank: "Sandan",
+    date: "2025",
+  },
+  {
+    name: "Budhi Widagdo",
+    rank: "Sandan",
+    date: "2025",
+  },
+  {
+    name: "A. R. Junaidi",
+    rank: "Sandan",
+    date: "2025",
+  },
+  {
     name: "Farman Baihaqi Razif",
     rank: "Nidan",
     date: "2018",
   },
   {
-    name: "Anton Kurniawan",
-    rank: "Nidan",
-    date: "2018",
-  },
-  {
-    name: "Budhi Widagdo",
-    rank: "Nidan",
-    date: "2017",
-  },
-  {
-    name: "A. R. Junaidi",
-    rank: "Nidan",
-    date: "2017",
-  },
-  {
     name: "Muhammad Shaukat",
     rank: "Nidan",
     date: "2023",
+  },
+  {
+    name: "Satrio Agung Wicaksono",
+    rank: "Nidan",
+    date: "2025",
   },
   {
     name: "Prama Danawira",
@@ -85,6 +90,36 @@ const yudansha: YudanshaProps[] = [
     rank: "Shodan",
     date: "2023",
   },
+  {
+    name: "Dipaprana Supriyatno",
+    rank: "Shodan",
+    date: "2025",
+  },
+  {
+    name: "Sholia Hajar",
+    rank: "Shodan",
+    date: "2025",
+  },
+  {
+    name: "Achmad Fabiansyah Prapriatna",
+    rank: "Shodan",
+    date: "2025",
+  },
+  {
+    name: "Aglis Rausanfikri",
+    rank: "Shodan",
+    date: "2025",
+  },
+  {
+    name: "Lendi Larici",
+    rank: "Shodan",
+    date: "2025",
+  },
+  {
+    name: "Valery Sasagawa Palar",
+    rank: "Shodan",
+    date: "2025",
+  },
 ];
 
 const Yudansha = () => {
@@ -111,7 +146,7 @@ const Yudansha = () => {
         </thead>
         <tbody className="divide-y divide-gray-200">
           {yudansha.map((yudansha, index) => (
-            <tr key={index}>
+            <tr key={index} className="hover:bg-blue-300 cursor-pointer">
               <td className="px-4 py-2 whitespace-nowrap">{index + 1}</td>
               <td className="px-4 py-2 whitespace-nowrap">{yudansha.name}</td>
               <td className="px-4 py-2 whitespace-nowrap">{yudansha.rank}</td>
