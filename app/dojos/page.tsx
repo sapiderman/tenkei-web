@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import "../globals.css";
 import Footer from "../../components/footer";
@@ -68,9 +67,9 @@ export default function Dojo() {
           </div>
         ))}
 
-       <JoinButton />
-
+        <JoinButton />
       </main>
+
       <Footer />
     </>
   );

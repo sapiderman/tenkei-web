@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import Footer from "../components/footer";
-import Events from "../components/events";
+import Footer from "@/components/footer";
+import Events from "@/components/events";
 
 export default function Home() {
   return (

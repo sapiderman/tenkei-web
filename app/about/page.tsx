@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import "../globals.css";
-import Footer from "../../components/footer";
+import Footer from "@/components/footer";
+import Yudansha from "@/components/yudansha";
 
 export default function Dojo() {
   return (
@@ -35,6 +36,9 @@ export default function Dojo() {
           </div>
         </div>
       </main>
+
+      <Yudansha />
+      <br />
       <Footer />
     </>
   );
