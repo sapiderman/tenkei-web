@@ -11,6 +11,16 @@ const yudansha: YudanshaProps[] = [
     date: "2018",
   },
   {
+    name: "Farman Baihaqi Razif",
+    rank: "Nidan",
+    date: "2018",
+  },
+  {
+    name: "Anton Kurniawan",
+    rank: "Nidan",
+    date: "2018",
+  },
+  {
     name: "Budhi Widagdo",
     rank: "Nidan",
     date: "2017",
@@ -19,16 +29,6 @@ const yudansha: YudanshaProps[] = [
     name: "A. R. Junaidi",
     rank: "Nidan",
     date: "2017",
-  },
-  {
-    name: "Anton Kurniawan",
-    rank: "Nidan",
-    date: "2018",
-  },
-  {
-    name: "Farman Baihaqi Razif",
-    rank: "Nidan",
-    date: "2018",
   },
   {
     name: "Muhammad Shaukat",
@@ -87,31 +87,50 @@ const yudansha: YudanshaProps[] = [
   },
 ];
 
-export default function Yudansha() {
+const Yudansha = () => {
   return (
-    <table className="min-w-full divide-y divide-gray-200">
-      <thead className="bg-gray-50">
-        <tr>
-          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Name
-          </th>
-          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Rank
-          </th>
-          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Date
-          </th>
-        </tr>
-      </thead>
-      <tbody className="bg-white divide-y divide-gray-200">
-        {yudansha.map((yudansha, index) => (
-          <tr key={index}>
-            <td className="px-6 py-4 whitespace-nowrap">{yudansha.name}</td>
-            <td className="px-6 py-4 whitespace-nowrap">{yudansha.rank}</td>
-            <td className="px-6 py-4 whitespace-nowrap">{yudansha.date}</td>
+    <div className="relative overflow-x-auto">
+      <h4 className="text-2xl font-semibold">Students with Yudansha ranking</h4>
+      <br />
+      <table className="min-w-full divide-y">
+        <thead className="bg-gray-200">
+          <tr>
+            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              No.
+            </th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Name
+            </th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Rank
+            </th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Attained
+            </th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody className="divide-y divide-gray-200">
+          {yudansha.map((yudansha, index) => (
+            <tr key={index}>
+              <td className="px-4 py-2 whitespace-nowrap">{index + 1}</td>
+              <td className="px-4 py-2 whitespace-nowrap">{yudansha.name}</td>
+              <td className="px-4 py-2 whitespace-nowrap">{yudansha.rank}</td>
+              <td className="px-4 py-2 whitespace-nowrap">{yudansha.date}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <br />
+
+      <a
+        href="https://en.wikipedia.org/wiki/Dan_(rank)"
+        className="text-blue-600"
+      >
+        Dan ranking are Shodan = 1st dan, Nidan = 2nd dan, Sandan = 3rd dan,
+        Godan = 5th dan.
+      </a>
+    </div>
   );
-}
+};
+
+export default Yudansha;
