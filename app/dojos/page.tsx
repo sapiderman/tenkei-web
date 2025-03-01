@@ -66,7 +66,7 @@ export default function Dojo() {
             <p>{schedule.contact}</p>
           </div>
         ))}
-       <JoinButton />
+        <JoinButton />
       </main>
 
       <Footer />
