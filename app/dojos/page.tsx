@@ -1,8 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import "../globals.css";
 import Footer from "../../components/footer";
-import Yudansha from "@/components/yudansha";
+import JoinButton from "@/components/joinButton";
 
 type Schedule = {
   title: string;
@@ -67,6 +66,7 @@ export default function Dojo() {
             <p>{schedule.contact}</p>
           </div>
         ))}
+        <JoinButton />
       </main>
 
       <Footer />

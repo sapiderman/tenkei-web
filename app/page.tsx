@@ -104,7 +104,6 @@ export default function Home() {
           </a>
         </div>
       </main>
-
       <Events />
       <br />
       <Footer />
