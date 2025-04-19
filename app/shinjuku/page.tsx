@@ -3,7 +3,7 @@ import Link from "next/link";
 import "../globals.css";
 import Footer from "../../components/footer";
 
-export default function Dojo() {
+export default function Shinjuku() {
   return (
     <>
       <main className="flex min-h-screen flex-col items-center p-8 md:p-24 max-w-4xl mx-auto">
