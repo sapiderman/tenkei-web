@@ -13,7 +13,7 @@ export default function About() {
             About Tenkei Aikidojo
           </h1>
 
-          <p className="text-base sm:text-lg leading-relaxed text-gray-800 text-justify sm:text-center">
+          <p className="text-base sm:text-lg leading-relaxed text-gray-800 text-left sm:text-left">
             Tenkei Aikidojo is a group of dojos under the guidance of Sensei Eka
             Machdi Ramdani (5th Dan), which is the Jakarta branch of Shinjuku
             Aikikai Dojo. Tenkei dojo emphasizes Aikido training by exploring
