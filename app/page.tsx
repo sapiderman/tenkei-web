@@ -13,15 +13,18 @@ export default function Home() {
             Welcome to the new Tenkei web&nbsp;
           </p>
 
-          <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white lg:static lg:h-auto lg:w-auto lg:bg-none">
-            <Image
+            <div className="fixed bottom-0 left-0 flex w-full items-end justify-center bg-gradient-to-t from-white via-white lg:static lg:h-auto lg:w-auto lg:bg-none p-4 lg:p-0">
+            {/* Use a container div to control the responsive size */}
+            <div className="relative w-32 h-32 lg:w-48 lg:h-48"> {/* Smaller on mobile, larger on desktop */}
+              <Image
               src="/tenkei_logo.png"
               alt="Tenkei Logo"
-              width={200}
-              height={200}
+              layout="fill" // Fill the container div
+              objectFit="contain" // Ensure the image aspect ratio is maintained
               priority
-            />
-          </div>
+              />
+            </div>
+            </div>
         </div>
 
         <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:lg:h-[360px] z-[-1]">
