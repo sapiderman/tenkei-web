@@ -38,7 +38,7 @@ const schedules: Schedule[] = [
     title: "Tenkei Nurul Badar",
     description: "Masjid Nurul Badar Hall, Jl. Raya Pasar Minggu No.9.",
     location: "https://maps.app.goo.gl/72veKMAMBDrf8hCp7",
-    time: "Tuesdays: 2000-2200, Wednesdays Weapons Class: 2000-2200",
+    time: "Tuesdays: 2000-2200, Thursdays Weapons Class: 2000-2200",
     contact: "Muhammad: +62 899-9811-7-five-nine",
   },
 ];
