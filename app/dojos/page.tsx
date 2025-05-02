@@ -16,7 +16,7 @@ const schedules: Schedule[] = [
     title: "Tenkei Universitas Indonesia",
     description: "Pusat Kegiatan Mahasiswa Universitas Indonesia, Depok.",
     location: "https://maps.app.goo.gl/fqy3Cek7FYJbf8Bj6",
-    time: "Tuesdays and Thursdays: 1600-1800. Saturday Children: 1200-1300  , Saturday Adults: 1300-1500",
+    time: "Tuesdays and Thursdays: 1600-1800. Saturday Children: 1100-1200, Saturday Adults: 1300-1500, Saturday Weapons Class: 1530-1640",
     contact: "Lia: +62-856-9329-55-four-five, April: +62-896-5227-71-zero-five",
   },
   {
