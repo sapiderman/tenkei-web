@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import "../globals.css";
 import Footer from "../../components/footer";
@@ -47,10 +48,24 @@ export default function Dojo() {
   return (
     <>
       <main className="flex min-h-screen flex-col items-left justify-between p-24">
-        <h1 className="mb-1 text-2xl font-bold">
-          {" "}
-          Dojo Locations, Schedules and Contacts{" "}
+        {/* Flex container to align heading and logo */}
+        <div className="flex items-center justify-left gap-4 sm:gap-6">
+        {/* Heading - text-center removed as flex container handles centering */}
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+          Dojo Locations, Schedules and Contacts
         </h1>
+        {/* Sized container for the logo */}
+        {/* Adjust w-XX h-XX classes to control the logo size (e.g., w-16 h-16 is 64px) */}
+        <div className="relative w-10 h-10 sm:w-20 sm:h-20 md:w-24 md:h-24 flex-shrink-0">
+          <Image
+          src="/tenkei_logo.png"
+          alt="Tenkei Logo"
+          layout="fill" // Fill the container div
+          objectFit="contain" // Ensure the image aspect ratio is maintained
+          priority
+          />
+        </div>
+        </div>
 
         {schedules.map((schedule, index) => (
           <div key={index} className="my-4">
