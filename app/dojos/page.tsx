@@ -30,7 +30,7 @@ const schedules: Schedule[] = [
   },
   {
     title: "Tenkei Mayapada",
-    description: "9th Floor Gedung Parkir Mayapada.",
+    description: "8th Floor Gedung Parkir Mayapada.",
     location: "https://maps.app.goo.gl/PBLdBLXzEDdMZ8Rt9",
     time: "Mondays: 1930-2130",
     contact: "Anton: +62-815-1650-0-two-six",
