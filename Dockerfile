@@ -3,7 +3,7 @@
 # ===============================================
 # Stage 1: Dependencies
 # ===============================================
-FROM node:22-alpine AS deps
+FROM node:22.14.0-alpine3.22 AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN yarn install --frozen-lockfile
 # ===============================================
 # Stage 2: Build
 # ===============================================
-FROM node:22-alpine AS builder
+FROM node:22.14.0-alpine3.22 AS builder
 WORKDIR /app
 
 # Copy dependencies from deps stage
@@ -32,7 +32,7 @@ RUN yarn build
 # ===============================================
 # Stage 3: Production Runner
 # ===============================================
-FROM node:22-alpine AS runner
+FROM node:22.14.0-alpine3.22 AS runner
 WORKDIR /app
 
 # Set production environment
