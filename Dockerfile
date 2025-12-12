@@ -3,8 +3,7 @@
 # ===============================================
 # Stage 1: Dependencies
 # ===============================================
-FROM node:22.14.0-alpine3.22 AS deps
-RUN apk add --no-cache libc6-compat
+FROM node:22-bookworm-slim AS deps
 WORKDIR /app
 
 # Copy package files
@@ -16,7 +15,7 @@ RUN yarn install --frozen-lockfile
 # ===============================================
 # Stage 2: Build
 # ===============================================
-FROM node:22.14.0-alpine3.22 AS builder
+FROM node:22-bookworm-slim AS builder
 WORKDIR /app
 
 # Copy dependencies from deps stage
@@ -32,26 +31,22 @@ RUN yarn build
 # ===============================================
 # Stage 3: Production Runner
 # ===============================================
-FROM node:22.14.0-alpine3.22 AS runner
+FROM gcr.io/distroless/nodejs22-debian12 AS runner
 WORKDIR /app
 
 # Set production environment
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Create non-root user for security
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
 # Copy public assets
 COPY --from=builder /app/public ./public
 
 # Copy the standalone build output
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nonroot:nonroot /app/.next/standalone ./
+COPY --from=builder --chown=nonroot:nonroot /app/.next/static ./.next/static
 
 # Switch to non-root user
-USER nextjs
+USER nonroot
 
 # Expose port
 EXPOSE 3000
