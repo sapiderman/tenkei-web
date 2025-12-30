@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy New Year 2026!</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #00d2ff;
+        --secondary-color: #3a7bd5;
+        --accent-color: #ffd700; /* Gold */
+        --bg-dark: #0f0c29;
+        --bg-light: #302b63;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body,
+      html {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        font-family: "Montserrat", sans-serif;
+        background: linear-gradient(
+          to bottom,
+          var(--bg-dark),
+          var(--bg-light),
+          #24243e
+        );
+        color: white;
+      }
+
+      /* The canvas sits behind the text content */
+      #canvas-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* --- CSS FOR THE FULL LOGO --- */
+      .top-right-logo {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 20; /* High z-index to ensure it's on top of everything */
+        /* Responsive sizing for the wider logo: min 75px, pref 15vw, max 150px */
+        width: clamp(75px, 15vw, 150px);
+        height: auto;
+        /* Optional: adds a subtle shadow so white text pops off dark background */
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+      }
+      /* ------------------------------ */
+
+      /* Main content wrapper sitting on top of canvas */
+      .content-wrapper {
+        position: relative;
+        z-index: 10;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        /* Added padding top so main text doesn't overlap logo on small screens if flipped landscape */
+        padding-top: 80px;
+      }
+
+      .greeting {
+        font-size: clamp(1.5rem, 4vw, 3rem);
+        font-weight: 400;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        text-shadow: 0 0 10px rgba(0, 210, 255, 0.7);
+        animation: fadeInDown 1.5s ease-out;
+      }
+
+      .year {
+        /* Responsive font sizing */
+        font-size: clamp(5rem, 18vw, 12rem);
+        font-weight: 900;
+        line-height: 1;
+        color: transparent;
+        /* Gradient text effect */
+        background: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--accent-color),
+          var(--secondary-color)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        /* Glowing effect */
+        filter: drop-shadow(0 0 20px rgba(0, 210, 255, 0.5))
+          drop-shadow(0 0 60px rgba(255, 215, 0, 0.3));
+        animation: scaleIn 2s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      .message {
+        margin-top: 30px;
+        font-size: clamp(1rem, 2vw, 1.5rem);
+        max-width: 600px;
+        line-height: 1.6;
+        color: #e0e0e0;
+        animation: fadeInUp 2s ease-out 0.5s both; /* Waits 0.5s before starting */
+      }
+
+      /* Animations */
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas-container"></canvas>
+
+    <img
+      src="/tenkei_logo.png"
+      alt="Tenkei Aikidojo Full Logo"
+      class="top-right-logo"
+    />
+    <div class="content-wrapper">
+      <h2 class="greeting">Happy New Year</h2>
+      <h1 class="year">2026</h1>
+      <p class="message">
+        Wishing you a year fully loaded with happiness, success, and exciting
+        new opportunities.
+      </p>
+    </div>
+
+    <script>
+      // Basic Fireworks implementation on Canvas
+      const canvas = document.getElementById("canvas-container");
+      const ctx = canvas.getContext("2d");
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+
+      // Resize canvas when window resizes
+      window.addEventListener("resize", () => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+      });
+
+      // Helper to get random number
+      const random = (min, max) => Math.random() * (max - min) + min;
+
+      // The Particle class (the explosion bits)
+      class Particle {
+        constructor(x, y, color) {
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          // Random velocity in all directions
+          const angle = random(0, Math.PI * 2);
+          const speed = random(1, 5);
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed;
+          this.alpha = 1; // Opacity
+          this.friction = 0.98; // Slows down over time
+          this.gravity = 0.05; // Pulls down slightly
+        }
+
+        update() {
+          this.vx *= this.friction;
+          this.vy *= this.friction;
+          this.vy += this.gravity;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.alpha -= 0.01; // Fade out
+        }
+
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      // The Firework class (the rocket going up)
+      class Firework {
+        constructor() {
+          this.x = random(width * 0.1, width * 0.9);
+          this.y = height;
+          this.targetY = random(height * 0.1, height * 0.4);
+          this.speed = random(4, 8);
+          this.color = `hsl(${random(0, 360)}, 100%, 60%)`; // Random bright color
+          this.particles = [];
+          this.exploded = false;
+        }
+
+        update() {
+          if (!this.exploded) {
+            this.y -= this.speed;
+            // If reached target height, explode
+            if (this.y <= this.targetY) {
+              this.explode();
+            }
+          }
+
+          // Update all particles belonging to this firework
+          this.particles.forEach((particle, index) => {
+            particle.update();
+            if (particle.alpha <= 0) {
+              this.particles.splice(index, 1);
+            }
+          });
+        }
+
+        explode() {
+          this.exploded = true;
+          // Create 50 explosion particles
+          for (let i = 0; i < 50; i++) {
+            this.particles.push(new Particle(this.x, this.y, this.color));
+          }
+        }
+
+        draw() {
+          if (!this.exploded) {
+            // Draw the rocket going up
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+          }
+          // Draw particles
+          this.particles.forEach((particle) => particle.draw());
+        }
+      }
+
+      let fireworks = [];
+
+      function animate() {
+        // Create a slight trail effect by not clearing completely
+        ctx.fillStyle = "rgba(15, 12, 41, 0.2)";
+        ctx.fillRect(0, 0, width, height);
+
+        // Randomly launch new fireworks
+        if (Math.random() < 0.03) {
+          // Adjust 0.03 to change frequency
+          fireworks.push(new Firework());
+        }
+
+        fireworks.forEach((firework, index) => {
+          firework.update();
+          firework.draw();
+          // Remove dead fireworks
+          if (firework.exploded && firework.particles.length === 0) {
+            fireworks.splice(index, 1);
+          }
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+</html>

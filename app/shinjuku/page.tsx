@@ -1,6 +1,12 @@
-import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/footer";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Shinjuku Aikikai - Tenkei Aikidojo",
+  description:
+    "Learn about Shinjuku Aikikai, the Tokyo dojo affiliated with Tenkei Aikidojo",
+};
 
 export default function Shinjuku() {
   return (

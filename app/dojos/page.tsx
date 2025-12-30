@@ -2,6 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/footer";
 import JoinButton from "@/components/joinButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dojos - Tenkei Aikidojo",
+  description:
+    "Find Tenkei Aikidojo locations, practice schedules, and contact information",
+};
 
 type Schedule = {
   title: string;
@@ -60,6 +67,7 @@ export default function Dojo() {
               src="/tenkei_logo.png"
               alt="Tenkei Logo"
               fill
+              sizes="(max-width: 640px) 40px, (max-width: 768px) 80px, 96px"
               className="object-contain"
               priority
             />

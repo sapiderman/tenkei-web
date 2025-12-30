@@ -15,11 +15,14 @@ export default function Home() {
 
           <div className="fixed bottom-0 left-0 flex w-full items-end justify-center bg-gradient-to-t from-white via-white lg:static lg:h-auto lg:w-auto lg:bg-none p-4 lg:p-0">
             {/* Use a container div to control the responsive size */}
-            <div className="relative w-32 h-32 lg:w-48 lg:h-48"> {/* Smaller on mobile, larger on desktop */}
+            <div className="relative w-32 h-32 lg:w-48 lg:h-48">
+              {" "}
+              {/* Smaller on mobile, larger on desktop */}
               <Image
                 src="/tenkei_logo.png"
                 alt="Tenkei Logo"
                 fill
+                sizes="(max-width: 1024px) 128px, 192px"
                 className="object-contain"
                 priority
               />
@@ -73,6 +76,7 @@ export default function Home() {
           <a
             href="https://blog.tenkeiaikidojo.org/"
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100"
+            target="_blank"
             rel="noopener noreferrer"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>

@@ -3,6 +3,13 @@ import Link from "next/link";
 import Footer from "@/components/footer";
 import Yudansha from "@/components/yudansha";
 import Sensei from "@/components/sensei";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About - Tenkei Aikidojo",
+  description:
+    "Learn about the history of Tenkei Aikidojo and our Sensei Eka Machdi Ramdani",
+};
 
 export default function About() {
   return (
@@ -22,12 +29,12 @@ export default function About() {
                 src="/tenkei_logo.png"
                 alt="Tenkei Logo"
                 fill
+                sizes="(max-width: 640px) 40px, (max-width: 768px) 80px, 96px"
                 className="object-contain"
                 priority
               />
             </div>
           </div>
-
 
           <p className="text-base sm:text-lg leading-relaxed text-gray-800 text-left sm:text-left">
             Tenkei Aikidojo is a group of dojos under the guidance of Sensei Eka
