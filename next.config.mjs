@@ -22,6 +22,10 @@ const nextConfig = {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
           },
+                    {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN', // Allows embedding only from your own domain
+          },
         ],
       },
     ];
