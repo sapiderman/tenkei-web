@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/footer";
 import JoinButton from "@/components/joinButton";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
