@@ -1,0 +1,53 @@
+# Docker
+.dockerignore
+
+# Dependencies
+node_modules
+
+# Next.js build output (will be built in container)
+.next
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__
+
+# Development files
+.env.local
+.env.development
+.env.development.local
+
+# Documentation
+README.md
+LICENSE
+docs
+
+# CI/CD
+.github
+.devcontainer
+
+# Google Cloud
+.gcloudignore
+app.yaml
