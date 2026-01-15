@@ -42,7 +42,7 @@ const schedules: Schedule[] = [
     contact: "Anton: +62-815-1650-0-two-six",
   },
   {
-    title: "Natsu Aikidojo",
+    title: "Tenkei Natsu Aikidojo",
     description: "Masjid Nurul Badar Hall, Jl. Raya Pasar Minggu No.9.",
     location: "https://maps.app.goo.gl/7u5St4X79yG8h4H27",
     time: "Tuesdays: 2000-2200, Thursdays Weapons Class: 2000-2200",
