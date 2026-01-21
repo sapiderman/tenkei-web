@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  // This URL is now hidden from the client browser
-  // For even better security, store this in an environment variable (e.g. process.env.REI_API_URL)
-  const TARGET_API_URL = process.env.REI_API_URL || 'example.com/api/register';
+  
+  const TARGET_API_URL = process.env.BE_API_URL || 'example.com/api/register';
 
   try {
     const body = await request.json();
