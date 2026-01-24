@@ -140,7 +140,7 @@ export async function POST(request: Request) {
     console.error("Server configuration error: BE_API_URL is missing");
     return NextResponse.json(
       { error: "Internal server configuration error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 

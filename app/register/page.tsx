@@ -366,7 +366,7 @@ export default function RegisterPage() {
               !
             </p>
             <p className="text-gray-600 mb-6">
-              A confirmation has been sent to your WhatsApp.
+              A dojo cho will be in concact shortly. See you on the mat!
             </p>
             <a
               href="https://tenkeiaikidojo.org"
