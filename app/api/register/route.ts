@@ -30,7 +30,7 @@ function sanitizeString(input: unknown): string {
   return input
     .trim()
     .replace(/[<>]/g, "") // Remove HTML brackets
-    .replace(/javascript:/gi, "") // Remove javascript: protocol
+    .replace(/(javascript|data|vbscript):/gi, "") // Remove some protocols
     .replace(/on\w+=/gi, ""); // Remove event handlers like onclick=
 }
 
