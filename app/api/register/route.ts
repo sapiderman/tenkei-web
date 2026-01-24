@@ -1,24 +1,6 @@
 import { NextResponse } from "next/server";
 import { filterXSS } from "xss";
-
-// Allowed values for rank dropdown
-const VALID_RANKS = [
-  "10th Kyu",
-  "9th Kyu",
-  "8th Kyu",
-  "7th Kyu",
-  "6th Kyu",
-  "5th Kyu",
-  "4th Kyu",
-  "3rd Kyu",
-  "2nd Kyu",
-  "1st Kyu",
-  "Shodan (1st Dan)",
-  "Nidan (2nd Dan)",
-  "Sandan (3rd Dan)",
-  "Yondan (4th Dan)",
-  "Godan (5th Dan)",
-];
+import { VALID_RANKS } from "@/lib/constants";
 
 /**
  * Sanitize string input to prevent basic XSS and injection attacks.
@@ -31,7 +13,7 @@ function sanitizeString(input: unknown): string {
 
   const trimmed = input.trim();
   // Use xss library to strip all HTML tags (whitelist: {})
-  // This matches the previous strictness but is more robust than regex
+
   const cleaned = filterXSS(trimmed, {
     whiteList: {},
     stripIgnoreTag: true,
@@ -46,7 +28,6 @@ function sanitizeString(input: unknown): string {
 
 /**
  * Validates email format using a standard regex.
- * More robust than simple checks but permissive enough for valid emails.
  */
 function isValidEmail(email: string): boolean {
   // Regex:
@@ -79,8 +60,29 @@ function isValidPhone(phone: string): boolean {
  */
 function isValidDate(dateStr: string): boolean {
   if (!dateStr) return true; // Optional field
-  const date = new Date(dateStr);
-  return !isNaN(date.getTime()) && date <= new Date();
+
+  const matches = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(dateStr);
+  if (!matches) {
+    return false;
+  }
+
+  const year = Number(matches[1]);
+  const month = Number(matches[2]);
+  const day = Number(matches[3]);
+
+  const candidate = new Date(year, month - 1, day);
+  if (
+    candidate.getFullYear() !== year ||
+    candidate.getMonth() !== month - 1 ||
+    candidate.getDate() !== day
+  ) {
+    return false;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return candidate <= today;
 }
 
 /**

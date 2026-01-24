@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Footer from "@/components/footer";
 import JoinButton from "@/components/joinButton";
 import Image from "next/image";
@@ -81,24 +80,28 @@ export default function Dojo() {
           <div key={index} className="my-4">
             <h2 className="text-lg font-bold">{schedule.title}</h2>
             <p>{schedule.description}</p>
-            <Link
+            <a
               className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
               href={schedule.location}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               {schedule.location}
-            </Link>
+            </a>
             <p>{schedule.time}</p>
             <p>{schedule.contact}</p>
             {schedule.ig && (
               <>
                 <p>
                   ig:{" "}
-                  <Link
+                  <a
                     className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
                     href={schedule.ig}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {schedule.ig}
-                  </Link>
+                  </a>
                 </p>
               </>
             )}

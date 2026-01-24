@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, ChangeEvent, FormEvent } from "react";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { filterXSS } from "xss";
+import { VALID_RANKS as RANK_OPTIONS } from "@/lib/constants";
 
 interface RegisterFormData {
   name: string;
@@ -26,24 +27,6 @@ const DOJO_OPTIONS = [
   "Tenkei Mayapada",
   "Tenkei Taman Menteng",
   "Tenkei Natsu Aikidojo",
-];
-
-const RANK_OPTIONS = [
-  "10th Kyu",
-  "9th Kyu",
-  "8th Kyu",
-  "7th Kyu",
-  "6th Kyu",
-  "5th Kyu",
-  "4th Kyu",
-  "3rd Kyu",
-  "2nd Kyu",
-  "1st Kyu",
-  "Shodan (1st Dan)",
-  "Nidan (2nd Dan)",
-  "Sandan (3rd Dan)",
-  "Yondan (4th Dan)",
-  "Godan (5th Dan)",
 ];
 
 const XSS_OPTIONS = {
