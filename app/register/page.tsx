@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, ChangeEvent, FormEvent } from "react";
 import { Turnstile } from "@marsidev/react-turnstile";
 
-interface FormData {
+interface RegisterFormData {
   name: string;
   email: string;
   whatsapp: string;
@@ -46,7 +46,7 @@ const RANK_OPTIONS = [
 ];
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<RegisterFormData>({
     name: "",
     email: "",
     whatsapp: "",
@@ -94,14 +94,14 @@ export default function RegisterPage() {
 
     if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
-      setFormData((prev: FormData) => ({ ...prev, [name]: checked }));
+      setFormData((prev: RegisterFormData) => ({ ...prev, [name]: checked }));
     } else {
-      setFormData((prev: FormData) => ({ ...prev, [name]: value }));
+      setFormData((prev: RegisterFormData) => ({ ...prev, [name]: value }));
     }
   };
 
   const handleDojoSelect = (dojo: string) => {
-    setFormData((prev: FormData) => ({ ...prev, dojo }));
+    setFormData((prev: RegisterFormData) => ({ ...prev, dojo }));
     setDojoSearch(dojo);
     setDojoOpen(false);
   };
@@ -366,11 +366,12 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
+                  id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
@@ -381,11 +382,12 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Email Address
                 </label>
                 <input
                   type="email"
+                  id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
@@ -395,11 +397,12 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="whatsapp" className="block text-sm font-medium text-gray-700">
                   WhatsApp Number <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
+                  id="whatsapp"
                   name="whatsapp"
                   value={formData.whatsapp}
                   onChange={handleInputChange}
@@ -410,11 +413,12 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="date_of_birth" className="block text-sm font-medium text-gray-700">
                   Date of Birth
                 </label>
                 <input
                   type="date"
+                  id="date_of_birth"
                   name="date_of_birth"
                   value={formData.date_of_birth}
                   onChange={handleInputChange}
@@ -432,11 +436,12 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Password <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
+                  id="password"
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
@@ -451,11 +456,12 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password_confirm" className="block text-sm font-medium text-gray-700">
                   Confirm Password <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
+                  id="password_confirm"
                   name="password_confirm"
                   value={formData.password_confirm}
                   onChange={handleInputChange}
@@ -476,12 +482,13 @@ export default function RegisterPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Dojo Dropdown */}
               <div className="space-y-1" ref={dojoRef}>
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="dojo" className="block text-sm font-medium text-gray-700">
                   Dojo
                 </label>
                 <div className="relative">
                   <input
                     type="text"
+                    id="dojo"
                     name="dojo"
                     value={dojoSearch}
                     onChange={(e) => {
@@ -516,10 +523,11 @@ export default function RegisterPage() {
 
               {/* Rank Selection */}
               <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="rank" className="block text-sm font-medium text-gray-700">
                   Current Rank
                 </label>
                 <select
+                  id="rank"
                   name="rank"
                   value={formData.rank}
                   onChange={handleInputChange}
@@ -535,11 +543,12 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="last_grading_date" className="block text-sm font-medium text-gray-700">
                   Last Grading Date
                 </label>
                 <input
                   type="date"
+                  id="last_grading_date"
                   name="last_grading_date"
                   value={formData.last_grading_date}
                   onChange={handleInputChange}
@@ -557,11 +566,12 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="emergency_contact_name" className="block text-sm font-medium text-gray-700">
                   Emergency Contact Name
                 </label>
                 <input
                   type="text"
+                  id="emergency_contact_name"
                   name="emergency_contact_name"
                   value={formData.emergency_contact_name}
                   onChange={handleInputChange}
@@ -571,11 +581,12 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="emergency_contact_number" className="block text-sm font-medium text-gray-700">
                   Emergency Contact Number
                 </label>
                 <input
                   type="tel"
+                  id="emergency_contact_number"
                   name="emergency_contact_number"
                   value={formData.emergency_contact_number}
                   onChange={handleInputChange}
@@ -593,10 +604,11 @@ export default function RegisterPage() {
             </h2>
 
             <div className="space-y-1">
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="medical_conditions" className="block text-sm font-medium text-gray-700">
                 Medical Conditions
               </label>
               <textarea
+                id="medical_conditions"
                 name="medical_conditions"
                 value={formData.medical_conditions}
                 onChange={handleInputChange}

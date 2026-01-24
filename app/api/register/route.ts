@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { filterXSS } from "xss";
 
 // Allowed values for rank dropdown
 const VALID_RANKS = [
@@ -27,11 +28,15 @@ function sanitizeString(input: unknown): string {
   if (typeof input !== "string") {
     return "";
   }
-  return input
-    .trim()
-    .replace(/[<>]/g, "") // Remove HTML brackets
-    .replace(/(javascript|data|vbscript):/gi, "") // Remove some protocols
-    .replace(/on\w+=/gi, ""); // Remove event handlers like onclick=
+
+  const trimmed = input.trim();
+  // Use xss library to strip all HTML tags (whitelist: {})
+  // This matches the previous strictness but is more robust than regex
+  return filterXSS(trimmed, {
+    whiteList: {},
+    stripIgnoreTag: true,
+    stripIgnoreTagBody: ["script", "style"]
+  });
 }
 
 /**
