@@ -89,6 +89,12 @@ const buildSanitizedPayload = (data: RegisterFormData) => ({
 });
 
 export default function RegisterPage() {
+  // Get Turnstile site key - use test key in development, require proper key in production
+  const turnstileSiteKey =
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+    (process.env.NODE_ENV === "development" ? "1x00000000000000000000AA" : "");
+  const hasTurnstileKey = turnstileSiteKey.length > 0;
+
   const [formData, setFormData] = useState<RegisterFormData>({
     name: "",
     email: "",
@@ -163,7 +169,10 @@ export default function RegisterPage() {
         sanitizedValue = sanitizeTextInput(value);
     }
 
-    setFormData((prev: RegisterFormData) => ({ ...prev, [name]: sanitizedValue }));
+    setFormData((prev: RegisterFormData) => ({
+      ...prev,
+      [name]: sanitizedValue,
+    }));
 
     if (name === "dojo") {
       setDojoSearch(sanitizedValue);
@@ -304,7 +313,11 @@ export default function RegisterPage() {
       return false;
     }
     if (!sanitizeToken(turnstileToken)) {
-      setError("Please complete the security challenge");
+      setError(
+        hasTurnstileKey
+          ? "Please complete the security challenge"
+          : "Registration is unavailable due to missing security configuration. Please contact the administrator.",
+      );
       return false;
     }
 
@@ -437,7 +450,10 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -453,7 +469,10 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Email Address
                 </label>
                 <input
@@ -468,7 +487,10 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="whatsapp" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="whatsapp"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   WhatsApp Number <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -484,7 +506,10 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="date_of_birth" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="date_of_birth"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Date of Birth
                 </label>
                 <input
@@ -507,7 +532,10 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Password <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -527,7 +555,10 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="password_confirm" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password_confirm"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Confirm Password <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -553,7 +584,10 @@ export default function RegisterPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Dojo Dropdown */}
               <div className="space-y-1" ref={dojoRef}>
-                <label htmlFor="dojo" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="dojo"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Dojo
                 </label>
                 <div className="relative">
@@ -565,7 +599,10 @@ export default function RegisterPage() {
                     onChange={(e) => {
                       const sanitizedValue = sanitizeTextInput(e.target.value);
                       setDojoSearch(sanitizedValue);
-                      setFormData((prev) => ({ ...prev, dojo: sanitizedValue }));
+                      setFormData((prev) => ({
+                        ...prev,
+                        dojo: sanitizedValue,
+                      }));
                       setDojoOpen(true);
                     }}
                     onFocus={() => setDojoOpen(true)}
@@ -594,7 +631,10 @@ export default function RegisterPage() {
 
               {/* Rank Selection */}
               <div className="space-y-1">
-                <label htmlFor="rank" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="rank"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Current Rank
                 </label>
                 <select
@@ -614,7 +654,10 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1 md:col-span-2">
-                <label htmlFor="last_grading_date" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="last_grading_date"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Last Grading Date
                 </label>
                 <input
@@ -637,7 +680,10 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label htmlFor="emergency_contact_name" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="emergency_contact_name"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Emergency Contact Name
                 </label>
                 <input
@@ -652,7 +698,10 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="emergency_contact_number" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="emergency_contact_number"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Emergency Contact Number
                 </label>
                 <input
@@ -675,7 +724,10 @@ export default function RegisterPage() {
             </h2>
 
             <div className="space-y-1">
-              <label htmlFor="medical_conditions" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="medical_conditions"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Medical Conditions
               </label>
               <textarea
@@ -730,15 +782,22 @@ export default function RegisterPage() {
           </div>
 
           <div className="flex justify-center">
-            <Turnstile
-              siteKey={
-                process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
-                (process.env.NODE_ENV === "development"
-                  ? "1x00000000000000000000AA"
-                  : "")
-              }
-              onSuccess={handleTurnstileSuccess}
-            />
+            {hasTurnstileKey ? (
+              <Turnstile
+                siteKey={turnstileSiteKey}
+                onSuccess={handleTurnstileSuccess}
+              />
+            ) : (
+              <div className="w-full p-4 bg-red-50 border-2 border-red-300 rounded-lg">
+                <p className="text-red-800 text-center font-semibold">
+                  ⚠️ Configuration Error
+                </p>
+                <p className="text-red-700 text-center text-sm mt-1">
+                  Turnstile site key is not configured. Please contact the
+                  administrator.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Submit Button */}
