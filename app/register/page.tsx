@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, ChangeEvent, FormEvent } from "react";
+import Link from "next/link";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { filterXSS } from "xss";
 import { VALID_RANKS as RANK_OPTIONS } from "@/lib/constants";
@@ -235,8 +236,11 @@ export default function RegisterPage() {
 
     // Date of Birth validation (if provided)
     if (formData.date_of_birth) {
-      const dob = new Date(formData.date_of_birth);
+      const [y, m, d] = formData.date_of_birth.split("-").map(Number);
+      const dob = new Date(y, m - 1, d);
       const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
       if (isNaN(dob.getTime()) || dob > today) {
         setError("Date of birth cannot be in the future");
         return false;
@@ -368,12 +372,12 @@ export default function RegisterPage() {
             <p className="text-gray-600 mb-6">
               A dojo cho will be in concact shortly. See you on the mat!
             </p>
-            <a
-              href="https://tenkeiaikidojo.org"
+            <Link
+              href="/"
               className="inline-block bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-semibold py-2 px-6 rounded-lg transition-all shadow-lg shadow-emerald-500/20"
             >
               Return to site
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -756,12 +760,12 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-gray-500">
             Already have an account?{" "}
-            <a
+            <Link
               href="/login"
               className="text-blue-600 hover:text-blue-500 underline"
             >
               Sign in
-            </a>
+            </Link>
           </p>
         </form>
       </div>
