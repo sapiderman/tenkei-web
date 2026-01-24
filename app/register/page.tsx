@@ -273,7 +273,9 @@ export default function RegisterPage() {
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
-      console.error("Registration error:", err);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Registration error:", err);
+      }
     } finally {
       setIsLoading(false);
     }
