@@ -52,6 +52,16 @@ const XSS_OPTIONS = {
   stripIgnoreTagBody: ["script", "style"],
 };
 
+// Turnstile test site key for development (always passes)
+const TURNSTILE_TEST_SITE_KEY = "1x00000000000000000000AA";
+
+// Error messages
+const ERROR_MESSAGES = {
+  TURNSTILE_REQUIRED: "Please complete the security challenge",
+  TURNSTILE_NOT_CONFIGURED:
+    "Registration is unavailable due to missing security configuration. Please contact the administrator.",
+};
+
 const stripControlChars = (value: string) =>
   value
     .replace(/\r?\n/g, " ")
@@ -92,7 +102,7 @@ export default function RegisterPage() {
   // Get Turnstile site key - use test key in development, require proper key in production
   const turnstileSiteKey =
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
-    (process.env.NODE_ENV === "development" ? "1x00000000000000000000AA" : "");
+    (process.env.NODE_ENV === "development" ? TURNSTILE_TEST_SITE_KEY : "");
   const hasTurnstileKey = turnstileSiteKey.length > 0;
 
   const [formData, setFormData] = useState<RegisterFormData>({
@@ -315,8 +325,8 @@ export default function RegisterPage() {
     if (!sanitizeToken(turnstileToken)) {
       setError(
         hasTurnstileKey
-          ? "Please complete the security challenge"
-          : "Registration is unavailable due to missing security configuration. Please contact the administrator.",
+          ? ERROR_MESSAGES.TURNSTILE_REQUIRED
+          : ERROR_MESSAGES.TURNSTILE_NOT_CONFIGURED,
       );
       return false;
     }
