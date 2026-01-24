@@ -39,7 +39,7 @@ function sanitizeString(input: unknown): string {
  * More robust than simple checks but permissive enough for valid emails.
  */
 function isValidEmail(email: string): boolean {
-  // Regex: 
+  // Regex:
   // 1. No whitespace or @ in local part
   // 2. @ symbol
   // 3. No whitespace or @ in domain part
@@ -93,7 +93,7 @@ async function verifyTurnstileToken(token: string): Promise<boolean> {
           secret: secretKey,
           response: token,
         }),
-      }
+      },
     );
     const data = await response.json();
     return data.success === true;
@@ -134,7 +134,7 @@ export async function POST(request: Request) {
     if (typeof turnstileToken !== "string" || !turnstileToken) {
       return NextResponse.json(
         { error: "Security verification required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -142,7 +142,7 @@ export async function POST(request: Request) {
     if (!isValidToken) {
       return NextResponse.json(
         { error: "Security verification failed. Please try again." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -163,7 +163,9 @@ export async function POST(request: Request) {
     const rank = sanitizeString(body.rank);
     const lastGradingDate = sanitizeString(body.last_grading_date);
     const emergencyContactName = sanitizeString(body.emergency_contact_name);
-    const emergencyContactNumber = sanitizeString(body.emergency_contact_number);
+    const emergencyContactNumber = sanitizeString(
+      body.emergency_contact_number,
+    );
     const medicalConditions = sanitizeString(body.medical_conditions);
 
     // Booleans
@@ -174,28 +176,28 @@ export async function POST(request: Request) {
     if (!name || name.length < 1) {
       return NextResponse.json(
         { error: "Full name is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!whatsapp) {
       return NextResponse.json(
         { error: "WhatsApp number is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!password) {
       return NextResponse.json(
         { error: "Password is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!consentDatastore) {
       return NextResponse.json(
         { error: "You must consent to data storage to register" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -203,7 +205,7 @@ export async function POST(request: Request) {
     if (name.length > 100) {
       return NextResponse.json(
         { error: "Name is too long (max 100 characters)" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -211,49 +213,49 @@ export async function POST(request: Request) {
     if (email.length > 100) {
       return NextResponse.json(
         { error: "Email is too long (max 100 characters)" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (whatsapp.length > 20) {
       return NextResponse.json(
         { error: "WhatsApp number is too long" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (password.length > 128) {
       return NextResponse.json(
         { error: "Password is too long (max 128 characters)" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (emergencyContactName.length > 100) {
       return NextResponse.json(
         { error: "Emergency contact name is too long (max 100 characters)" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (emergencyContactNumber.length > 20) {
       return NextResponse.json(
         { error: "Emergency contact number is too long" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (medicalConditions.length > 500) {
       return NextResponse.json(
         { error: "Medical conditions text is too long (max 500 characters)" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (dojo.length > 100) {
       return NextResponse.json(
         { error: "Dojo name is too long (max 100 characters)" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -261,35 +263,35 @@ export async function POST(request: Request) {
     if (email && !isValidEmail(email)) {
       return NextResponse.json(
         { error: "Please enter a valid email address" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!isValidPhone(whatsapp)) {
       return NextResponse.json(
         { error: "Please enter a valid WhatsApp number (e.g. 0812...)" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (emergencyContactNumber && !isValidPhone(emergencyContactNumber)) {
       return NextResponse.json(
         { error: "Please enter a valid emergency contact number" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!isValidDate(dateOfBirth)) {
       return NextResponse.json(
         { error: "Please enter a valid date of birth" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!isValidDate(lastGradingDate)) {
       return NextResponse.json(
         { error: "Please enter a valid last grading date" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -297,14 +299,14 @@ export async function POST(request: Request) {
     if (password.length < 8) {
       return NextResponse.json(
         { error: "Password must be at least 8 characters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (password !== passwordConfirm) {
       return NextResponse.json(
         { error: "Passwords do not match" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -313,7 +315,7 @@ export async function POST(request: Request) {
     if (rank && !VALID_RANKS.includes(rank)) {
       return NextResponse.json(
         { error: "Please select a valid rank" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -351,7 +353,7 @@ export async function POST(request: Request) {
     console.error("Registration proxy error:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred during registration." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

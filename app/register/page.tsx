@@ -131,7 +131,7 @@ export default function RegisterPage() {
       setError("Password is too long (max 128 characters)");
       return false;
     }
-    if  (formData.emergency_contact_name.length > 100) {
+    if (formData.emergency_contact_name.length > 100) {
       setError("Emergency contact name is too long (max 100 characters)");
       return false;
     }
@@ -153,7 +153,9 @@ export default function RegisterPage() {
     ];
     for (const field of textFields) {
       if (field !== sanitize(field)) {
-        setError("Invalid characters detected. Please remove special characters.");
+        setError(
+          "Invalid characters detected. Please remove special characters.",
+        );
         return false;
       }
     }
@@ -190,7 +192,10 @@ export default function RegisterPage() {
 
     // Emergency Contact Number validation (if provided)
     if (formData.emergency_contact_number) {
-      const cleanedEmergency = formData.emergency_contact_number.replace(/[\s\-().]/g, "");
+      const cleanedEmergency = formData.emergency_contact_number.replace(
+        /[\s\-().]/g,
+        "",
+      );
       if (!phoneRegex.test(cleanedEmergency)) {
         setError("Please enter a valid Emergency Contact number");
         return false;

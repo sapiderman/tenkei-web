@@ -26,8 +26,7 @@ const schedules: Schedule[] = [
     location: "https://maps.app.goo.gl/fqy3Cek7FYJbf8Bj6",
     time: "Tuesdays and Thursdays: 1600-1800. Saturday Children: 1100-1200, Saturday Adults: 1300-1500, Saturday Weapons Class: 1530-1640",
     contact: "Lia: +62-856-9329-55-four-five, April: +62-896-5227-71-zero-five",
-    ig: "https://www.instagram.com/tenkeiaikidoui"
-
+    ig: "https://www.instagram.com/tenkeiaikidoui",
   },
   {
     title: "Tenkei Taman Menteng",
@@ -50,7 +49,7 @@ const schedules: Schedule[] = [
     location: "https://maps.app.goo.gl/7u5St4X79yG8h4H27",
     time: "Tuesdays: 2000-2200, Thursdays Weapons Class: 2000-2200",
     contact: "Muhammad: +62 899-9811-7-five-nine",
-    ig: "https://www.instagram.com/natsuaikidojo"
+    ig: "https://www.instagram.com/natsuaikidojo",
   },
 ];
 
@@ -91,12 +90,17 @@ export default function Dojo() {
             <p>{schedule.time}</p>
             <p>{schedule.contact}</p>
             {schedule.ig && (
-              <Link
-                className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-                href={schedule.ig}
-              >
-                {schedule.ig}
-              </Link>
+              <>
+                <p>
+                  ig:{" "}
+                  <Link
+                    className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                    href={schedule.ig}
+                  >
+                    {schedule.ig}
+                  </Link>
+                </p>
+              </>
             )}
           </div>
         ))}
