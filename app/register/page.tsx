@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, ChangeEvent, FormEvent } from "react";
 import { Turnstile } from "@marsidev/react-turnstile";
+import { filterXSS } from "xss";
 
 interface RegisterFormData {
   name: string;
@@ -44,6 +45,48 @@ const RANK_OPTIONS = [
   "Yondan (4th Dan)",
   "Godan (5th Dan)",
 ];
+
+const XSS_OPTIONS = {
+  whiteList: {},
+  stripIgnoreTag: true,
+  stripIgnoreTagBody: ["script", "style"],
+};
+
+const stripControlChars = (value: string) =>
+  value
+    .replace(/\r?\n/g, " ")
+    .replace(/\t/g, " ")
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]+/g, "");
+
+const sanitizeTextInput = (value: string) =>
+  stripControlChars(filterXSS(value.trim(), XSS_OPTIONS));
+
+const sanitizePhoneInput = (value: string) =>
+  stripControlChars(value.replace(/[^\d+\s().-]/g, "").trim());
+
+const sanitizeDateInput = (value: string) =>
+  stripControlChars(value.replace(/[^0-9-]/g, "").trim());
+
+const sanitizePasswordInput = (value: string) => stripControlChars(value);
+
+const sanitizeToken = (value: string) => stripControlChars(value.trim());
+
+const buildSanitizedPayload = (data: RegisterFormData) => ({
+  name: sanitizeTextInput(data.name),
+  email: sanitizeTextInput(data.email),
+  whatsapp: sanitizePhoneInput(data.whatsapp),
+  date_of_birth: sanitizeDateInput(data.date_of_birth),
+  password: sanitizePasswordInput(data.password),
+  password_confirm: sanitizePasswordInput(data.password_confirm),
+  dojo: sanitizeTextInput(data.dojo),
+  rank: sanitizeTextInput(data.rank),
+  last_grading_date: sanitizeDateInput(data.last_grading_date),
+  emergency_contact_name: sanitizeTextInput(data.emergency_contact_name),
+  emergency_contact_number: sanitizePhoneInput(data.emergency_contact_number),
+  medical_conditions: sanitizeTextInput(data.medical_conditions),
+  consent_datastore: data.consent_datastore,
+  consent_marketing: data.consent_marketing,
+});
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState<RegisterFormData>({
@@ -90,30 +133,55 @@ export default function RegisterPage() {
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
-    const { name, value, type } = e.target;
+    const { name, type, value } = e.target;
 
     if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData((prev: RegisterFormData) => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData((prev: RegisterFormData) => ({ ...prev, [name]: value }));
+      return;
+    }
+
+    let sanitizedValue = value;
+
+    switch (name) {
+      case "password":
+      case "password_confirm":
+        sanitizedValue = sanitizePasswordInput(value);
+        break;
+      case "whatsapp":
+      case "emergency_contact_number":
+        sanitizedValue = sanitizePhoneInput(value);
+        break;
+      case "date_of_birth":
+      case "last_grading_date":
+        sanitizedValue = sanitizeDateInput(value);
+        break;
+      case "rank":
+        sanitizedValue = sanitizeTextInput(value);
+        break;
+      default:
+        sanitizedValue = sanitizeTextInput(value);
+    }
+
+    setFormData((prev: RegisterFormData) => ({ ...prev, [name]: sanitizedValue }));
+
+    if (name === "dojo") {
+      setDojoSearch(sanitizedValue);
     }
   };
 
   const handleDojoSelect = (dojo: string) => {
-    setFormData((prev: RegisterFormData) => ({ ...prev, dojo }));
-    setDojoSearch(dojo);
+    const sanitizedDojo = sanitizeTextInput(dojo);
+    setFormData((prev: RegisterFormData) => ({ ...prev, dojo: sanitizedDojo }));
+    setDojoSearch(sanitizedDojo);
     setDojoOpen(false);
   };
 
-  const validateForm = (): boolean => {
-    // Security: Sanitize inputs - remove potential XSS characters
-    const sanitize = (str: string) =>
-      str
-        .replace(/[<>]/g, "")
-        .replace(/javascript:/gi, "")
-        .replace(/on\w+=/gi, "");
+  const handleTurnstileSuccess = (token: string) => {
+    setTurnstileToken(sanitizeToken(token));
+  };
 
+  const validateForm = (): boolean => {
     // Security: Basic length checks to prevent massive payloads
     if (formData.name.length > 100) {
       setError("Name is too long (max 100 characters)");
@@ -150,9 +218,11 @@ export default function RegisterPage() {
       formData.email,
       formData.emergency_contact_name,
       formData.medical_conditions,
+      formData.dojo,
+      formData.rank,
     ];
     for (const field of textFields) {
-      if (field !== sanitize(field)) {
+      if (field && field !== sanitizeTextInput(field)) {
         setError(
           "Invalid characters detected. Please remove special characters.",
         );
@@ -233,7 +303,7 @@ export default function RegisterPage() {
       setError("You must consent to data storage to register");
       return false;
     }
-    if (!turnstileToken) {
+    if (!sanitizeToken(turnstileToken)) {
       setError("Please complete the security challenge");
       return false;
     }
@@ -252,14 +322,15 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
+      const sanitizedSubmission = buildSanitizedPayload(formData);
       const response = await fetch("/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...formData,
-          "cf-turnstile-response": turnstileToken,
+          ...sanitizedSubmission,
+          "cf-turnstile-response": sanitizeToken(turnstileToken),
         }),
       });
 
@@ -492,9 +563,9 @@ export default function RegisterPage() {
                     name="dojo"
                     value={dojoSearch}
                     onChange={(e) => {
-                      const val = e.target.value;
-                      setDojoSearch(val);
-                      setFormData((prev) => ({ ...prev, dojo: val }));
+                      const sanitizedValue = sanitizeTextInput(e.target.value);
+                      setDojoSearch(sanitizedValue);
+                      setFormData((prev) => ({ ...prev, dojo: sanitizedValue }));
                       setDojoOpen(true);
                     }}
                     onFocus={() => setDojoOpen(true)}
@@ -666,7 +737,7 @@ export default function RegisterPage() {
                   ? "1x00000000000000000000AA"
                   : "")
               }
-              onSuccess={setTurnstileToken}
+              onSuccess={handleTurnstileSuccess}
             />
           </div>
 

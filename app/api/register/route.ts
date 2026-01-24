@@ -32,11 +32,16 @@ function sanitizeString(input: unknown): string {
   const trimmed = input.trim();
   // Use xss library to strip all HTML tags (whitelist: {})
   // This matches the previous strictness but is more robust than regex
-  return filterXSS(trimmed, {
+  const cleaned = filterXSS(trimmed, {
     whiteList: {},
     stripIgnoreTag: true,
-    stripIgnoreTagBody: ["script", "style"]
+    stripIgnoreTagBody: ["script", "style"],
   });
+  // Normalise control characters to mitigate header/log injection vectors
+  return cleaned
+    .replace(/\r?\n/g, " ")
+    .replace(/\t/g, " ")
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]+/g, "");
 }
 
 /**
@@ -141,8 +146,11 @@ export async function POST(request: Request) {
     const body: RegistrationBody = await request.json();
 
     // 1. Verify Turnstile token first (anti-bot protection)
-    const turnstileToken = body["cf-turnstile-response"];
-    if (typeof turnstileToken !== "string" || !turnstileToken) {
+    const rawTurnstileToken = body["cf-turnstile-response"];
+    const turnstileToken =
+      typeof rawTurnstileToken === "string" ? rawTurnstileToken.trim() : "";
+
+    if (!turnstileToken) {
       return NextResponse.json(
         { error: "Security verification required" },
         { status: 400 },
