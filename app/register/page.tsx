@@ -485,7 +485,9 @@ export default function RegisterPage() {
                     name="dojo"
                     value={dojoSearch}
                     onChange={(e) => {
-                      setDojoSearch(e.target.value);
+                      const val = e.target.value;
+                      setDojoSearch(val);
+                      setFormData((prev) => ({ ...prev, dojo: val }));
                       setDojoOpen(true);
                     }}
                     onFocus={() => setDojoOpen(true)}
@@ -648,7 +650,9 @@ export default function RegisterPage() {
             <Turnstile
               siteKey={
                 process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
-                "1x00000000000000000000AA"
+                (process.env.NODE_ENV === "development"
+                  ? "1x00000000000000000000AA"
+                  : "")
               }
               onSuccess={setTurnstileToken}
             />

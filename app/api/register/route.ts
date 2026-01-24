@@ -122,12 +122,18 @@ interface RegistrationBody {
 }
 
 export async function POST(request: Request) {
-  const TARGET_API_URL = process.env.BE_API_URL || "example.com/api/register";
+  const TARGET_API_URL = process.env.BE_API_URL;
+
+  if (!TARGET_API_URL) {
+    console.error("Server configuration error: BE_API_URL is missing");
+    return NextResponse.json(
+      { error: "Internal server configuration error" },
+      { status: 500 }
+    );
+  }
 
   try {
     const body: RegistrationBody = await request.json();
-
-    // === SERVER-SIDE VALIDATION ===
 
     // 1. Verify Turnstile token first (anti-bot protection)
     const turnstileToken = body["cf-turnstile-response"];
