@@ -318,7 +318,7 @@ export async function POST(request: Request) {
       medical_conditions: medicalConditions,
       consent_datastore: consentDatastore,
       consent_marketing: consentMarketing,
-      cf_turnstile_response: turnstileToken, 
+      cf_turnstile_response: turnstileToken,
     };
 
     const response = await fetch(TARGET_API_URL, {
