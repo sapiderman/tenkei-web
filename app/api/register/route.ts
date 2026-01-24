@@ -19,9 +19,14 @@ const VALID_RANKS = [
   "Godan (5th Dan)",
 ];
 
-// Sanitize string input - remove potential XSS/injection characters
+/**
+ * Sanitize string input to prevent basic XSS and injection attacks.
+ * Returns an empty string if input is not a string or is undefined.
+ */
 function sanitizeString(input: unknown): string {
-  if (typeof input !== "string") return "";
+  if (typeof input !== "string") {
+    return "";
+  }
   return input
     .trim()
     .replace(/[<>]/g, "") // Remove HTML brackets
@@ -29,34 +34,53 @@ function sanitizeString(input: unknown): string {
     .replace(/on\w+=/gi, ""); // Remove event handlers like onclick=
 }
 
-// Validate email format
+/**
+ * Validates email format using a standard regex.
+ * More robust than simple checks but permissive enough for valid emails.
+ */
 function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Regex: 
+  // 1. No whitespace or @ in local part
+  // 2. @ symbol
+  // 3. No whitespace or @ in domain part
+  // 4. Dot
+  // 5. At least 2 chars for TLD
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   return emailRegex.test(email);
 }
 
-// Validate phone number format (international)
+/**
+ * Validates phone number format.
+ * Accepts international formats, strips formatting chars before check.
+ * Min 7 digits, Max 15 digits (E.164 standard is max 15).
+ */
 function isValidPhone(phone: string): boolean {
-  // Accepts formats like: +1234567890, 1234567890, +62 812 3456 7890
-  // Must have 7-15 digits, optionally starting with +
+  if (!phone) return false;
+  // Remove spaces, hyphens, parentheses, and dots
   const cleaned = phone.replace(/[\s\-().]/g, "");
+  // Optional '+' followed by 7 to 15 digits
   const phoneRegex = /^\+?\d{7,15}$/;
   return phoneRegex.test(cleaned);
 }
 
-// Validate date format (YYYY-MM-DD)
+/**
+ * Validates date format (YYYY-MM-DD).
+ * Checks if it's a valid date and not in the future.
+ */
 function isValidDate(dateStr: string): boolean {
   if (!dateStr) return true; // Optional field
   const date = new Date(dateStr);
   return !isNaN(date.getTime()) && date <= new Date();
 }
 
-// Verify Cloudflare Turnstile token
+/**
+ * Verifies Cloudflare Turnstile token.
+ */
 async function verifyTurnstileToken(token: string): Promise<boolean> {
   const secretKey = process.env.TURNSTILE_SECRET_KEY;
   if (!secretKey) {
     console.error("TURNSTILE_SECRET_KEY not configured");
-    return false;
+    return false; // Fail secure
   }
 
   try {
@@ -123,19 +147,26 @@ export async function POST(request: Request) {
     }
 
     // 2. Sanitize and validate all string inputs
+    // We treat everything as unknown first, then sanitize to guaranteed strings
     const name = sanitizeString(body.name);
     const email = sanitizeString(body.email);
     const whatsapp = sanitizeString(body.whatsapp);
     const dateOfBirth = sanitizeString(body.date_of_birth);
+    // Passwords are NOT sanitized (special chars are valid), but type checked
     const password = typeof body.password === "string" ? body.password : "";
     const passwordConfirm =
       typeof body.password_confirm === "string" ? body.password_confirm : "";
+
+    // Dojo: Allow custom names, just sanitize
     const dojo = sanitizeString(body.dojo);
+
     const rank = sanitizeString(body.rank);
     const lastGradingDate = sanitizeString(body.last_grading_date);
     const emergencyContactName = sanitizeString(body.emergency_contact_name);
     const emergencyContactNumber = sanitizeString(body.emergency_contact_number);
     const medicalConditions = sanitizeString(body.medical_conditions);
+
+    // Booleans
     const consentDatastore = body.consent_datastore === true;
     const consentMarketing = body.consent_marketing === true;
 
@@ -168,7 +199,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 4. Length validation (prevent payload attacks)
+    // 4. Length validation (prevent payload attacks / DB truncation issues)
     if (name.length > 100) {
       return NextResponse.json(
         { error: "Name is too long (max 100 characters)" },
@@ -176,6 +207,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // Standard email max length in databases is often 255, but 100 is safe strict limit for this app
     if (email.length > 100) {
       return NextResponse.json(
         { error: "Email is too long (max 100 characters)" },
@@ -218,6 +250,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (dojo.length > 100) {
+      return NextResponse.json(
+        { error: "Dojo name is too long (max 100 characters)" },
+        { status: 400 }
+      );
+    }
+
     // 5. Format validation
     if (email && !isValidEmail(email)) {
       return NextResponse.json(
@@ -254,7 +293,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 6. Password validation
+    // 6. Password validation (Length ONLY, as per current best practices if not strict)
     if (password.length < 8) {
       return NextResponse.json(
         { error: "Password must be at least 8 characters" },
@@ -270,13 +309,7 @@ export async function POST(request: Request) {
     }
 
     // 7. Validate dojo and rank
-    if (dojo.length > 100) {
-      return NextResponse.json(
-        { error: "Dojo name is too long (max 100 characters)" },
-        { status: 400 }
-      );
-    }
-
+    // Dojo can be anything, but we already length checked it above (>100)
     if (rank && !VALID_RANKS.includes(rank)) {
       return NextResponse.json(
         { error: "Please select a valid rank" },

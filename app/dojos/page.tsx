@@ -90,6 +90,14 @@ export default function Dojo() {
             </Link>
             <p>{schedule.time}</p>
             <p>{schedule.contact}</p>
+            {schedule.ig && (
+              <Link
+                className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                href={schedule.ig}
+              >
+                {schedule.ig}
+              </Link>
+            )}
           </div>
         ))}
         <JoinButton />
