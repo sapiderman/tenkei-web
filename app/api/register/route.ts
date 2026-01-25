@@ -352,6 +352,11 @@ export async function POST(request: Request) {
     // Forward relevant headers to backend
     const headers = new Headers();
     headers.set("Content-Type", "application/json");
+    headers.set("Accept", "application/json");
+    headers.set("Accept-Language", "en");
+    if (process.env.CLOUDFLARE_BYPASS_SECRET) {
+      headers.set("x-cf-bypass", process.env.CLOUDFLARE_BYPASS_SECRET);
+    }
 
     const userAgent = request.headers.get("user-agent");
     if (userAgent) headers.set("User-Agent", userAgent);
