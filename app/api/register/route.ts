@@ -85,6 +85,26 @@ function isValidDate(dateStr: string): boolean {
   return candidate <= today;
 }
 
+/**
+ * Validates Cloudflare Turnstile token format.
+ * Turnstile tokens are base64url-encoded strings.
+ * Length: typical tokens are 2000-4000 chars, max 5000 for safety.
+ * Character set: A-Z, a-z, 0-9, hyphen, underscore, plus period and equals for compatibility.
+ */
+function isValidTurnstileToken(token: string): boolean {
+  if (!token) return false;
+
+  // Check length (must be reasonable for a Turnstile token)
+  if (token.length < 20 || token.length > 5000) {
+    return false;
+  }
+
+  // Validate character set: standard base64url (A-Z, a-z, 0-9, -, _)
+  // Also allow . and = for compatibility with variations
+  const validCharRegex = /^[A-Za-z0-9_=.\-]+$/;
+  return validCharRegex.test(token);
+}
+
 interface RegistrationBody {
   name?: unknown;
   email?: unknown;
@@ -125,6 +145,14 @@ export async function POST(request: Request) {
     if (!turnstileToken) {
       return NextResponse.json(
         { error: "Security verification required" },
+        { status: 400 },
+      );
+    }
+
+    // Validate turnstile token format
+    if (!isValidTurnstileToken(turnstileToken)) {
+      return NextResponse.json(
+        { error: "Invalid security verification token" },
         { status: 400 },
       );
     }
