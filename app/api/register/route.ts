@@ -318,14 +318,25 @@ export async function POST(request: Request) {
       medical_conditions: medicalConditions,
       consent_datastore: consentDatastore,
       consent_marketing: consentMarketing,
-      cf_turnstile_response: turnstileToken,
+      "cf-turnstile-response": turnstileToken,
     };
+
+    // Forward relevant headers to backend
+    const headers = new Headers();
+    headers.set("Content-Type", "application/json");
+
+    const userAgent = request.headers.get("user-agent");
+    if (userAgent) headers.set("User-Agent", userAgent);
+
+    const xForwardedFor = request.headers.get("x-forwarded-for");
+    if (xForwardedFor) headers.set("X-Forwarded-For", xForwardedFor);
+
+    const acceptLanguage = request.headers.get("accept-language");
+    if (acceptLanguage) headers.set("Accept-Language", acceptLanguage);
 
     const response = await fetch(TARGET_API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify(sanitizedPayload),
     });
 
