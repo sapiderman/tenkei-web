@@ -369,7 +369,24 @@ export async function POST(request: Request) {
     });
 
     // Handle non-JSON responses gracefully
-    const data = await response.json().catch(() => ({}));
+    const responseText = await response.text();
+    let data: Record<string, unknown> = {};
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      // Response was not JSON
+      data = { rawResponse: responseText };
+    }
+
+    // Log backend errors for debugging
+    if (!response.ok) {
+      console.error("Backend registration error:", {
+        status: response.status,
+        statusText: response.statusText,
+        body: data,
+        targetUrl: TARGET_API_URL,
+      });
+    }
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
