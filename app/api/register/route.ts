@@ -89,7 +89,7 @@ function isValidDate(dateStr: string): boolean {
  * Validates Cloudflare Turnstile token format.
  * Turnstile tokens are base64url-encoded strings.
  * Length: typical tokens are 2000-4000 chars, max 5000 for safety.
- * Character set: A-Z, a-z, 0-9, hyphen, underscore, and period.
+ * Character set: A-Z, a-z, 0-9, hyphen, underscore, plus period and equals for compatibility.
  */
 function isValidTurnstileToken(token: string): boolean {
   if (!token) return false;
@@ -99,9 +99,9 @@ function isValidTurnstileToken(token: string): boolean {
     return false;
   }
 
-  // Validate character set: base64url uses A-Z, a-z, 0-9, -, _, and .
-  // Also allow = for padding (though base64url typically doesn't use it)
-  const validCharRegex = /^[A-Za-z0-9_\-.=]+$/;
+  // Validate character set: standard base64url (A-Z, a-z, 0-9, -, _)
+  // Also allow . and = for compatibility with variations
+  const validCharRegex = /^[A-Za-z0-9_=.\-]+$/;
   return validCharRegex.test(token);
 }
 
