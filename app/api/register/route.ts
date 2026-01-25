@@ -85,36 +85,6 @@ function isValidDate(dateStr: string): boolean {
   return candidate <= today;
 }
 
-/**
- * Verifies Cloudflare Turnstile token.
- */
-async function verifyTurnstileToken(token: string): Promise<boolean> {
-  const secretKey = process.env.TURNSTILE_SECRET_KEY;
-  if (!secretKey) {
-    console.error("TURNSTILE_SECRET_KEY not configured");
-    return false; // Fail secure
-  }
-
-  try {
-    const response = await fetch(
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          secret: secretKey,
-          response: token,
-        }),
-      },
-    );
-    const data = await response.json();
-    return data.success === true;
-  } catch (error) {
-    console.error("Turnstile verification error:", error);
-    return false;
-  }
-}
-
 interface RegistrationBody {
   name?: unknown;
   email?: unknown;
@@ -147,7 +117,7 @@ export async function POST(request: Request) {
   try {
     const body: RegistrationBody = await request.json();
 
-    // 1. Verify Turnstile token first (anti-bot protection)
+    // 1. Get turnstile token
     const rawTurnstileToken = body["cf-turnstile-response"];
     const turnstileToken =
       typeof rawTurnstileToken === "string" ? rawTurnstileToken.trim() : "";
@@ -155,14 +125,6 @@ export async function POST(request: Request) {
     if (!turnstileToken) {
       return NextResponse.json(
         { error: "Security verification required" },
-        { status: 400 },
-      );
-    }
-
-    const isValidToken = await verifyTurnstileToken(turnstileToken);
-    if (!isValidToken) {
-      return NextResponse.json(
-        { error: "Security verification failed. Please try again." },
         { status: 400 },
       );
     }
@@ -356,6 +318,7 @@ export async function POST(request: Request) {
       medical_conditions: medicalConditions,
       consent_datastore: consentDatastore,
       consent_marketing: consentMarketing,
+      cf_turnstile_response: turnstileToken,
     };
 
     const response = await fetch(TARGET_API_URL, {
