@@ -43,6 +43,9 @@ const stripControlChars = (value: string) =>
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]+/g, "");
 
 const sanitizeTextInput = (value: string) =>
+  stripControlChars(filterXSS(value, XSS_OPTIONS));
+
+const sanitizeTextInputForSubmission = (value: string) =>
   stripControlChars(filterXSS(value.trim(), XSS_OPTIONS));
 
 const sanitizePhoneInput = (value: string) =>
@@ -56,18 +59,18 @@ const sanitizePasswordInput = (value: string) => stripControlChars(value);
 const sanitizeToken = (value: string) => stripControlChars(value.trim());
 
 const buildSanitizedPayload = (data: RegisterFormData) => ({
-  name: sanitizeTextInput(data.name),
-  email: sanitizeTextInput(data.email),
+  name: sanitizeTextInputForSubmission(data.name),
+  email: sanitizeTextInputForSubmission(data.email),
   whatsapp: sanitizePhoneInput(data.whatsapp),
   date_of_birth: sanitizeDateInput(data.date_of_birth),
   password: sanitizePasswordInput(data.password),
   password_confirm: sanitizePasswordInput(data.password_confirm),
-  dojo: sanitizeTextInput(data.dojo),
-  rank: sanitizeTextInput(data.rank),
+  dojo: sanitizeTextInputForSubmission(data.dojo),
+  rank: sanitizeTextInputForSubmission(data.rank),
   last_grading_date: sanitizeDateInput(data.last_grading_date),
-  emergency_contact_name: sanitizeTextInput(data.emergency_contact_name),
+  emergency_contact_name: sanitizeTextInputForSubmission(data.emergency_contact_name),
   emergency_contact_number: sanitizePhoneInput(data.emergency_contact_number),
-  medical_conditions: sanitizeTextInput(data.medical_conditions),
+  medical_conditions: sanitizeTextInputForSubmission(data.medical_conditions),
   consent_datastore: data.consent_datastore,
   consent_marketing: data.consent_marketing,
 });
