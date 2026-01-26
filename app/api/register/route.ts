@@ -99,9 +99,9 @@ function isValidTurnstileToken(token: string): boolean {
     return false;
   }
 
-  // Validate character set: standard base64url (A-Z, a-z, 0-9, -, _)
+  // Validate character set: base64/base64url variants (A-Z, a-z, 0-9, -, _, +, /)
   // Also allow . and = for compatibility with variations
-  const validCharRegex = /^[A-Za-z0-9_=.\-]+$/;
+  const validCharRegex = /^[A-Za-z0-9_=.\-+\/]+$/;
   return validCharRegex.test(token);
 }
 
@@ -120,7 +120,7 @@ interface RegistrationBody {
   medical_conditions?: unknown;
   consent_datastore?: unknown;
   consent_marketing?: unknown;
-  "cf-turnstile-response"?: unknown;
+  "cf_turnstile_response"?: unknown;
 }
 
 export async function POST(request: Request) {
@@ -137,8 +137,8 @@ export async function POST(request: Request) {
   try {
     const body: RegistrationBody = await request.json();
 
-    // 1. Get turnstile token
-    const rawTurnstileToken = body["cf-turnstile-response"];
+    // 1. Get turnstile token (use underscore key)
+    const rawTurnstileToken = body["cf_turnstile_response"];
     const turnstileToken =
       typeof rawTurnstileToken === "string" ? rawTurnstileToken.trim() : "";
 
@@ -346,7 +346,7 @@ export async function POST(request: Request) {
       medical_conditions: medicalConditions,
       consent_datastore: consentDatastore,
       consent_marketing: consentMarketing,
-      "cf-turnstile-response": turnstileToken,
+      "cf_turnstile_response": turnstileToken,
     };
 
     // Forward relevant headers to backend

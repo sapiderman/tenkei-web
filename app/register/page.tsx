@@ -320,7 +320,7 @@ export default function RegisterPage() {
         },
         body: JSON.stringify({
           ...sanitizedSubmission,
-          "cf-turnstile-response": sanitizeToken(turnstileToken),
+          cf_turnstile_response: sanitizeToken(turnstileToken),
         }),
       });
 
