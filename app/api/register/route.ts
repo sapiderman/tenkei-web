@@ -338,6 +338,7 @@ export async function POST(request: Request) {
       whatsapp,
       date_of_birth: dateOfBirth,
       password,
+      password_confirm: passwordConfirm,
       dojo,
       rank,
       last_grading_date: lastGradingDate,
