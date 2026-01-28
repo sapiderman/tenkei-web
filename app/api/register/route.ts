@@ -384,16 +384,6 @@ export async function POST(request: Request) {
       data = { rawResponse: responseText };
     }
 
-    // Log backend errors for debugging
-    if (!response.ok) {
-      console.error("Backend registration error:", {
-        status: response.status,
-        statusText: response.statusText,
-        body: data,
-        targetUrl: TARGET_API_URL,
-      });
-    }
-
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error("Registration proxy error:", error);
