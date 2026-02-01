@@ -369,14 +369,14 @@ export default function RegisterPage() {
               Registration Complete!
             </h3>
             <p className="text-gray-600 mb-4">
-              Welcome to the dojo,{" "}
+              Welcome to the Tenkeiaikidojo,{" "}
               <span className="text-emerald-600 font-semibold">
                 {formData.name}
               </span>
               !
             </p>
             <p className="text-gray-600 mb-6">
-              A dojo cho will be in concact shortly. See you on the mat!
+              A dojocho will be in contact shortly. See you on the mat!
             </p>
             <Link
               href="/"
