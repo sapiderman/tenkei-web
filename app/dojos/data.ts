@@ -45,4 +45,5 @@ export const fees = {
   "Registration Fee": "Rp 250,000 (already includes annual fee)",
   "Annual Fee": "Rp 150,000",
   "Monthly Fee (regular)": "Rp 200,000",
+  "Examination Fee": "Rp 150,000 (students Rp 100,000)",
 };
