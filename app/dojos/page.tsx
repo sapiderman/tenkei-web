@@ -73,12 +73,17 @@ export default function Dojo() {
               <thead>
                 <tr className="border-b border-gray-300">
                   <th className="py-2 font-semibold text-gray-900">Type</th>
-                  <th className="py-2 pl-4 font-semibold text-gray-900">Cost</th>
+                  <th className="py-2 pl-4 font-semibold text-gray-900">
+                    Cost
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {Object.entries(fees).map(([key, value]) => (
-                  <tr key={key} className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
+                  <tr
+                    key={key}
+                    className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"
+                  >
                     <td className="py-2 text-gray-700">{key}</td>
                     <td className="py-2 pl-4 text-gray-600">{value}</td>
                   </tr>

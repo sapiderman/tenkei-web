@@ -120,7 +120,7 @@ interface RegistrationBody {
   medical_conditions?: unknown;
   consent_datastore?: unknown;
   consent_marketing?: unknown;
-  "cf_turnstile_response"?: unknown;
+  cf_turnstile_response?: unknown;
 }
 
 export async function POST(request: Request) {
@@ -347,7 +347,7 @@ export async function POST(request: Request) {
       medical_conditions: medicalConditions,
       consent_datastore: consentDatastore,
       consent_marketing: consentMarketing,
-      "cf_turnstile_response": turnstileToken,
+      cf_turnstile_response: turnstileToken,
     };
 
     // Forward relevant headers to backend
@@ -382,6 +382,16 @@ export async function POST(request: Request) {
     } catch {
       // Response was not JSON
       data = { rawResponse: responseText };
+    }
+
+    // Log backend errors for debugging
+    if (!response.ok) {
+      console.error("Backend registration error:", {
+        status: response.status,
+        statusText: response.statusText,
+        body: data,
+        targetUrl: TARGET_API_URL,
+      });
     }
 
     return NextResponse.json(data, { status: response.status });
