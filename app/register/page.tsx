@@ -68,7 +68,9 @@ const buildSanitizedPayload = (data: RegisterFormData) => ({
   dojo: sanitizeTextInputForSubmission(data.dojo),
   rank: sanitizeTextInputForSubmission(data.rank),
   last_grading_date: sanitizeDateInput(data.last_grading_date),
-  emergency_contact_name: sanitizeTextInputForSubmission(data.emergency_contact_name),
+  emergency_contact_name: sanitizeTextInputForSubmission(
+    data.emergency_contact_name,
+  ),
   emergency_contact_number: sanitizePhoneInput(data.emergency_contact_number),
   medical_conditions: sanitizeTextInputForSubmission(data.medical_conditions),
   consent_datastore: data.consent_datastore,
@@ -369,14 +371,14 @@ export default function RegisterPage() {
               Registration Complete!
             </h3>
             <p className="text-gray-600 mb-4">
-              Welcome to the dojo,{" "}
+              Welcome to the Tenkeiaikidojo,{" "}
               <span className="text-emerald-600 font-semibold">
                 {formData.name}
               </span>
               !
             </p>
             <p className="text-gray-600 mb-6">
-              A dojo cho will be in concact shortly. See you on the mat!
+              A dojocho will be in contact shortly. See you on the mat!
             </p>
             <Link
               href="/"
