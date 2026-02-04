@@ -19,7 +19,7 @@ function sanitizeString(input: unknown): string {
     stripIgnoreTag: true,
     stripIgnoreTagBody: ["script", "style"],
   });
-  // Normalise control characters to mitigate header/log injection vectors
+  // Normalize control characters to mitigate header/log injection vectors
   return cleaned
     .replace(/\r?\n/g, " ")
     .replace(/\t/g, " ")

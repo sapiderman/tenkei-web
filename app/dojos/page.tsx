@@ -92,7 +92,7 @@ export default function Dojo() {
             </table>
           </div>
           <p className="mt-2 text-sm text-gray-500 italic">
-            Note: All fees are subject to change without prior notice. Yudansha examination fee depens on the Yen exchange rate.
+            Note: All fees are subject to change without prior notice. Yudansha examination fee depends on the Yen exchange rate.
           </p>
         </div>
         <JoinButton />
