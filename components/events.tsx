@@ -1,9 +1,14 @@
+import { getT } from "../app/i18n"; // Adjust path as needed
+
 import Image from "next/image";
 
-export default function Events() {
+export default async function Events({ lang }: { lang: string }) {
+  const { t } = await getT(lang, "common");
   return (
     <div>
-      <h2 className="flex justify-center mb-5 text-5xl font-bold">Events </h2>
+      <h2 className="flex justify-center mb-5 text-5xl font-bold">
+        {t("events")}{" "}
+      </h2>
       <div className="flex justify-center w-full h-[600px]">
         <iframe
           src="/happyNewYear2026.html"

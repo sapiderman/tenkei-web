@@ -46,8 +46,7 @@ const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = () => {
         closes: "16:40",
       },
     ],
-    hasMap:
-      "https://maps.app.goo.gl/fqy3Cek7FYJbf8Bj6",
+    hasMap: "https://maps.app.goo.gl/fqy3Cek7FYJbf8Bj6",
     priceRange: "$",
     areaServed: {
       "@type": "AdministrativeArea",

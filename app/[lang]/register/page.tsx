@@ -1,4 +1,19 @@
-"use client";
+import type { Metadata } from "next";
+import { getT } from "../../../i18n"; // Adjust path for i18n helper
+
+export async function generateMetadata({
+  params: { lang },
+}: {
+  params: { lang: string };
+}): Promise<Metadata> {
+  const { t } = await getT(lang, "common");
+  return {
+    title: t("register_page_title"),
+    description: t("register_page_description"),
+  };
+}
+
+("use client");
 
 import { useState, useRef, useEffect, ChangeEvent, FormEvent } from "react";
 import Link from "next/link";
