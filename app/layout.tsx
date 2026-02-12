@@ -47,11 +47,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <LocalBusinessSchema />
+      </head>
       <body className={inter.className} suppressHydrationWarning>
         {children}
         <Analytics />
         <SpeedInsights />
-        <LocalBusinessSchema />
       </body>
     </html>
   );

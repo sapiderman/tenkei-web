@@ -11,7 +11,7 @@ const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = () => {
     name: "Tenkei Aikidojo",
     image: "https://www.tenkeiaikidojo.org/tenkei_logo.png",
     url: "https://www.tenkeiaikidojo.org",
-    telephone: "+62-856-9329-5545", // Lia's number
+    telephone: "+62-856-9329-55-four-five", //
     email: "info@tenkeiaikidojo.org",
     address: {
       "@type": "PostalAddress",
@@ -23,8 +23,8 @@ const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = () => {
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: "-6.360706", // Approximate center of UI Campus
-      longitude: "106.829107",
+      latitude: "-6.365200346599992", // Approximate center of Pusgiwa
+      longitude: "106.82433803237402",
     },
     openingHoursSpecification: [
       {
@@ -46,8 +46,7 @@ const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = () => {
         closes: "16:40",
       },
     ],
-    hasMap:
-      "https://maps.app.goo.gl/fqy3Cek7FYJbf8Bj6",
+    hasMap: "https://maps.app.goo.gl/fqy3Cek7FYJbf8Bj6",
     priceRange: "$",
     areaServed: {
       "@type": "AdministrativeArea",
