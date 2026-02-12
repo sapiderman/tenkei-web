@@ -1,9 +1,9 @@
-// middleware.ts
+// proxy.ts
 import { i18n } from "./i18n.config";
 import { i18nRouter } from "next-i18n-router";
 import { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   return i18nRouter(request, i18n);
 }
 

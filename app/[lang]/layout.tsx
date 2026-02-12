@@ -1,6 +1,6 @@
-import { getT } from "../../i18n";
+import { getT } from "../i18n";
 import { dir } from "i18next";
-import { languages } from "../../i18n/settings";
+import { languages } from "../i18n/settings";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";

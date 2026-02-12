@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getT } from "../../i18n"; // Adjust path for i18n helper
+import { getT } from "../i18n"; // Adjust path for i18n helper
 
 import Footer from "@/components/footer"; // Will need to be updated to be language aware
 import Events from "@/components/events"; // Will need to be updated to be language aware
