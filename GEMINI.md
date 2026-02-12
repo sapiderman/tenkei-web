@@ -4,16 +4,16 @@
 
 This is the official website for Tenkei Aikidojo, a martial arts dojo specializing in Aikido. The site provides information about the dojo, classes, instructors, and allows potential students to learn about and connect with the community.
 
-**Live Site**: https://tenkei.vercel.app  
-**Repository**: https://github.com/sapiderman/tenkei-web  
+**Live Site**: <https://tenkei.vercel.app>  
+**Repository**: <https://github.com/sapiderman/tenkei-web>  
 **License**: MIT
 
 ## Tech Stack
 
 ### Core Framework
 
-- **Next.js 14+** (App Router)
-- **React 18+**
+- **Next.js 16+** (App Router)
+- **React 19+**
 - **TypeScript** (strict mode)
 - **Node.js** (required for development)
 
@@ -25,7 +25,7 @@ This is the official website for Tenkei Aikidojo, a martial arts dojo specializi
 
 ### Package Management
 
-- **Yarn** (Berry/v3+) - Primary package manager
+- **Yarn** (v1 / Classic, pinned via Volta) - /?P0.rimary package manager
 - Configuration: `.yarnrc.yml`
 - Lock file: `yarn.lock`
 
@@ -459,10 +459,10 @@ When implementing new features, consider asking:
 
 ### Documentation
 
-- Next.js docs: https://nextjs.org/docs
-- Tailwind CSS: https://tailwindcss.com/docs
-- TypeScript: https://www.typescriptlang.org/docs
-- React: https://react.dev
+- Next.js docs: <https://nextjs.org/docs>
+- Tailwind CSS: <https://tailwindcss.com/docs>
+- TypeScript: <https://www.typescriptlang.org/docs>
+- React: <https://react.dev>
 
 ### Package Updates
 
