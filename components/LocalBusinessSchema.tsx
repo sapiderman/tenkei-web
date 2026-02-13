@@ -15,7 +15,7 @@ const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = () => {
     email: "info@tenkeiaikidojo.org",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Jl. Prof. Dr. Fuad Hassan, Kukusan, Kecamatan Beji",
+      streetAddress: "Gd. pusgiwa, Lt. 1, Kampus Baru Universitas Indonesia,",
       addressLocality: "Depok",
       addressRegion: "Jawa Barat",
       postalCode: "16425",
