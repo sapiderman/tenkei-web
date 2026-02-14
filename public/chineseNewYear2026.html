@@ -31,7 +31,8 @@
         overflow: hidden;
         font-family: "Sora", sans-serif;
         color: var(--ink);
-        background: radial-gradient(circle at 20% 20%, #7a141e, transparent 45%),
+        background:
+          radial-gradient(circle at 20% 20%, #7a141e, transparent 45%),
           radial-gradient(circle at 80% 10%, #b11821, transparent 40%),
           linear-gradient(160deg, var(--red-1), var(--red-2) 45%, #2a0b12 100%);
       }
@@ -59,7 +60,8 @@
         background: radial-gradient(circle at 35% 30%, #ffb3b3, #d61f2c 60%);
         border: 2px solid rgba(247, 227, 166, 0.6);
         border-radius: 45% 45% 40% 40%;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25),
+        box-shadow:
+          0 10px 25px rgba(0, 0, 0, 0.25),
           0 0 25px rgba(245, 193, 90, 0.3);
         animation: float 8s ease-in-out infinite;
       }
@@ -149,7 +151,12 @@
         font-size: clamp(4rem, 14vw, 8.5rem);
         font-weight: 700;
         color: transparent;
-        background: linear-gradient(90deg, var(--gold-2), var(--gold-1), #ffd266);
+        background: linear-gradient(
+          90deg,
+          var(--gold-2),
+          var(--gold-1),
+          #ffd266
+        );
         -webkit-background-clip: text;
         background-clip: text;
         filter: drop-shadow(0 0 22px rgba(245, 193, 90, 0.5));
@@ -260,7 +267,8 @@
         <h1 class="title">Chinese New Year</h1>
         <div class="year">2026</div>
         <p class="subtitle">
-          May the Year of the Horse find you abundant wealth, health and success in everything you do.
+          May the Year of the Horse find you abundant wealth, health and success
+          in everything you do.
         </p>
 
         <div class="horse-mark" aria-hidden="true">
@@ -337,7 +345,12 @@
           ctx.translate(piece.x, piece.y);
           ctx.rotate(piece.rotation);
           ctx.fillStyle = piece.color;
-          ctx.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size);
+          ctx.fillRect(
+            -piece.size / 2,
+            -piece.size / 2,
+            piece.size,
+            piece.size,
+          );
           ctx.restore();
         });
 
