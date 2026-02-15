@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -14,11 +15,11 @@ export async function generateStaticParams() {
   return languages.map((lang) => ({ lang }));
 }
 
-export async function generateMetadata({
-  params: { lang },
-}: {
-  params: { lang: string };
+export async function generateMetadata(props: {
+  params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
+  const params = await props.params;
+  const { lang } = params;
   const { t } = await getT(lang, "common"); // Use 'common' namespace
 
   const title = t("tenkei_aikidojo"); // Assuming a translation key for the title
@@ -53,4 +54,22 @@ export async function generateMetadata({
       images: ["https://www.tenkeiaikidojo.org/tenkei_logo_text.png"],
     },
   };
+}
+
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+
+  return (
+    <>
+      <LocalBusinessSchema />
+      <LanguageSwitcher currentLang={lang} />
+      {children}
+    </>
+  );
 }

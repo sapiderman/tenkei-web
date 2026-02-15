@@ -1,7 +1,7 @@
 import Footer from "@/components/footer";
 import JoinButton from "@/components/joinButton";
 import Image from "next/image";
-import { getT } from "../../../i18n"; // Adjust path for i18n helper
+import { getT } from "@/app/i18n"; // Use alias path
 import type { Metadata } from "next";
 import { fees, schedules } from "./data"; // Keep this import
 

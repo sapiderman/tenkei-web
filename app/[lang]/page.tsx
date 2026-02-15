@@ -4,18 +4,16 @@ import { getT } from "../i18n"; // Adjust path for i18n helper
 
 import Footer from "@/components/footer"; // Will need to be updated to be language aware
 import Events from "@/components/events"; // Will need to be updated to be language aware
-import LanguageSwitcher from "@/components/LanguageSwitcher"; // New language switcher component
 
-export default async function HomePage({
-  params: { lang },
-}: {
-  params: { lang: string };
+export default async function HomePage(props: {
+  params: Promise<{ lang: string }>;
 }) {
+  const params = await props.params;
+  const { lang } = params;
   const { t } = await getT(lang, "common"); // Get translation function for 'common' namespace
 
   return (
     <>
-      <LanguageSwitcher currentLang={lang} /> {/* Add language switcher */}
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
           <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4">

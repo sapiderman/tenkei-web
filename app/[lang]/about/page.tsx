@@ -3,14 +3,14 @@ import Link from "next/link";
 import Footer from "@/components/footer";
 import Yudansha from "@/components/yudansha";
 import Sensei from "@/components/sensei";
-import { getT } from "../../../i18n"; // Adjust path for i18n helper
+import { getT } from "@/app/i18n"; // Use alias path
 import type { Metadata } from "next";
 
-export async function generateMetadata({
-  params: { lang },
-}: {
-  params: { lang: string };
+export async function generateMetadata(props: {
+  params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
+  const params = await props.params;
+  const { lang } = params;
   const { t } = await getT(lang, "common");
   return {
     title: `${t("about_us")} - ${t("tenkei_aikidojo")}`,
@@ -18,11 +18,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function About({
-  params: { lang },
-}: {
-  params: { lang: string };
+export default async function About(props: {
+  params: Promise<{ lang: string }>;
 }) {
+  const params = await props.params;
+  const { lang } = params;
   const { t } = await getT(lang, "common");
   return (
     <>
