@@ -186,143 +186,155 @@
     </div>
 
     <script>
-      // Basic Fireworks implementation on Canvas
-      const canvas = document.getElementById("canvas-container");
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-      let width = window.innerWidth;
-      let height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-
-      // Resize canvas when window resizes
-      window.addEventListener("resize", () => {
-        width = window.innerWidth;
-        height = window.innerHeight;
+      (() => {
+        // Basic Fireworks implementation on Canvas
+        const canvas = document.getElementById("canvas-container");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        let width = window.innerWidth;
+        let height = window.innerHeight;
         canvas.width = width;
         canvas.height = height;
-      });
 
-      // Helper to get random number
-      const random = (min, max) => Math.random() * (max - min) + min;
-
-      // The Particle class (the explosion bits)
-      class Particle {
-        constructor(x, y, color) {
-          this.x = x;
-          this.y = y;
-          this.color = color;
-          // Random velocity in all directions
-          const angle = random(0, Math.PI * 2);
-          const speed = random(1, 5);
-          this.vx = Math.cos(angle) * speed;
-          this.vy = Math.sin(angle) * speed;
-          this.alpha = 1; // Opacity
-          this.friction = 0.98; // Slows down over time
-          this.gravity = 0.05; // Pulls down slightly
-        }
-
-        update() {
-          this.vx *= this.friction;
-          this.vy *= this.friction;
-          this.vy += this.gravity;
-          this.x += this.vx;
-          this.y += this.vy;
-          this.alpha -= 0.01; // Fade out
-        }
-
-        draw() {
-          ctx.save();
-          ctx.globalAlpha = this.alpha;
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-          ctx.fillStyle = this.color;
-          ctx.fill();
-          ctx.restore();
-        }
-      }
-
-      // The Firework class (the rocket going up)
-      class Firework {
-        constructor() {
-          this.x = random(width * 0.1, width * 0.9);
-          this.y = height;
-          this.targetY = random(height * 0.1, height * 0.4);
-          this.speed = random(4, 8);
-          this.color = `hsl(${random(0, 360)}, 100%, 60%)`; // Random bright color
-          this.particles = [];
-          this.exploded = false;
-        }
-
-        update() {
-          if (!this.exploded) {
-            this.y -= this.speed;
-            // If reached target height, explode
-            if (this.y <= this.targetY) {
-              this.explode();
-            }
-          }
-
-          // Update all particles belonging to this firework
-          this.particles.forEach((particle, index) => {
-            particle.update();
-            if (particle.alpha <= 0) {
-              this.particles.splice(index, 1);
-            }
-          });
-        }
-
-        explode() {
-          this.exploded = true;
-          // Create 50 explosion particles
-          for (let i = 0; i < 50; i++) {
-            this.particles.push(new Particle(this.x, this.y, this.color));
-          }
-        }
-
-        draw() {
-          if (!this.exploded) {
-            // Draw the rocket going up
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-          }
-          // Draw particles
-          this.particles.forEach((particle) => particle.draw());
-        }
-      }
-
-      let fireworks = [];
-
-      function animate() {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          return;
-        }
-
-        // Create a slight trail effect by not clearing completely
-        ctx.fillStyle = "rgba(15, 12, 41, 0.2)";
-        ctx.fillRect(0, 0, width, height);
-
-        // Randomly launch new fireworks
-        if (Math.random() < 0.03) {
-          // Adjust 0.03 to change frequency
-          fireworks.push(new Firework());
-        }
-
-        fireworks.forEach((firework, index) => {
-          firework.update();
-          firework.draw();
-          // Remove dead fireworks
-          if (firework.exploded && firework.particles.length === 0) {
-            fireworks.splice(index, 1);
-          }
+        // Resize canvas when window resizes
+        window.addEventListener("resize", () => {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          canvas.width = width;
+          canvas.height = height;
         });
 
-        requestAnimationFrame(animate);
-      }
+        // Helper to get random number
+        const random = (min, max) => Math.random() * (max - min) + min;
 
-      animate();
+        // The Particle class (the explosion bits)
+        class Particle {
+          constructor(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            // Random velocity in all directions
+            const angle = random(0, Math.PI * 2);
+            const speed = random(1, 5);
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.alpha = 1; // Opacity
+            this.friction = 0.98; // Slows down over time
+            this.gravity = 0.05; // Pulls down slightly
+          }
+
+          update() {
+            this.vx *= this.friction;
+            this.vy *= this.friction;
+            this.vy += this.gravity;
+            this.x += this.vx;
+            this.y += this.vy;
+            this.alpha -= 0.01; // Fade out
+          }
+
+          draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+
+        // The Firework class (the rocket going up)
+        class Firework {
+          constructor() {
+            this.x = random(width * 0.1, width * 0.9);
+            this.y = height;
+            this.targetY = random(height * 0.1, height * 0.4);
+            this.speed = random(4, 8);
+            this.color = `hsl(${random(0, 360)}, 100%, 60%)`; // Random bright color
+            this.particles = [];
+            this.exploded = false;
+          }
+
+          update() {
+            if (!this.exploded) {
+              this.y -= this.speed;
+              // If reached target height, explode
+              if (this.y <= this.targetY) {
+                this.explode();
+              }
+            }
+
+            // Update all particles belonging to this firework
+            this.particles.forEach((particle, index) => {
+              particle.update();
+              if (particle.alpha <= 0) {
+                this.particles.splice(index, 1);
+              }
+            });
+          }
+
+          explode() {
+            this.exploded = true;
+            // Create 50 explosion particles
+            for (let i = 0; i < 50; i++) {
+              this.particles.push(new Particle(this.x, this.y, this.color));
+            }
+          }
+
+          draw() {
+            if (!this.exploded) {
+              // Draw the rocket going up
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+              ctx.fillStyle = this.color;
+              ctx.fill();
+            }
+            // Draw particles
+            this.particles.forEach((particle) => particle.draw());
+          }
+        }
+
+        let fireworks = [];
+
+        const mediaQuery = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+        let prefersReducedMotion = mediaQuery.matches;
+
+        mediaQuery.addEventListener("change", () => {
+          prefersReducedMotion = mediaQuery.matches;
+        });
+
+        function animate() {
+          if (prefersReducedMotion) {
+            requestAnimationFrame(animate);
+            return;
+          }
+
+          // Create a slight trail effect by not clearing completely
+          ctx.fillStyle = "rgba(15, 12, 41, 0.2)";
+          ctx.fillRect(0, 0, width, height);
+
+          // Randomly launch new fireworks
+          if (Math.random() < 0.03) {
+            // Adjust 0.03 to change frequency
+            fireworks.push(new Firework());
+          }
+
+          fireworks.forEach((firework, index) => {
+            firework.update();
+            firework.draw();
+            // Remove dead fireworks
+            if (firework.exploded && firework.particles.length === 0) {
+              fireworks.splice(index, 1);
+            }
+          });
+
+          requestAnimationFrame(animate);
+        }
+
+        animate();
+      })();
     </script>
   </body>
 </html>

@@ -310,79 +310,91 @@
     </main>
 
     <script>
-      const canvas = document.getElementById("confetti");
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
+      (() => {
+        const canvas = document.getElementById("confetti");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
 
-      const colors = ["#f7e3a6", "#f5c15a", "#eebd4f", "#ffd98a", "#ff8d8d"];
-      const confettiCount = 90;
-      const confetti = [];
+        const colors = ["#f7e3a6", "#f5c15a", "#eebd4f", "#ffd98a", "#ff8d8d"];
+        const confettiCount = 90;
+        const confetti = [];
 
-      const resize = () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      };
+        const resize = () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        };
 
-      window.addEventListener("resize", resize);
-      resize();
+        window.addEventListener("resize", resize);
+        resize();
 
-      const random = (min, max) => Math.random() * (max - min) + min;
+        const random = (min, max) => Math.random() * (max - min) + min;
 
-      const createPiece = () => ({
-        x: random(0, canvas.width),
-        y: random(-canvas.height, 0),
-        size: random(6, 14),
-        speed: random(0.8, 2.2),
-        drift: random(-0.6, 0.6),
-        rotation: random(0, Math.PI * 2),
-        rotationSpeed: random(-0.03, 0.03),
-        color: colors[Math.floor(random(0, colors.length))],
-      });
-
-      for (let i = 0; i < confettiCount; i++) {
-        confetti.push(createPiece());
-      }
-
-      const animate = () => {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          return;
-        }
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        confetti.forEach((piece) => {
-          piece.y += piece.speed;
-          piece.x += piece.drift;
-          piece.rotation += piece.rotationSpeed;
-
-          if (piece.y > canvas.height + 30) {
-            piece.y = -30;
-            piece.x = random(0, canvas.width);
-          }
-
-          if (piece.x > canvas.width + 30) {
-            piece.x = -30;
-          } else if (piece.x < -30) {
-            piece.x = canvas.width + 30;
-          }
-
-          ctx.save();
-          ctx.translate(piece.x, piece.y);
-          ctx.rotate(piece.rotation);
-          ctx.fillStyle = piece.color;
-          ctx.fillRect(
-            -piece.size / 2,
-            -piece.size / 2,
-            piece.size,
-            piece.size,
-          );
-          ctx.restore();
+        const createPiece = () => ({
+          x: random(0, canvas.width),
+          y: random(-canvas.height, 0),
+          size: random(6, 14),
+          speed: random(0.8, 2.2),
+          drift: random(-0.6, 0.6),
+          rotation: random(0, Math.PI * 2),
+          rotationSpeed: random(-0.03, 0.03),
+          color: colors[Math.floor(random(0, colors.length))],
         });
 
-        requestAnimationFrame(animate);
-      };
+        for (let i = 0; i < confettiCount; i++) {
+          confetti.push(createPiece());
+        }
 
-      animate();
+        const mediaQuery = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+        let prefersReducedMotion = mediaQuery.matches;
+
+        mediaQuery.addEventListener("change", () => {
+          prefersReducedMotion = mediaQuery.matches;
+        });
+
+        const animate = () => {
+          if (prefersReducedMotion) {
+            requestAnimationFrame(animate);
+            return;
+          }
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          confetti.forEach((piece) => {
+            piece.y += piece.speed;
+            piece.x += piece.drift;
+            piece.rotation += piece.rotationSpeed;
+
+            if (piece.y > canvas.height + 30) {
+              piece.y = -30;
+              piece.x = random(0, canvas.width);
+            }
+
+            if (piece.x > canvas.width + 30) {
+              piece.x = -30;
+            } else if (piece.x < -30) {
+              piece.x = canvas.width + 30;
+            }
+
+            ctx.save();
+            ctx.translate(piece.x, piece.y);
+            ctx.rotate(piece.rotation);
+            ctx.fillStyle = piece.color;
+            ctx.fillRect(
+              -piece.size / 2,
+              -piece.size / 2,
+              piece.size,
+              piece.size,
+            );
+            ctx.restore();
+          });
+
+          requestAnimationFrame(animate);
+        };
+
+        animate();
+      })();
     </script>
   </body>
 </html>
