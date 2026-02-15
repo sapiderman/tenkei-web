@@ -12,7 +12,8 @@
       :root {
         --primary-color: #00d2ff;
         --secondary-color: #3a7bd5;
-        --accent-color: #ffd700; /* Gold */
+        --accent-color: #ffd700;
+        /* Gold */
         --bg-dark: #0f0c29;
         --bg-light: #302b63;
       }
@@ -54,13 +55,15 @@
         position: absolute;
         top: 20px;
         right: 20px;
-        z-index: 20; /* High z-index to ensure it's on top of everything */
+        z-index: 20;
+        /* High z-index to ensure it's on top of everything */
         /* Responsive sizing for the wider logo: min 75px, pref 15vw, max 150px */
         width: clamp(75px, 15vw, 150px);
         height: auto;
         /* Optional: adds a subtle shadow so white text pops off dark background */
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
       }
+
       /* ------------------------------ */
 
       /* Main content wrapper sitting on top of canvas */
@@ -116,7 +119,8 @@
         max-width: 600px;
         line-height: 1.6;
         color: #e0e0e0;
-        animation: fadeInUp 2s ease-out 0.5s both; /* Waits 0.5s before starting */
+        animation: fadeInUp 2s ease-out 0.5s both;
+        /* Waits 0.5s before starting */
       }
 
       /* Animations */
@@ -125,26 +129,31 @@
           opacity: 0;
           transform: translateY(-30px);
         }
+
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
+
       @keyframes fadeInUp {
         from {
           opacity: 0;
           transform: translateY(30px);
         }
+
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
+
       @keyframes scaleIn {
         from {
           opacity: 0;
           transform: scale(0.5);
         }
+
         to {
           opacity: 1;
           transform: scale(1);
@@ -152,6 +161,7 @@
       }
     </style>
   </head>
+
   <body>
     <canvas id="canvas-container"></canvas>
 
@@ -168,6 +178,7 @@
       // Basic Fireworks implementation on Canvas
       const canvas = document.getElementById("canvas-container");
       const ctx = canvas.getContext("2d");
+      if (!ctx) return;
       let width = window.innerWidth;
       let height = window.innerHeight;
       canvas.width = width;

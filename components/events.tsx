@@ -9,6 +9,7 @@ export default function Events() {
           src="/chineseNewYear2026.html"
           className="w-full h-full border-none rounded-lg shadow-lg"
           title="Happy Chinese New Year 2026"
+          sandbox="allow-scripts"
         />
       </div>
     </div>

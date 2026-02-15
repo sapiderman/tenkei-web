@@ -95,16 +95,19 @@
         left: 8%;
         animation-delay: 0s;
       }
+
       .lantern:nth-child(2) {
         top: 14%;
         left: 22%;
         animation-delay: 1.5s;
       }
+
       .lantern:nth-child(3) {
         top: 6%;
         right: 14%;
         animation-delay: 0.8s;
       }
+
       .lantern:nth-child(4) {
         top: 16%;
         right: 28%;
@@ -195,6 +198,7 @@
         100% {
           transform: translateY(0);
         }
+
         50% {
           transform: translateY(-18px);
         }
@@ -205,6 +209,7 @@
           opacity: 0;
           transform: translateY(-20px);
         }
+
         to {
           opacity: 1;
           transform: translateY(0);
@@ -216,6 +221,7 @@
           opacity: 0;
           transform: translateY(25px);
         }
+
         to {
           opacity: 1;
           transform: translateY(0);
@@ -227,6 +233,7 @@
           opacity: 0;
           transform: scale(0.9);
         }
+
         to {
           opacity: 1;
           transform: scale(1);
@@ -238,6 +245,7 @@
         100% {
           filter: drop-shadow(0 0 18px rgba(245, 193, 90, 0.45));
         }
+
         50% {
           filter: drop-shadow(0 0 28px rgba(245, 193, 90, 0.7));
         }
@@ -251,6 +259,7 @@
       }
     </style>
   </head>
+
   <body>
     <canvas id="confetti"></canvas>
 
@@ -292,6 +301,7 @@
     <script>
       const canvas = document.getElementById("confetti");
       const ctx = canvas.getContext("2d");
+      if (!ctx) return;
 
       const colors = ["#f7e3a6", "#f5c15a", "#eebd4f", "#ffd98a", "#ff8d8d"];
       const confettiCount = 90;
