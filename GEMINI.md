@@ -35,6 +35,7 @@ This is the official website for Tenkei Aikidojo, a martial arts dojo specializi
 - **Google Cloud Platform** - Alternative deployment (via `app.yaml`)
 - **Docker** - Containerization support
 - **GitHub Actions** - CI/CD workflows
+- **Cloudflare R2** - Static asset storage
 
 ### Development Environment
 
@@ -44,7 +45,7 @@ This is the official website for Tenkei Aikidojo, a martial arts dojo specializi
 
 ## Project Structure
 
-```
+```shell
 tenkei-web/
 ├── app/                    # Next.js App Router pages and layouts
 │   ├── layout.tsx         # Root layout component
@@ -180,7 +181,7 @@ Before committing:
 
 ### Target Audience
 
-- **Primary**: Adults interested in learning Aikido in Jakarta, Indonesia
+- **Primary**: Adults interested in learning martial arts in Jakarta, Indonesia
 - **Secondary**: Parents looking for children's martial arts classes
 - **Tertiary**: Existing students checking schedules/news
 
@@ -188,9 +189,9 @@ Before committing:
 
 1. **Home** - Introduction to the dojo
 2. **About** - History, philosophy, instructors
-3. **Classes** - Schedule, levels, pricing
-4. **Gallery** - Photos/videos of training
-5. **Contact** - Location, contact form, social media
+3. **Dojos** - Class schedules, locations, contacts and registration page
+4. **Events** - Photos, videos and information about past and upcoming events
+5. **Shinjuku** - Information about Shinjuku Dojo and Tenkei affiliation
 6. **Blog** - Articles about Aikido, announcements
 
 ## Performance & SEO Requirements
@@ -229,7 +230,7 @@ Before committing:
 - **Auto-deployment**: Every push to `main` triggers deployment
 - **Preview deployments**: Every PR gets a preview URL
 - **Environment variables**: Set in Vercel dashboard
-- **Custom domain**: Configured in Vercel DNS settings
+- **Custom domain**: Configured in Vercel DNS settings and Cloudflare DNS settings
 
 ### Google Cloud Platform (Alternative)
 
@@ -413,7 +414,7 @@ When I (Gemini CLI) am working on this project:
 
 ### Indonesian Locale Considerations
 
-- Content may be in **Bahasa Indonesia** and/or English
+- Content may be in **Bahasa Indonesia**, English and Japanese
 - Date/time formatting should follow Indonesian conventions
 - Currency: Indonesian Rupiah (IDR)
 - Time zone: WIB (Western Indonesia Time, UTC+7)
@@ -421,7 +422,7 @@ When I (Gemini CLI) am working on this project:
 ### Business Hours & Contact
 
 - Training typically in evenings (weekdays) and weekends
-- Location: Jakarta, Indonesia
+- Location: Jakarta and Depok, Indonesia
 - Contact methods: Phone, WhatsApp, Email, Social media
 
 ## Future Roadmap Ideas
