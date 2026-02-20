@@ -1,220 +1,478 @@
 # Tenkei Aikidojo Website
 
-## Overview
+## Project Overview
 
-This is the official website for **Tenkei Aikidojo**, a martial arts dojo in Jakarta specializing in Aikido. The site connects potential students with our community, schedule, and philosophy.
+This is the official website for Tenkei Aikidojo, a martial arts dojo specializing in Aikido. The site provides information about the dojo, classes, instructors, and allows potential students to learn about and connect with the community.
 
 **Live Site**: <https://tenkei.vercel.app>  
 **Repository**: <https://github.com/sapiderman/tenkei-web>  
 **License**: MIT
 
-## AI Rules
-
-**Role**: You are a Senior React Developer specializing in Next.js and Performance.
-
-**Behavioral Guidelines:**
-
-1. **Plan Phase**: For complex tasks, outline your plan in 3 bullet points before coding.
-2. **Critique**: If the user's request breaks a pattern (e.g., using `axios`), politely correct them and use the project standard (`fetch`).
-3. **No Magic**: Do not use placeholder comments like `// ... rest of code`. Output the full functional block unless instructed otherwise.
-4. **Scope**: Only touch files necessary for the task. Do not "tidy up" unrelated code unless specifically instructed.
-5. **Dependencies**: **Do not run `yarn add`** without permission. Use standard library or existing packages first.
-
-**Language:**
-
-- **Code**: English.
-- **Content**: English (primary), Bahasa Indonesia (formal) if requested.
-
 ## Tech Stack
 
-### Frameworks
+### Core Framework
 
-- **Next.js 14+** (App Router)
-- **React 18+**
-- **TypeScript** (Strict Mode)
-- **Node.js**
+- **Next.js 16+** (App Router)
+- **React 19+**
+- **TypeScript** (strict mode)
+- **Node.js** (required for development)
 
-### Styling
+### Styling & UI
 
-- **Tailwind CSS** (Utility-first)
-- **PostCSS**
-- **Lucide React** (Icons)
+- **Tailwind CSS** - Utility-first CSS framework
+- **PostCSS** - CSS processing
+- Custom components in `/components` directory
 
-### Tools
+### Package Management
 
-- **Yarn** (Volta)
-- **VS Code** (Settings in `.vscode/`)
-- **ESLint** & **Prettier**
-- **Docker** (Containerization)
+- **Yarn** (v1 / Classic, pinned via Volta) - /?P0.rimary package manager
+- Configuration: `.yarnrc.yml`
+- Lock file: `yarn.lock`
 
-## Structure
+### Deployment & Infrastructure
+
+- **Vercel** - Primary deployment platform
+- **Google Cloud Platform** - Alternative deployment (via `app.yaml`)
+- **Docker** - Containerization support
+- **GitHub Actions** - CI/CD workflows
+- **Cloudflare R2** - Static asset storage
+
+### Development Environment
+
+- **VS Code** - Primary IDE (see `.vscode/` for settings)
+- **Devcontainer** - Development container support (see `.devcontainer/`)
+- **ESLint** - Code linting (`.eslintrc.json`)
+
+## Project Structure
 
 ```shell
-
 tenkei-web/
-├── app/                 # Next.js App Router (pages/layouts)
-│   ├── layout.tsx       # Root layout
-│   └── page.tsx         # Home
-├── components/          # React Components
-│   ├── ui/              # Primitives (buttons, cards)
-│   └── [feature]/       # Feature-specific
-├── lib/                 # Utilities
-│   ├── utils.ts         # cn() helper
-│   └── api.ts           # API fetchers
-├── public/              # Static Assets
-└── .github/             # CI/CD Workflows
-
+├── app/                    # Next.js App Router pages and layouts
+│   ├── layout.tsx         # Root layout component
+│   ├── page.tsx          # Home page
+│   └── [feature]/        # Feature-based routing
+├── components/            # Reusable React components
+│   ├── ui/               # UI primitives (buttons, cards, etc.)
+│   └── [feature]/        # Feature-specific components
+├── lib/                  # Utility functions and helpers
+│   ├── utils.ts         # General utilities
+│   └── [feature]/       # Feature-specific utilities
+├── public/              # Static assets (images, fonts, etc.)
+│   ├── images/          # Image assets
+│   └── fonts/           # Font files
+├── .github/             # GitHub Actions workflows
+├── .devcontainer/       # VS Code devcontainer configuration
+├── .vscode/             # VS Code workspace settings
+└── [config files]       # Configuration files
 ```
 
-## Standards
+## Coding Standards & Conventions
 
-### TypeScript
+### TypeScript Guidelines
 
-- **Strict Mode**: Enabled.
-- **No `any`**: Use explicit interfaces.
-- **Naming**:
-  - Components: `PascalCase`
-  - Functions: `camelCase`
-  - Constants: `UPPER_SNAKE_CASE`
+- **Strict mode**: Always enabled
+- **Type safety**: Prefer explicit types over `any`
+- **Interfaces over Types**: Use `interface` for object shapes, `type` for unions/intersections
+- **Naming conventions**:
+  - Components: `PascalCase` (e.g., `HeroSection.tsx`)
+  - Functions: `camelCase` (e.g., `getUserData()`)
+  - Constants: `UPPER_SNAKE_CASE` (e.g., `MAX_STUDENTS`)
+  - Files: Match component name or use `kebab-case` for utilities
 
-### React
+### React Component Patterns
 
-- **Functional**: No Class Components.
-- **Server First**: Use `'use client'` only when interactivity is needed.
-- **Props**: Use `interface` for Props (e.g., `HeroProps`).
+- **Functional components only** - No class components
+- **Server Components by default** - Use `'use client'` only when necessary
+- **Component structure**:
 
-### Anti-Patterns
+  ```typescript
+  // 1. Imports (grouped: React, Next.js, third-party, local)
+  import { ReactNode } from 'react'
+  import Link from 'next/link'
 
-- **No `axios`**: Use the native `fetch` API for all requests.
-- **No `default` exports**: Use named exports (`export function Hero...`) for better tree-shaking (except for Next.js Pages/Layouts).
-- **No inline styles**: Use Tailwind classes or `clsx/cn`.
-- **No Hardcoded Secrets**: Use `process.env`.
-- **No "Prop Drilling"**: Use Composition or Context where appropriate.
-- **No `console.log`**: Remove all `console.log` statements from the code.
-- **No middleware.ts**: Remove middleware files, use the newer proxy instead.
+  // 2. Type definitions
+  interface HeroSectionProps {
+    title: string
+    subtitle?: string
+    children?: ReactNode
+  }
 
-## Workflow
+  // 3. Component
+  export function HeroSection({ title, subtitle, children }: HeroSectionProps) {
+    return (
+      <section className="...">
+        {/* Implementation */}
+      </section>
+    )
+  }
+  ```
 
-1. **Setup**: Copy `.env.example` -> `.env.local`.
-2. **Install**: `yarn install`.
-3. **Dev**: `yarn dev` -> `http://localhost:3000`.
-4. **Lint**: `yarn lint` (Must pass before commit).
-5. **Build**: `yarn build` (Must pass before PR).
+### File Naming
 
-**Commit Style**: Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`).
+- **Components**: `ComponentName.tsx` (PascalCase)
+- **Pages**: `page.tsx` (Next.js App Router convention)
+- **Layouts**: `layout.tsx` (Next.js App Router convention)
+- **Utilities**: `utility-name.ts` (kebab-case)
+- **Types**: `types.ts` or `ComponentName.types.ts`
 
-## Domain
+### CSS & Styling
 
-### Context
+- **Tailwind-first**: Use Tailwind utilities wherever possible
+- **Component classes**: Use `cn()` helper from `lib/utils` for conditional classes
+- **Custom CSS**: Only when Tailwind utilities are insufficient
+- **Responsive design**: Mobile-first approach
+  - Mobile: default (no prefix)
+  - Tablet: `md:` (768px+)
+  - Desktop: `lg:` (1024px+)
+  - Large screens: `xl:` (1280px+)
 
-- **Tenkei**: Dojo name.
-- **Aikido**: Japanese martial art (Harmony/Defense).
-- **Sensei**: Teacher.
-- **Location**: South Jakarta, Indonesia.
+### Git Commit Conventions
 
-### Users
+Follow conventional commits format:
 
-- **Primary**: Adults in JKT wanting self-defense/fitness.
-- **Secondary**: Parents looking for kids' classes.
-- **Tertiary**: Current students checking schedule.
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `docs:` - Documentation changes
+- `style:` - Code style changes (formatting, no logic change)
+- `refactor:` - Code refactoring
+- `test:` - Adding or updating tests
+- `chore:` - Maintenance tasks
 
-## Perf & SEO
+Example: `feat: add contact form to aikido classes page`
 
-### Targets
+## Development Workflow
 
-- **Lighthouse**: 90+ (Performance, Accessibility, SEO).
-- **Core Vitals**: LCP < 2.5s, CLS < 0.1.
+### Environment Setup
 
-### Requirements
+1. Clone repository
+2. Copy `.env.example` to `.env.local`
+3. Run `yarn install`
+4. Run `yarn dev` to start development server
+5. Open `http://localhost:3000`
 
-- **Images**: Use `next/image` with `alt` text.
-- **Metadata**: Unique `title` and `description` per page.
-- **Semantic HTML**: Proper `h1` -> `h6` hierarchy.
-- **Access**: WCAG 2.1 AA (Keyboard navigable).
+### Common Commands
 
-## API & Data
+```bash
+yarn dev          # Start development server
+yarn build        # Build for production
+yarn start        # Start production server
+yarn lint         # Run ESLint
+yarn lint:fix     # Auto-fix linting issues
+```
 
-### Fetching
+### Code Quality Checks
 
-- **Pattern**: Use Server Components for data fetching where possible.
-- **Client**: Use `SWR` or `React Query` if client-side polling is needed.
-- **Backend**: Interfaces with Go backend (`scse-cloud`) via REST/JSON.
+Before committing:
+
+1. Run `yarn lint` - Must pass with no errors
+2. Run `yarn build` - Must build successfully
+3. Test changes manually in browser
+4. Check responsive design (mobile, tablet, desktop)
+
+## Content & Domain Knowledge
+
+### Aikido Context
+
+- **Tenkei** - The name of the dojo
+- **Aikido** - Japanese martial art focusing on harmony and self-defense
+- **Dojo** - Training hall for martial arts
+- **Sensei** - Instructor/teacher
+- **Kyu/Dan** - Ranking system in martial arts
+
+### Target Audience
+
+- **Primary**: Adults interested in learning martial arts in Jakarta, Indonesia
+- **Secondary**: Parents looking for children's martial arts classes
+- **Tertiary**: Existing students checking schedules/news
+
+### Key Website Sections (Typical)
+
+1. **Home** - Introduction to the dojo
+2. **About** - History, philosophy, instructors
+3. **Dojos** - Class schedules, locations, contacts and registration page
+4. **Events** - Photos, videos and information about past and upcoming events
+5. **Shinjuku** - Information about Shinjuku Dojo and Tenkei affiliation
+6. **Blog** - Articles about Aikido, announcements
+
+## Performance & SEO Requirements
+
+### Performance Targets
+
+- **Lighthouse Score**: 90+ across all metrics
+- **Core Web Vitals**:
+  - LCP (Largest Contentful Paint): < 2.5s
+  - FID (First Input Delay): < 100ms
+  - CLS (Cumulative Layout Shift): < 0.1
+- **Image optimization**: Use Next.js `<Image>` component
+- **Code splitting**: Leverage Next.js automatic code splitting
+
+### SEO Best Practices
+
+- **Meta tags**: Every page must have unique title and description
+- **Structured data**: Use JSON-LD for organization/local business
+- **Open Graph**: Proper OG tags for social sharing
+- **Sitemap**: Auto-generated via Next.js
+- **robots.txt**: Configured for search engines
+- **Alt text**: All images must have descriptive alt text
+
+### Accessibility (a11y)
+
+- **WCAG 2.1 AA compliance** as minimum target
+- **Semantic HTML**: Use proper heading hierarchy (h1-h6)
+- **ARIA labels**: Where necessary for screen readers
+- **Keyboard navigation**: All interactive elements accessible via keyboard
+- **Color contrast**: Minimum 4.5:1 for normal text, 3:1 for large text
+
+## Deployment
+
+### Vercel (Primary)
+
+- **Auto-deployment**: Every push to `main` triggers deployment
+- **Preview deployments**: Every PR gets a preview URL
+- **Environment variables**: Set in Vercel dashboard
+- **Custom domain**: Configured in Vercel DNS settings and Cloudflare DNS settings
+
+### Google Cloud Platform (Alternative)
+
+- Uses `app.yaml` configuration
+- Deploy via `gcloud app deploy`
+- Staging/production environments
+
+### Docker
+
+- `Dockerfile` provided for containerized deployments
+- `.dockerignore` configured to exclude unnecessary files
+
+## Testing Strategy
+
+### Manual Testing Checklist
+
+When implementing new features, test:
+
+- [ ] Desktop (Chrome, Firefox, Safari)
+- [ ] Mobile (iOS Safari, Android Chrome)
+- [ ] Tablet (iPad, Android tablet)
+- [ ] Different screen sizes (320px to 1920px+)
+- [ ] Dark mode (if applicable)
+- [ ] Accessibility (keyboard navigation, screen reader)
+
+### Future Considerations
+
+- Unit tests with Jest + React Testing Library
+- E2E tests with Playwright
+- Visual regression testing
+
+## API & Data Management
+
+### Data Sources
+
+- Static content in components/pages
+- Potential CMS integration (future consideration)
+- Contact form submissions (future backend integration)
 
 ### Forms
 
-- **Validation**: Zod + React Hook Form.
-- **Security**: CSRF protection enabled.
+- Client-side validation using React Hook Form (if implemented)
+- Server-side validation in API routes
+- Proper error handling and user feedback
 
-## Security
+## Security Considerations
 
-- **HTTPS**: Enforced.
-- **Headers**: CSP configured in `next.config.js`.
-- **Sanitization**: All user input must be validated (Zod).
+### General Security
 
-## Patterns
+- No sensitive data in client-side code
+- Environment variables for secrets (never commit `.env.local`)
+- HTTPS enforced on production
+- CSP headers configured via Next.js config
+- Input validation on all user-submitted data
 
-### Images
+### Contact Forms
 
-```tsx
-import Image from "next/image";
+- CSRF protection
+- Rate limiting
+- Email validation
+- Spam protection (reCAPTCHA or similar)
 
+## Common Patterns & Best Practices
+
+### Image Handling
+
+```typescript
+import Image from 'next/image'
+
+// Always use Next.js Image component for optimization
 <Image
-  src="/images/hero.jpg"
-  alt="Aikido practice"
+  src="/images/dojo-training.jpg"
+  alt="Students practicing Aikido at Tenkei Dojo"
   width={800}
   height={600}
-  priority // If above the fold
-/>;
+  priority={isAboveFold} // Use for LCP images
+  placeholder="blur"
+  blurDataURL="..." // Low-quality placeholder
+/>
 ```
 
-### Styles
+### Metadata (SEO)
 
-```ts
-import { cn } from "@/lib/utils"
+```typescript
+// app/[page]/page.tsx
+import { Metadata } from "next";
 
-<div className={cn("p-4", isActive && "bg-blue-500")} />
-
+export const metadata: Metadata = {
+  title: "Aikido Classes in Jakarta | Tenkei Aikidojo",
+  description: "Join our Aikido classes in Jakarta...",
+  openGraph: {
+    title: "Aikido Classes in Jakarta",
+    description: "...",
+    images: ["/og-image.jpg"],
+  },
+};
 ```
 
-### Context
+### Utility Function Pattern
 
-### Locale
+```typescript
+// lib/utils.ts
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
-- **Language**: English (Primary), Bahasa Indonesia (Secondary).
-- **Currency**: IDR (Rp).
-- **Timezone**: WIB (UTC+7).
+// Combine Tailwind classes safely
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
 
-### Schedule
+### Loading States
 
-- **Classes**: Weekday evenings, Weekend mornings.
-- **Events**: Grading (Kyu/Dan tests) periodically.
+```typescript
+// app/[page]/loading.tsx
+export default function Loading() {
+  return <div className="...">Loading...</div>
+}
+```
 
-## Deploy
+### Error Handling
 
-- **Vercel**: Auto-deploy on push to `main`.
-- **Preview**: Created for every PR.
-- **Env Vars**: Managed in Vercel Dashboard.
+```typescript
+// app/[page]/error.tsx
+'use client'
 
-## Roadmap
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <button onClick={() => reset()}>Try again</button>
+    </div>
+  )
+}
+```
 
-- [ ] Member Portal (Login).
-- [ ] Online Registration.
-- [ ] Merchandise Store.
-- [ ] Instructor Profiles.
+## When Making Changes
 
-## Emergency
+### Before Writing Code
 
-### Contacts
+1. **Understand the requirement** - What problem are we solving?
+2. **Check existing patterns** - Is there a similar component/pattern already?
+3. **Plan the approach** - What files need to be created/modified?
+4. **Consider performance** - Will this impact loading time or bundle size?
+5. **Think accessibility** - Is this usable for everyone?
 
-- **Dev Team**: Use GitHub Issues.
-- **Dojo Admin**: Contact Sensei via WhatsApp group.
+### Code Review Checklist
 
-### Recovery
+- [ ] TypeScript types are properly defined (no `any`)
+- [ ] Components follow established patterns
+- [ ] Tailwind classes are used appropriately
+- [ ] Responsive design works on all screen sizes
+- [ ] Accessibility requirements met
+- [ ] Performance not negatively impacted
+- [ ] SEO meta tags updated if needed
+- [ ] No console errors or warnings
+- [ ] Code is well-commented for complex logic
 
-- **Build Fail**: Check Vercel logs.
-- **API Fail**: Check tenkei backend status.
+### AI Agent Guidelines
+
+When I (Gemini CLI) am working on this project:
+
+1. **Always read relevant files first** before making changes
+2. **Follow the established patterns** in the codebase
+3. **Run `yarn lint`** after making changes
+4. **Test the build** with `yarn build` before finalizing
+5. **Provide clear explanations** of changes made
+6. **Ask for clarification** if requirements are ambiguous
+7. **Consider edge cases** and error states
+8. **Document complex logic** with comments
+9. **Keep commits focused** on single changes
+10. **Respect the existing architecture** - don't introduce new patterns without discussion
+
+## Project-Specific Context
+
+### Indonesian Locale Considerations
+
+- Content may be in **Bahasa Indonesia**, English and Japanese
+- Date/time formatting should follow Indonesian conventions
+- Currency: Indonesian Rupiah (IDR)
+- Time zone: WIB (Western Indonesia Time, UTC+7)
+
+### Business Hours & Contact
+
+- Training typically in evenings (weekdays) and weekends
+- Location: Jakarta and Depok, Indonesia
+- Contact methods: Phone, WhatsApp, Email, Social media
+
+## Future Roadmap Ideas
+
+- Member portal with login
+- Online class registration
+- Payment integration
+- Training schedule calendar
+- Blog/news section
+- Multi-language support (Indonesian/English toggle)
+- Photo/video gallery
+- Instructor profiles
+- Student testimonials
+- Online store for merchandise
+
+## Questions to Ask Before Implementation
+
+When implementing new features, consider asking:
+
+1. **Who is the target user?** (New visitors, existing students, parents?)
+2. **What devices will they use?** (Primarily mobile? Desktop?)
+3. **What's the expected load?** (High traffic? Static content?)
+4. **Does this need to be dynamic?** (Can it be static for better performance?)
+5. **Are there accessibility concerns?** (Forms, interactive elements?)
+6. **What's the content update frequency?** (Should this use a CMS?)
+7. **Are there legal requirements?** (Privacy policy, terms of service?)
+
+## Emergency Contacts & Resources
+
+### Deployment Issues
+
+- Check Vercel dashboard for build logs
+- Check GitHub Actions for CI/CD failures
+- Review environment variables configuration
+
+### Documentation
+
+- Next.js docs: <https://nextjs.org/docs>
+- Tailwind CSS: <https://tailwindcss.com/docs>
+- TypeScript: <https://www.typescriptlang.org/docs>
+- React: <https://react.dev>
+
+### Package Updates
+
+- Check for security vulnerabilities: `yarn audit`
+- Update dependencies: Be cautious with major version updates
+- Test thoroughly after updates
 
 ---
 
-**Last Updated**: Feb 2026
-**Maintainer**: Tenkei Dev Team
+**Last Updated**: February 2026  
+**Maintained by**: Tenkei Aikidojo Development Team  
+**For questions about this project, consult the repository owner or create a GitHub issue.**

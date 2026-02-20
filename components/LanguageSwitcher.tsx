@@ -124,10 +124,11 @@ export default function LanguageSwitcher({
               <button
                 key={lang}
                 onClick={() => changeLanguage(lang)}
-                className={`block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors ${currentLang === lang
+                className={`block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors ${
+                  currentLang === lang
                     ? "bg-gray-50 font-semibold text-indigo-600"
                     : ""
-                  }`}
+                }`}
                 role="menuitem"
                 tabIndex={-1}
               >
