@@ -2,14 +2,10 @@ import { getT } from "../i18n";
 import { dir } from "i18next";
 import { languages } from "../i18n/settings";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import "../globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export async function generateStaticParams() {
   return languages.map((lang) => ({ lang }));
