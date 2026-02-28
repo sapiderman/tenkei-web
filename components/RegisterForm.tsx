@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect, ChangeEvent, FormEvent } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useTranslation } from "@/app/i18n/client";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { filterXSS } from "xss";
 import { VALID_RANKS as RANK_OPTIONS } from "@/lib/constants";
@@ -77,7 +79,11 @@ const buildSanitizedPayload = (data: RegisterFormData) => ({
   consent_marketing: data.consent_marketing,
 });
 
-export default function RegisterPage() {
+export default function RegisterForm() {
+  const params = useParams();
+  const lang = params.lang as string;
+  const { t } = useTranslation(lang, "common");
+
   const [formData, setFormData] = useState<RegisterFormData>({
     name: "",
     email: "",
@@ -368,23 +374,21 @@ export default function RegisterPage() {
               </svg>
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">
-              Registration Complete!
+              {t("registration_complete")}
             </h3>
             <p className="text-gray-600 mb-4">
-              Welcome to the Tenkeiaikidojo,{" "}
+              {t("welcome_to_tenkei")}
               <span className="text-emerald-600 font-semibold">
                 {formData.name}
               </span>
               !
             </p>
-            <p className="text-gray-600 mb-6">
-              A dojocho will be in contact shortly. See you on the mat!
-            </p>
+            <p className="text-gray-600 mb-6">{t("dojocho_contact_shortly")}</p>
             <Link
               href="/"
               className="inline-block bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-semibold py-2 px-6 rounded-lg transition-all shadow-lg shadow-emerald-500/20"
             >
-              Return to site
+              {t("return_to_site")}
             </Link>
           </div>
         </div>
@@ -397,11 +401,9 @@ export default function RegisterPage() {
       <div className="w-full max-w-2xl p-8 bg-white/80 backdrop-blur-md border border-white/50 rounded-2xl shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-emerald-600">
-            Tenkei Registration
+            {t("tenkei_registration")}
           </h1>
-          <p className="text-gray-500 mt-2">
-            Complete your profile to register.
-          </p>
+          <p className="text-gray-500 mt-2">{t("complete_profile_register")}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -427,7 +429,7 @@ export default function RegisterPage() {
           {/* Personal Information Section */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
-              Personal Information
+              {t("personal_information")}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -436,7 +438,7 @@ export default function RegisterPage() {
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Full Name <span className="text-red-500">*</span>
+                  {t("full_name")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -446,7 +448,7 @@ export default function RegisterPage() {
                   onChange={handleInputChange}
                   required
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
-                  placeholder="Your full name"
+                  placeholder={t("your_full_name") as string}
                 />
               </div>
 
@@ -455,7 +457,7 @@ export default function RegisterPage() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Email Address
+                  {t("email_address")}
                 </label>
                 <input
                   type="email"
@@ -473,7 +475,7 @@ export default function RegisterPage() {
                   htmlFor="whatsapp"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  WhatsApp Number <span className="text-red-500">*</span>
+                  {t("whatsapp_number")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
@@ -492,7 +494,7 @@ export default function RegisterPage() {
                   htmlFor="date_of_birth"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Date of Birth
+                  {t("date_of_birth")}
                 </label>
                 <input
                   type="date"
@@ -509,7 +511,7 @@ export default function RegisterPage() {
           {/* Account Security Section */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
-              Account Security
+              {t("account_security")}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -518,7 +520,7 @@ export default function RegisterPage() {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Password <span className="text-red-500">*</span>
+                  {t("password")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -530,10 +532,7 @@ export default function RegisterPage() {
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder="••••••••"
                 />
-                <p className="text-xs text-gray-500">
-                  Must be at least 8 characters, a password manager is highly
-                  recommended.
-                </p>
+                <p className="text-xs text-gray-500">{t("password_hint")}</p>
               </div>
 
               <div className="space-y-1">
@@ -541,7 +540,8 @@ export default function RegisterPage() {
                   htmlFor="password_confirm"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Confirm Password <span className="text-red-500">*</span>
+                  {t("confirm_password")}{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -560,7 +560,7 @@ export default function RegisterPage() {
           {/* Training Information Section */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
-              Training Information
+              {t("training_information")}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -570,7 +570,7 @@ export default function RegisterPage() {
                   htmlFor="dojo"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Dojo
+                  {t("dojo")}
                 </label>
                 <div className="relative">
                   <input
@@ -589,7 +589,7 @@ export default function RegisterPage() {
                     }}
                     onFocus={() => setDojoOpen(true)}
                     className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
-                    placeholder="Click to select or type your dojo"
+                    placeholder={t("dojo_placeholder") as string}
                     autoComplete="off"
                   />
 
@@ -617,7 +617,7 @@ export default function RegisterPage() {
                   htmlFor="rank"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Current Rank
+                  {t("current_rank")}
                 </label>
                 <select
                   id="rank"
@@ -626,7 +626,7 @@ export default function RegisterPage() {
                   onChange={handleInputChange}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                 >
-                  <option value="">Select your rank</option>
+                  <option value="">{t("select_rank")}</option>
                   {RANK_OPTIONS.map((rankOption) => (
                     <option key={rankOption} value={rankOption}>
                       {rankOption}
@@ -640,7 +640,7 @@ export default function RegisterPage() {
                   htmlFor="last_grading_date"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Last Grading Date
+                  {t("last_grading_date")}
                 </label>
                 <input
                   type="date"
@@ -657,7 +657,7 @@ export default function RegisterPage() {
           {/* Emergency Contact Section */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
-              Emergency Contact
+              {t("emergency_contact")}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -666,7 +666,7 @@ export default function RegisterPage() {
                   htmlFor="emergency_contact_name"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Emergency Contact Name
+                  {t("emergency_contact_name")}
                 </label>
                 <input
                   type="text"
@@ -675,7 +675,7 @@ export default function RegisterPage() {
                   value={formData.emergency_contact_name}
                   onChange={handleInputChange}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
-                  placeholder="Contact name"
+                  placeholder={t("contact_name") as string}
                 />
               </div>
 
@@ -684,7 +684,7 @@ export default function RegisterPage() {
                   htmlFor="emergency_contact_number"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Emergency Contact Number
+                  {t("emergency_contact_number")}
                 </label>
                 <input
                   type="tel"
@@ -702,7 +702,7 @@ export default function RegisterPage() {
           {/* Medical Information Section */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
-              Medical Information
+              {t("medical_information")}
             </h2>
 
             <div className="space-y-1">
@@ -710,7 +710,7 @@ export default function RegisterPage() {
                 htmlFor="medical_conditions"
                 className="block text-sm font-medium text-gray-700"
               >
-                Medical Conditions
+                {t("medical_conditions")}
               </label>
               <textarea
                 id="medical_conditions"
@@ -719,7 +719,7 @@ export default function RegisterPage() {
                 onChange={handleInputChange}
                 rows={3}
                 className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400 resize-none"
-                placeholder="(Optional) Please list any medical conditions, allergies, or injuries we should be aware of ex: asthma"
+                placeholder={t("medical_conditions_placeholder") as string}
               />
             </div>
           </div>
@@ -727,7 +727,7 @@ export default function RegisterPage() {
           {/* Consent & Agreements Section */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
-              Consent & Agreements
+              {t("consent_and_agreements")}
             </h2>
 
             <div className="space-y-3">
@@ -741,8 +741,7 @@ export default function RegisterPage() {
                   className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer"
                 />
                 <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
-                  I consent to the storage and processing of my personal data
-                  for membership purposes.{" "}
+                  {t("consent_datastore_text")}{" "}
                   <span className="text-red-500">*</span>
                 </span>
               </label>
@@ -756,8 +755,7 @@ export default function RegisterPage() {
                   className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer"
                 />
                 <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
-                  (Optional) I would like to receive news, updates, and
-                  promotional emails.
+                  {t("consent_marketing_text")}
                 </span>
               </label>
             </div>
@@ -781,10 +779,11 @@ export default function RegisterPage() {
             disabled={isLoading}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 rounded-lg shadow-lg shadow-blue-500/20 transition-all transform active:scale-95 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span>Complete Registration</span>
+            <span>{t("complete_registration")}</span>
             {isLoading && (
               <svg
-                className="w-5 h-5 animate-spin text-white/80"
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
               >
@@ -795,44 +794,17 @@ export default function RegisterPage() {
                   r="10"
                   stroke="currentColor"
                   strokeWidth="4"
-                />
+                ></circle>
                 <path
                   className="opacity-75"
                   fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                />
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
             )}
           </button>
-
-          <p className="text-center text-sm text-gray-500">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="text-blue-600 hover:text-blue-500 underline"
-            >
-              Sign in
-            </Link>
-          </p>
         </form>
       </div>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .fade-in {
-          animation: fadeIn 0.5s ease-in;
-        }
-      `}</style>
     </div>
   );
 }
