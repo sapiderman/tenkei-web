@@ -4,7 +4,7 @@
 
 This is the official website for Tenkei Aikidojo, a martial arts dojo specializing in Aikido. The site provides information about the dojo, classes, instructors, and allows potential students to learn about and connect with the community.
 
-**Live Site**: <https://tenkei.vercel.app>  
+**Live Site**: <https://tenkeiaikidojo.org>  
 **Repository**: <https://github.com/sapiderman/tenkei-web>  
 **License**: MIT
 
@@ -12,10 +12,12 @@ This is the official website for Tenkei Aikidojo, a martial arts dojo specializi
 
 ### Core Framework
 
-- **Next.js 16+** (App Router)
+- **Next.js 15+** (App Router)
 - **React 19+**
 - **TypeScript** (strict mode)
 - **Node.js** (required for development)
+- **State Management**: Local component state and React Context (default)
+- **Data Fetching**: Next.js native `fetch` with caching
 
 ### Styling & UI
 
@@ -25,7 +27,7 @@ This is the official website for Tenkei Aikidojo, a martial arts dojo specializi
 
 ### Package Management
 
-- **Yarn** (v1 / Classic, pinned via Volta) - /?P0.rimary package manager
+- **Yarn** (v1 / Classic, pinned via Volta) - Primary package manager
 - Configuration: `.yarnrc.yml`
 - Lock file: `yarn.lock`
 
@@ -42,6 +44,7 @@ This is the official website for Tenkei Aikidojo, a martial arts dojo specializi
 - **VS Code** - Primary IDE (see `.vscode/` for settings)
 - **Devcontainer** - Development container support (see `.devcontainer/`)
 - **ESLint** - Code linting (`.eslintrc.json`)
+- **Prettier** - Code formatting
 
 ## Project Structure
 
@@ -165,9 +168,10 @@ yarn lint:fix     # Auto-fix linting issues
 Before committing:
 
 1. Run `yarn lint` - Must pass with no errors
-2. Run `yarn build` - Must build successfully
-3. Test changes manually in browser
-4. Check responsive design (mobile, tablet, desktop)
+2. Run `yarn format` (if Prettier is configured)
+3. Run `yarn build` - Must build successfully
+4. Test changes manually in browser
+5. Check responsive design (mobile, tablet, desktop)
 
 ## Content & Domain Knowledge
 
@@ -273,7 +277,7 @@ When implementing new features, test:
 ### Forms
 
 - Client-side validation using React Hook Form (if implemented)
-- Server-side validation in API routes
+- Server-side validation using **Server Actions** (preferred over API routes)
 - Proper error handling and user feedback
 
 ## Security Considerations
@@ -282,6 +286,7 @@ When implementing new features, test:
 
 - No sensitive data in client-side code
 - Environment variables for secrets (never commit `.env.local`)
+  - Common variables: `NEXT_PUBLIC_SITE_URL`, API keys, etc.
 - HTTPS enforced on production
 - CSP headers configured via Next.js config
 - Input validation on all user-submitted data
@@ -409,6 +414,9 @@ When I (Gemini CLI) am working on this project:
 8. **Document complex logic** with comments
 9. **Keep commits focused** on single changes
 10. **Respect the existing architecture** - don't introduce new patterns without discussion
+11. **Do not output large blocks of code in chat**; use file editing tools to apply changes directly.
+12. **Always check for TypeScript errors** after modifying or creating components.
+13. **When adding new dependencies**, specify whether they should be `dependencies` or `devDependencies`.
 
 ## Project-Specific Context
 
