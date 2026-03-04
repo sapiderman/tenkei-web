@@ -24,6 +24,8 @@ COPY . .
 
 # Set Next.js to output standalone
 ENV NEXT_TELEMETRY_DISABLED=1
+# Set STANDALONE_BUILD=true to enable standalone output in next.config.mjs
+ENV STANDALONE_BUILD=true
 
 # Build the application
 RUN yarn build

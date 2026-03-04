@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Footer from "@/components/footer";
-import { getT } from "../../../i18n"; // Adjust path for i18n helper
+import { getT } from "@/app/i18n"; // Use alias path
 import type { Metadata } from "next";
 
 export async function generateMetadata({
