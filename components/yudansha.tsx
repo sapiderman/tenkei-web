@@ -1,3 +1,6 @@
+import React from "react";
+import { getT } from "../app/i18n"; // Adjust path as needed
+
 type YudanshaProps = {
   name: string;
   rank: string;
@@ -122,27 +125,28 @@ const yudansha: YudanshaProps[] = [
   },
 ];
 
-const Yudansha = () => {
+const Yudansha = async ({ lang }: { lang: string }) => {
+  const { t } = await getT(lang, "common");
   return (
     <div className="w-full">
       <h4 className="text-xl sm:text-2xl font-semibold mb-4">
-        Students with Yudansha ranking
+        {t("students_yudansha_ranking")}
       </h4>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-2 py-2 sm:px-4 sm:py-3">
-                No.
+                {t("no_short")}
               </th>
               <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3">
-                Name
+                {t("name")}
               </th>
               <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3">
-                Rank
+                {t("rank")}
               </th>
               <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3">
-                Attained
+                {t("attained")}
               </th>
             </tr>
           </thead>
@@ -170,8 +174,7 @@ const Yudansha = () => {
         rel="noopener noreferrer"
         className="text-sm text-blue-600 dark:text-blue-500 hover:underline"
       >
-        Dan ranking are Shodan = 1st dan, Nidan = 2nd dan, Sandan = 3rd dan,
-        Godan = 5th dan.
+        {t("dan_ranking_explanation")}
       </a>
     </div>
   );
