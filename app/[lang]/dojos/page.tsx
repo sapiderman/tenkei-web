@@ -1,16 +1,28 @@
 import Footer from "@/components/footer";
 import JoinButton from "@/components/joinButton";
 import Image from "next/image";
+import { getT } from "@/app/i18n"; // Use alias path
 import type { Metadata } from "next";
-import { fees, schedules } from "./data";
+import { fees, schedules } from "./data"; // Keep this import
 
-export const metadata: Metadata = {
-  title: "Dojos - Tenkei Aikidojo",
-  description:
-    "Find Tenkei Aikidojo locations, practice schedules, and contact information",
-};
+export async function generateMetadata({
+  params: { lang },
+}: {
+  params: { lang: string };
+}): Promise<Metadata> {
+  const { t } = await getT(lang, "common");
+  return {
+    title: t("dojos_page_title"),
+    description: t("dojos_page_description"),
+  };
+}
 
-export default function Dojo() {
+export default async function Dojo({
+  params: { lang },
+}: {
+  params: { lang: string };
+}) {
+  const { t } = await getT(lang, "common");
   return (
     <>
       <main className="flex min-h-screen flex-col items-left justify-between p-24">
@@ -18,7 +30,7 @@ export default function Dojo() {
         <div className="flex items-center justify-left gap-4 sm:gap-6">
           {/* Heading - text-center removed as flex container handles centering */}
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-            Dojo Locations, Schedules and Contacts
+            {t("dojo_locations_schedules_contacts")}
           </h1>
           {/* Sized container for the logo */}
           {/* Adjust w-XX h-XX classes to control the logo size (e.g., w-16 h-16 is 64px) */}
@@ -67,14 +79,16 @@ export default function Dojo() {
         ))}
 
         <div className="my-6">
-          <h2 className="text-lg font-bold mb-2">Dojo Fees</h2>
+          <h2 className="text-lg font-bold mb-2">{t("dojo_fees")}</h2>
           <div className="overflow-x-auto">
             <table className="w-full max-w-lg text-left border-collapse">
               <thead>
                 <tr className="border-b border-gray-300">
-                  <th className="py-1 font-semibold text-gray-900">Type</th>
+                  <th className="py-1 font-semibold text-gray-900">
+                    {t("type")}
+                  </th>
                   <th className="py-1 pl-4 font-semibold text-gray-900">
-                    Cost
+                    {t("cost")}
                   </th>
                 </tr>
               </thead>
@@ -91,15 +105,12 @@ export default function Dojo() {
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-sm text-gray-500 italic">
-            Note: All fees are subject to change without prior notice. Yudansha
-            examination fee depends on the Yen exchange rate.
-          </p>
+          <p className="mt-2 text-sm text-gray-500 italic">{t("fees_note")}</p>
         </div>
-        <JoinButton />
+        <JoinButton lang={lang} />
       </main>
 
-      <Footer />
+      <Footer lang={lang} />
     </>
   );
 }
