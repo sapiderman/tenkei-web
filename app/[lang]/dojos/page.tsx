@@ -5,11 +5,11 @@ import { getT } from "@/app/i18n"; // Use alias path
 import type { Metadata } from "next";
 import { fees, schedules } from "./data"; // Keep this import
 
-export async function generateMetadata({
-  params: { lang },
-}: {
-  params: { lang: string };
+export async function generateMetadata(props: {
+  params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
+  const params = await props.params;
+  const { lang } = params;
   const { t } = await getT(lang, "common");
   return {
     title: t("dojos_page_title"),
@@ -17,11 +17,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function Dojo({
-  params: { lang },
-}: {
-  params: { lang: string };
+export default async function Dojo(props: {
+  params: Promise<{ lang: string }>;
 }) {
+  const params = await props.params;
+  const { lang } = params;
   const { t } = await getT(lang, "common");
   return (
     <>
