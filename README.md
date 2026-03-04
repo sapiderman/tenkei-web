@@ -1,89 +1,94 @@
-# Project Overview
+# Tenkei Aikidojo Website
 
-This is a Next.js web application, bootstrapped with `create-next-app`, serving as the official website for Tenkei Aikidojo. It leverages the new App Router for routing and uses React for its UI components. The project integrates Tailwind CSS for styling, TypeScript for type safety, and Prettier for code formatting. It also includes Vercel Analytics and Speed Insights for performance monitoring.
+The official website for Tenkei Aikidojo, built with Next.js 16+, React 19, and TypeScript. This project serves as a modern, high-performance platform for students and practitioners to connect with the dojo.
+
+## Key Features
+
+- **Multi-language Support (i18n):** Full support for English, Indonesian, and Japanese using `i18next`.
+- **Modern Tech Stack:** Built with Next.js 16 (App Router) and React 19.
+- **Performance Optimized:** High Lighthouse scores, optimized images, and Vercel Speed Insights.
+- **SEO Ready:** Localized metadata, Open Graph tags, and structured data (JSON-LD).
+- **Responsive Design:** Mobile-first approach using Tailwind CSS.
+- **Security Focused:** Custom security headers and Turnstile spam protection.
 
 ## Technologies Used
 
-- **Framework:** Next.js (with App Router)
+- **Framework:** Next.js 16+ (App Router)
 - **UI Library:** React 19
 - **Language:** TypeScript
+- **Internationalization:** `i18next`, `react-i18next`, `next-i18n-router`
 - **Styling:** Tailwind CSS
-- **Package Manager:** Yarn
-- **Version Management:** Volta (for Node.js and Yarn versions)
-- **Deployment:** Configured for Vercel, with `output: "standalone"` for self-hosting.
-- **Analytics/Performance:** Vercel Analytics and Speed Insights
+- **Package Manager:** Yarn (Classic)
+- **Version Management:** Volta (Node.js 22+, Yarn 1.22.22)
+- **Monitoring:** Vercel Analytics & Speed Insights
 
-## Building and Running
+## Getting Started
 
-The project uses `yarn` as its package manager. Node.js and Yarn versions are managed by `volta`.
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (managed via Volta)
+- [Yarn](https://classic.yarnpkg.com/en/docs/install/)
+
+### Installation
+
+```bash
+yarn install
+```
 
 ### Development
 
-To run the development server:
+Run the development server:
 
 ```bash
 yarn dev
 ```
 
-This will start the application at `http://localhost:3000`. The page auto-updates as you edit files.
+The application will be available at `http://localhost:3000`.
 
 ### Production Build
 
-To build the application for production:
-
 ```bash
 yarn build
-```
-
-### Start Production Server
-
-To start the built production application:
-
-```bash
 yarn start
 ```
 
-## Development Conventions
+## Internationalization (i18n)
 
-### Linting
+This project uses a localized routing strategy (`/[lang]/...`).
 
-To lint the codebase using ESLint (configured for Next.js):
+- **Adding Translations:** Edit JSON files in `public/locales/[lang]/common.json`.
+- **Adding a Language:** Update `i18n.config.ts` and `app/i18n/settings.ts`.
+- **Usage:**
+  - **Server Components:** Use `getT(lang, 'common')`.
+  - **Client Components:** Use `useTranslation(lang, 'common')`.
 
-```bash
-yarn lint
-```
+## Project Structure
 
-### Formatting
-
-The project uses Prettier for code formatting.
-
-To check for formatting issues:
-
-```bash
-yarn check-format
-```
-
-To automatically format the code:
-
-```bash
-yarn format
-```
-
-### Project Structure
-
-- `app/`: Contains the main application routes and layouts (App Router).
-  - `app/layout.tsx`: Root layout and metadata for the application.
-  - `app/page.tsx`: The home page of the application.
-  - `app/api/`: API routes.
+- `app/[lang]/`: Localized routes and layouts.
+- `app/i18n/`: Internationalization configuration and hooks.
 - `components/`: Reusable React components.
-- `public/`: Static assets (images, etc.).
-- `lib/`: Utility functions or constants.
-- `next.config.mjs`: Next.js configuration, including custom security headers and `output: "standalone"`.
-- `tailwind.config.ts`: Tailwind CSS configuration.
-- `tsconfig.json`: TypeScript compiler configuration.
+- `public/locales/`: Translation resource files.
+- `lib/`: Shared utilities and constants.
+- `GEMINI.md`: **Crucial** - Detailed technical standards and development mandates.
 
-## Contribution Guidelines
+## Quality Standards
 
-- Adhere to the established Prettier formatting rules (`yarn format`).
-- Ensure that all code passes ESLint checks (`yarn lint`).
-- Follow the existing code style and architectural patterns (e.g., functional components, TypeScript for new features).
+### Linting & Formatting
+
+```bash
+yarn lint           # Run ESLint
+yarn format         # Auto-format with Prettier
+yarn check-format   # Verify formatting
+```
+
+## Contributing
+
+Please refer to [GEMINI.md](./GEMINI.md) for comprehensive coding standards, architectural patterns, and AI agent guidelines before making any changes.
+
+1. Ensure all code passes `yarn lint`.
+2. All user-facing strings must be localized.
+3. Follow the Conventional Commits specification.
+
+---
+
+**License:** MIT
