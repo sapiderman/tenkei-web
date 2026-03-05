@@ -1,0 +1,75 @@
+# --- Dependencies & Runtimes ---
+node_modules/
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# --- Build & Output ---
+.next/
+out/
+dist/
+build/
+.vercel/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+
+# --- Environment & Secrets (CRITICAL) ---
+.env
+.env.*
+!.env.example
+secrets.json
+*.pem
+*.key
+.vercel/.env.*.local
+
+# --- Version Control & IDEs ---
+.git/
+.svn/
+.hg/
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*~
+
+# --- Logs & Tests ---
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.nyc_output/
+coverage/
+.jest/
+test-results/
+playwright-report/
+blob-report/
+
+# --- Media & Binary Assets ---
+public/images/
+public/fonts/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.ico
+*.webp
+*.avif
+*.mp4
+*.webm
+
+# --- Font Files ---
+*.ttf
+*.woff
+*.woff2
+*.eot
+*.otf
+
+# --- OS & Editor extras ---
+Thumbs.db
