@@ -3,19 +3,23 @@
 # ===============================================
 # Stage 1: Dependencies
 # ===============================================
-FROM node:22-bookworm-slim AS deps
+FROM node:22-alpine AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package files
+# Copy package files and Yarn configuration
 COPY package.json yarn.lock .yarnrc.yml ./
+COPY .yarn/releases ./.yarn/releases
 
 # Install dependencies
-RUN yarn install --frozen-lockfile
+RUN corepack enable && yarn install --immutable
 
 # ===============================================
 # Stage 2: Build
 # ===============================================
-FROM node:22-bookworm-slim AS builder
+FROM node:22-alpine AS builder
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy dependencies from deps stage
@@ -27,8 +31,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Set STANDALONE_BUILD=true to enable standalone output in next.config.mjs
 ENV STANDALONE_BUILD=true
 
-# Build the application
-RUN yarn build
+# Enable Corepack and Build the application
+RUN corepack enable && yarn build
 
 # ===============================================
 # Stage 3: Production Runner

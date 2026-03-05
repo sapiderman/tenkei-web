@@ -4,7 +4,7 @@
 
 This is the official website for Tenkei Aikidojo, a martial arts dojo specializing in Aikido. The site provides information about the dojo, classes, instructors, and allows potential students to learn about and connect with the community.
 
-**Live Site**: <https://tenkei.vercel.app>  
+**Live Site**: <https://tenkeiaikidojo.org>  
 **Repository**: <https://github.com/sapiderman/tenkei-web>  
 **License**: MIT
 
@@ -16,6 +16,9 @@ This is the official website for Tenkei Aikidojo, a martial arts dojo specializi
 - **React 19+**
 - **TypeScript** (strict mode)
 - **Node.js** (required for development)
+- **Internationalization**: `i18next`, `react-i18next`, `next-i18n-router`
+- **State Management**: Local component state, React Context, and i18n hooks
+- **Data Fetching**: Next.js native `fetch` with caching
 
 ### Styling & UI
 
@@ -25,7 +28,7 @@ This is the official website for Tenkei Aikidojo, a martial arts dojo specializi
 
 ### Package Management
 
-- **Yarn** (v1 / Classic, pinned via Volta) - /?P0.rimary package manager
+- **Yarn** (Berry / v4+, pinned via Volta) - Primary package manager
 - Configuration: `.yarnrc.yml`
 - Lock file: `yarn.lock`
 
@@ -42,28 +45,72 @@ This is the official website for Tenkei Aikidojo, a martial arts dojo specializi
 - **VS Code** - Primary IDE (see `.vscode/` for settings)
 - **Devcontainer** - Development container support (see `.devcontainer/`)
 - **ESLint** - Code linting (`.eslintrc.json`)
+- **Prettier** - Code formatting
 
 ## Project Structure
 
 ```shell
 tenkei-web/
 ├── app/                    # Next.js App Router pages and layouts
+│   ├── [lang]/            # Localized routes (en, id, ja)
+│   │   ├── layout.tsx     # Localized layout component
+│   │   ├── page.tsx      # Localized home page
+│   │   └── [feature]/    # Feature-based localized routing
+│   ├── i18n/              # Internationalization configuration & utilities
+│   │   ├── settings.ts    # i18n settings (languages, defaultNS, etc.)
+│   │   ├── index.ts      # Server-side i18n initialization (getT)
+│   │   └── client.ts     # Client-side i18n hook (useTranslation)
 │   ├── layout.tsx         # Root layout component
-│   ├── page.tsx          # Home page
-│   └── [feature]/        # Feature-based routing
+│   └── globals.css        # Global CSS styles
 ├── components/            # Reusable React components
-│   ├── ui/               # UI primitives (buttons, cards, etc.)
-│   └── [feature]/        # Feature-specific components
+│   ├── ui/               # UI primitives (buttons, cards, etc.) - if applicable
+│   └── [ComponentName].tsx # Component files
 ├── lib/                  # Utility functions and helpers
 │   ├── utils.ts         # General utilities
-│   └── [feature]/       # Feature-specific utilities
+│   └── locales/         # Potential locale-specific utilities
 ├── public/              # Static assets (images, fonts, etc.)
 │   ├── images/          # Image assets
-│   └── fonts/           # Font files
+│   ├── fonts/           # Font files
+│   └── locales/         # JSON translation files
+│       ├── en/
+│       ├── id/
+│       └── ja/
+├── i18n.config.ts        # General i18n configuration
 ├── .github/             # GitHub Actions workflows
 ├── .devcontainer/       # VS Code devcontainer configuration
 ├── .vscode/             # VS Code workspace settings
 └── [config files]       # Configuration files
+```
+
+## Internationalization (i18n)
+
+The project supports multiple languages: English (`en`), Indonesian (`id`), and Japanese (`ja`).
+
+- **Default Locale**: `en`
+- **Translation Files**: Located in `public/locales/[lang]/common.json`.
+- **URL Pattern**: `/[lang]/path` (e.g., `/en/about`, `/id/about`).
+
+### Server Components Usage
+
+```typescript
+import { getT } from "@/app/i18n";
+
+export default async function Page({ params }: { params: { lang: string } }) {
+  const { t } = await getT(params.lang, "common");
+  return <h1>{t("welcome_message")}</h1>;
+}
+```
+
+### Client Components Usage
+
+```typescript
+'use client'
+import { useTranslation } from "@/app/i18n/client";
+
+export function ClientComponent({ lang }: { lang: string }) {
+  const { t } = useTranslation(lang, "common");
+  return <button>{t("submit")}</button>;
+}
 ```
 
 ## Coding Standards & Conventions
@@ -83,6 +130,7 @@ tenkei-web/
 
 - **Functional components only** - No class components
 - **Server Components by default** - Use `'use client'` only when necessary
+- **React 19 / Next.js 16 Features**: Prefer modern React hooks like `useActionState`, Server Actions for forms, and React 19 native features where appropriate.
 - **Component structure**:
 
   ```typescript
@@ -153,11 +201,11 @@ Example: `feat: add contact form to aikido classes page`
 ### Common Commands
 
 ```bash
-yarn dev          # Start development server
+yarn dev          # Start development server (using Turbopack)
 yarn build        # Build for production
 yarn start        # Start production server
 yarn lint         # Run ESLint
-yarn lint:fix     # Auto-fix linting issues
+yarn format       # Run Prettier format
 ```
 
 ### Code Quality Checks
@@ -165,9 +213,10 @@ yarn lint:fix     # Auto-fix linting issues
 Before committing:
 
 1. Run `yarn lint` - Must pass with no errors
-2. Run `yarn build` - Must build successfully
-3. Test changes manually in browser
-4. Check responsive design (mobile, tablet, desktop)
+2. Run `yarn format` (if Prettier is configured)
+3. Run `yarn build` - Must build successfully
+4. Test changes manually in browser
+5. Check responsive design (mobile, tablet, desktop)
 
 ## Content & Domain Knowledge
 
@@ -208,9 +257,9 @@ Before committing:
 
 ### SEO Best Practices
 
-- **Meta tags**: Every page must have unique title and description
+- **Meta tags**: Every page must have unique title and description, translated per locale.
 - **Structured data**: Use JSON-LD for organization/local business
-- **Open Graph**: Proper OG tags for social sharing
+- **Open Graph**: Proper OG tags for social sharing, localized `og:locale`
 - **Sitemap**: Auto-generated via Next.js
 - **robots.txt**: Configured for search engines
 - **Alt text**: All images must have descriptive alt text
@@ -255,6 +304,7 @@ When implementing new features, test:
 - [ ] Different screen sizes (320px to 1920px+)
 - [ ] Dark mode (if applicable)
 - [ ] Accessibility (keyboard navigation, screen reader)
+- [ ] Multi-language support (English, Indonesian, Japanese)
 
 ### Future Considerations
 
@@ -266,14 +316,14 @@ When implementing new features, test:
 
 ### Data Sources
 
-- Static content in components/pages
+- Static content in components/pages (managed via translation files)
 - Potential CMS integration (future consideration)
-- Contact form submissions (future backend integration)
+- Contact form submissions (via Server Actions or API routes)
 
 ### Forms
 
 - Client-side validation using React Hook Form (if implemented)
-- Server-side validation in API routes
+- Server-side validation using **Server Actions** (preferred over API routes)
 - Proper error handling and user feedback
 
 ## Security Considerations
@@ -282,16 +332,18 @@ When implementing new features, test:
 
 - No sensitive data in client-side code
 - Environment variables for secrets (never commit `.env.local`)
+  - Common variables: `NEXT_PUBLIC_SITE_URL`, API keys, etc.
 - HTTPS enforced on production
 - CSP headers configured via Next.js config
 - Input validation on all user-submitted data
+- Prevent Cross-Site Scripting (XSS) by using the installed `xss` library when dealing with raw user input
 
 ### Contact Forms
 
 - CSRF protection
 - Rate limiting
 - Email validation
-- Spam protection (reCAPTCHA or similar)
+- Spam protection (Cloudflare Turnstile via `@marsidev/react-turnstile`)
 
 ## Common Patterns & Best Practices
 
@@ -315,18 +367,21 @@ import Image from 'next/image'
 ### Metadata (SEO)
 
 ```typescript
-// app/[page]/page.tsx
+// app/[lang]/page.tsx
 import { Metadata } from "next";
+import { getT } from "@/app/i18n";
 
-export const metadata: Metadata = {
-  title: "Aikido Classes in Jakarta | Tenkei Aikidojo",
-  description: "Join our Aikido classes in Jakarta...",
-  openGraph: {
-    title: "Aikido Classes in Jakarta",
-    description: "...",
-    images: ["/og-image.jpg"],
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: { lang: string };
+}): Promise<Metadata> {
+  const { t } = await getT(params.lang, "common");
+  return {
+    title: t("metadata.title"),
+    description: t("metadata.description"),
+  };
+}
 ```
 
 ### Utility Function Pattern
@@ -345,7 +400,7 @@ export function cn(...inputs: ClassValue[]) {
 ### Loading States
 
 ```typescript
-// app/[page]/loading.tsx
+// app/[lang]/loading.tsx
 export default function Loading() {
   return <div className="...">Loading...</div>
 }
@@ -354,7 +409,7 @@ export default function Loading() {
 ### Error Handling
 
 ```typescript
-// app/[page]/error.tsx
+// app/[lang]/error.tsx
 'use client'
 
 export default function Error({
@@ -382,6 +437,7 @@ export default function Error({
 3. **Plan the approach** - What files need to be created/modified?
 4. **Consider performance** - Will this impact loading time or bundle size?
 5. **Think accessibility** - Is this usable for everyone?
+6. **Consider localization** - Does this need to be translated?
 
 ### Code Review Checklist
 
@@ -391,9 +447,10 @@ export default function Error({
 - [ ] Responsive design works on all screen sizes
 - [ ] Accessibility requirements met
 - [ ] Performance not negatively impacted
-- [ ] SEO meta tags updated if needed
+- [ ] SEO meta tags updated and localized
 - [ ] No console errors or warnings
 - [ ] Code is well-commented for complex logic
+- [ ] All user-facing strings are in translation files
 
 ### AI Agent Guidelines
 
@@ -409,6 +466,11 @@ When I (Gemini CLI) am working on this project:
 8. **Document complex logic** with comments
 9. **Keep commits focused** on single changes
 10. **Respect the existing architecture** - don't introduce new patterns without discussion
+11. **Do not output large blocks of code in chat**; use file editing tools to apply changes directly.
+12. **Always check for TypeScript errors** after modifying or creating components.
+13. **When adding new dependencies**, specify whether they should be `dependencies` or `devDependencies`.
+14. **Ensure all new features are properly localized** in supported languages.
+15. **Routing & Middleware**: Always consider `next.config.js` and `middleware.ts` when adding new routes to ensure the i18n routing logic remains intact.
 
 ## Project-Specific Context
 
@@ -432,7 +494,7 @@ When I (Gemini CLI) am working on this project:
 - Payment integration
 - Training schedule calendar
 - Blog/news section
-- Multi-language support (Indonesian/English toggle)
+- Multi-language support (Indonesian/English/Japanese toggle - implemented)
 - Photo/video gallery
 - Instructor profiles
 - Student testimonials
@@ -449,6 +511,7 @@ When implementing new features, consider asking:
 5. **Are there accessibility concerns?** (Forms, interactive elements?)
 6. **What's the content update frequency?** (Should this use a CMS?)
 7. **Are there legal requirements?** (Privacy policy, terms of service?)
+8. **Are all translations available for the new feature?**
 
 ## Emergency Contacts & Resources
 
@@ -464,6 +527,7 @@ When implementing new features, consider asking:
 - Tailwind CSS: <https://tailwindcss.com/docs>
 - TypeScript: <https://www.typescriptlang.org/docs>
 - React: <https://react.dev>
+- i18next: <https://www.i18next.com/>
 
 ### Package Updates
 
@@ -473,6 +537,6 @@ When implementing new features, consider asking:
 
 ---
 
-**Last Updated**: February 2026  
+**Last Updated**: March 2026  
 **Maintained by**: Tenkei Aikidojo Development Team  
 **For questions about this project, consult the repository owner or create a GitHub issue.**

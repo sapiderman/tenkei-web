@@ -1,23 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getT } from "../i18n"; // Adjust path for i18n helper
 
-import Footer from "@/components/footer";
-import Events from "@/components/events";
+import Footer from "@/components/footer"; // Will need to be updated to be language aware
+import Events from "@/components/events"; // Will need to be updated to be language aware
 
-export default function Home() {
+export default async function HomePage(props: {
+  params: Promise<{ lang: string }>;
+}) {
+  const params = await props.params;
+  const { lang } = params;
+  const { t } = await getT(lang, "common"); // Get translation function for 'common' namespace
+
   return (
     <>
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
           <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4">
-            Welcome to the new Tenkei web&nbsp;
+            {t("welcome_message")}&nbsp;
           </p>
 
           <div className="fixed bottom-0 left-0 flex w-full items-end justify-center bg-gradient-to-t from-white via-white lg:static lg:h-auto lg:w-auto lg:bg-none p-4 lg:p-0">
-            {/* Use a container div to control the responsive size */}
             <div className="relative w-32 h-32 lg:w-48 lg:h-48">
-              {" "}
-              {/* Smaller on mobile, larger on desktop */}
               <Image
                 src="/tenkei_logo.png"
                 alt="Tenkei Logo"
@@ -43,72 +47,72 @@ export default function Home() {
 
         <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
           <Link
-            href="/about"
+            href={`/${lang}/about`} // Update href with lang
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>
-              About{" "}
+              {t("about_us")}{" "}
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Short history of Tenkei Aikidojo and our Sensei
+              {t("about_tenkei_desc")}
             </p>
           </Link>
 
           <Link
-            href="/dojos"
+            href={`/${lang}/dojos`} // Update href with lang
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100"
             rel="noopener noreferrer"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>
-              Dojos{" "}
+              {t("dojos")}{" "}
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Explore all dojo locations and practice schedules
+              {t("explore_dojos_desc")}
             </p>
           </Link>
 
           <a
-            href="https://blog.tenkeiaikidojo.org/"
+            href="https://blog.tenkeiaikidojo.org/" // External link, no lang change
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100"
             target="_blank"
             rel="noopener noreferrer"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>
-              Blogs{" "}
+              {t("blogs")}{" "}
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Read about past events, articles and essays
+              {t("read_blogs_desc")}
             </p>
           </a>
 
           <Link
-            href="/shinjuku"
+            href={`/${lang}/shinjuku`} // Update href with lang
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>
-              Shinjuku Aikikai{" "}
+              {t("shinjuku_aikikai")}{" "}
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              A little about Shinjuku Aikikai
+              {t("shinjuku_desc")}
             </p>
           </Link>
         </div>
       </main>
-      <Events />
+      <Events lang={lang} />
       <br />
-      <Footer />
+      <Footer lang={lang} />
     </>
   );
 }
