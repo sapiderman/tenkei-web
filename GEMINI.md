@@ -28,8 +28,8 @@ This is the official website for Tenkei Aikidojo, a martial arts dojo specializi
 
 ### Package Management
 
-- **Yarn** (v1 / Classic, pinned via Volta) - Primary package manager
-- Configuration: `.yarnrc.yml`
+- **Yarn** (v4 / Berry, managed via Corepack) - Primary package manager
+- Configuration: `package.json` (`packageManager` field) and `.yarnrc.yml`
 - Lock file: `yarn.lock`
 
 ### Deployment & Infrastructure
@@ -193,9 +193,10 @@ Example: `feat: add contact form to aikido classes page`
 
 1. Clone repository
 2. Copy `.env.example` to `.env.local`
-3. Run `yarn install`
-4. Run `yarn dev` to start development server
-5. Open `http://localhost:3000`
+3. Run `corepack enable` (ensures Yarn v4 is active)
+4. Run `yarn install`
+5. Run `yarn dev` to start development server
+6. Open `http://localhost:3000`
 
 ### Common Commands
 
@@ -369,7 +370,11 @@ import Image from 'next/image'
 import { Metadata } from "next";
 import { getT } from "@/app/i18n";
 
-export async function generateMetadata({ params }: { params: { lang: string } }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { lang: string };
+}): Promise<Metadata> {
   const { t } = await getT(params.lang, "common");
   return {
     title: t("metadata.title"),
@@ -533,4 +538,3 @@ When implementing new features, consider asking:
 **Last Updated**: March 2026  
 **Maintained by**: Tenkei Aikidojo Development Team  
 **For questions about this project, consult the repository owner or create a GitHub issue.**
-
