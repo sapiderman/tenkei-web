@@ -6,11 +6,14 @@
 FROM node:22-bookworm-slim AS deps
 WORKDIR /app
 
+# Enable Corepack
+RUN corepack enable
+
 # Copy package files
 COPY package.json yarn.lock .yarnrc.yml ./
 
 # Install dependencies
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 # ===============================================
 # Stage 2: Build
