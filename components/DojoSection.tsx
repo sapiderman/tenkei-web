@@ -7,24 +7,24 @@ export default async function DojoSection({ lang }: { lang: string }) {
 
   const dojos = [
     {
-      name: "Blok S Dojo",
-      location: "Jakarta Selatan",
-      schedule: "Tuesdays & Thursdays",
+      name: t("dojo_blok_s"),
+      location: t("loc_south_jakarta"),
+      schedule: t("sched_tue_thu"),
     },
     {
-      name: "Ragunan Dojo",
-      location: "Jakarta Selatan",
-      schedule: "Wednesdays & Saturdays",
+      name: t("dojo_ragunan"),
+      location: t("loc_south_jakarta"),
+      schedule: t("sched_wed_sat"),
     },
     {
-      name: "Mayapada Dojo",
-      location: "Jakarta Selatan",
-      schedule: "Mondays & Fridays",
+      name: t("dojo_mayapada"),
+      location: t("loc_south_jakarta"),
+      schedule: t("sched_mon_fri"),
     },
     {
-      name: "Kemenpora Dojo",
-      location: "Jakarta Pusat",
-      schedule: "Wednesdays",
+      name: t("dojo_kemenpora"),
+      location: t("loc_central_jakarta"),
+      schedule: t("sched_wed"),
     },
   ];
 

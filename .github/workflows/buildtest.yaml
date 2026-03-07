@@ -20,13 +20,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Enable Corepack
+        run: corepack enable
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-      - name: Enable Corepack
-        run: corepack enable
-      - run: yarn
+      - run: yarn install
       - run: yarn check-format
       - name: Cancel workflow on failure
         if: failure()
@@ -36,13 +36,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Enable Corepack
+        run: corepack enable
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-      - name: Enable Corepack
-        run: corepack enable
-      - run: yarn
+      - run: yarn install
       - run: yarn build
       - name: Cancel workflow on failure
         if: failure()

@@ -20,9 +20,9 @@ export default async function Hero({ lang }: { lang: string }) {
         </div>
 
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-8 animate-slide-up [animation-delay:200ms]">
-          <span className="text-gradient">Aikido for the</span>
+          <span className="text-gradient">{t("hero_title_1")}</span>
           <br />
-          <span className="text-white">Modern World</span>
+          <span className="text-white">{t("hero_title_2")}</span>
         </h1>
 
         <p className="max-w-2xl mx-auto text-lg md:text-xl text-white/60 mb-12 animate-slide-up [animation-delay:400ms]">
