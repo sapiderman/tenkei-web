@@ -1,9 +1,11 @@
 import Footer from "@/components/footer";
 import JoinButton from "@/components/joinButton";
 import Image from "next/image";
+import Header from "@/components/Header";
 import { getT } from "@/app/i18n"; // Use alias path
 import type { Metadata } from "next";
 import { fees, schedules } from "./data"; // Keep this import
+import { MapPin, Clock, Phone, Instagram } from "lucide-react";
 
 export async function generateMetadata(props: {
   params: Promise<{ lang: string }>;
@@ -24,93 +26,109 @@ export default async function Dojo(props: {
   const { lang } = params;
   const { t } = await getT(lang, "common");
   return (
-    <>
-      <main className="flex min-h-screen flex-col items-left justify-between p-24">
-        {/* Flex container to align heading and logo */}
-        <div className="flex items-center justify-left gap-4 sm:gap-6">
-          {/* Heading - text-center removed as flex container handles centering */}
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-            {t("dojo_locations_schedules_contacts")}
-          </h1>
-          {/* Sized container for the logo */}
-          {/* Adjust w-XX h-XX classes to control the logo size (e.g., w-16 h-16 is 64px) */}
-          <div className="relative w-10 h-10 sm:w-20 sm:h-20 md:w-24 md:h-24 flex-shrink-0">
+    <div className="min-h-screen bg-zinc-950 text-white selection:bg-blue-500/30">
+      <Header lang={lang} />
+      <main className="pt-32 pb-24 px-6 max-w-7xl mx-auto animate-fade-in">
+        <div className="flex items-center justify-between gap-6 mb-16">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6">
+              {t("dojo_locations_schedules_contacts")}
+            </h1>
+          </div>
+          <div className="relative w-16 h-16 sm:w-24 sm:h-24 flex-shrink-0">
             <Image
               src="/tenkei_logo.png"
               alt="Tenkei Logo"
               fill
-              sizes="(max-width: 640px) 40px, (max-width: 768px) 80px, 96px"
               className="object-contain"
               priority
             />
           </div>
         </div>
 
-        {schedules.map((schedule, index) => (
-          <div key={index} className="my-4">
-            <h2 className="text-lg font-bold">{schedule.title}</h2>
-            <p>{schedule.description}</p>
-            <a
-              className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-              href={schedule.location}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {schedule.location}
-            </a>
-            <p>{schedule.time}</p>
-            <p>{schedule.contact}</p>
-            {schedule.ig && (
-              <>
-                <p>
-                  ig:{" "}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
+          {schedules.map((schedule, index) => (
+            <div key={index} className="p-8 rounded-3xl glass border-white/5 hover:border-white/10 transition-all group">
+              <h2 className="text-2xl font-bold mb-6 group-hover:text-blue-500 transition-colors">{schedule.title}</h2>
+              <div className="space-y-4">
+                <p className="text-white/60 leading-relaxed">{schedule.description}</p>
+
+                <div className="flex items-start gap-3 text-white/70">
+                  <MapPin className="w-5 h-5 text-blue-500 shrink-0 mt-1" />
                   <a
-                    className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-                    href={schedule.ig}
+                    className="hover:text-white transition-colors break-all"
+                    href={schedule.location}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {schedule.ig}
+                    {schedule.location}
                   </a>
-                </p>
-              </>
-            )}
-          </div>
-        ))}
+                </div>
 
-        <div className="my-6">
-          <h2 className="text-lg font-bold mb-2">{t("dojo_fees")}</h2>
+                <div className="flex items-center gap-3 text-white/70">
+                  <Clock className="w-5 h-5 text-blue-500 shrink-0" />
+                  <span>{schedule.time}</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-white/70">
+                  <Phone className="w-5 h-5 text-blue-500 shrink-0" />
+                  <span>{schedule.contact}</span>
+                </div>
+
+                {schedule.ig && (
+                  <div className="flex items-center gap-3 text-white/70">
+                    <Instagram className="w-5 h-5 text-blue-500 shrink-0" />
+                    <a
+                      className="hover:text-white transition-colors"
+                      href={schedule.ig}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {schedule.ig.replace('https://www.instagram.com/', '@').replace('/', '')}
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="max-w-3xl mx-auto mb-24 p-8 rounded-3xl glass border-white/5">
+          <h2 className="text-3xl font-bold mb-8 text-center">{t("dojo_fees")}</h2>
           <div className="overflow-x-auto">
-            <table className="w-full max-w-lg text-left border-collapse">
+            <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-gray-300">
-                  <th className="py-1 font-semibold text-gray-900">
+                <tr className="border-b border-white/10">
+                  <th className="pb-4 font-bold text-white/40 uppercase tracking-widest text-xs">
                     {t("type")}
                   </th>
-                  <th className="py-1 pl-4 font-semibold text-gray-900">
+                  <th className="pb-4 pl-4 font-bold text-white/40 uppercase tracking-widest text-xs">
                     {t("cost")}
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-white/5">
                 {Object.entries(fees).map(([key, value]) => (
                   <tr
                     key={key}
-                    className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"
+                    className="group hover:bg-white/5 transition-colors"
                   >
-                    <td className="py-1 text-gray-700">{key}</td>
-                    <td className="py-1 pl-4 text-gray-600">{value}</td>
+                    <td className="py-4 text-white/80 group-hover:text-white">{key}</td>
+                    <td className="py-4 pl-4 text-white/60 group-hover:text-white font-mono">{value}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-sm text-gray-500 italic">{t("fees_note")}</p>
+          <p className="mt-8 text-sm text-white/40 italic text-center">{t("fees_note")}</p>
         </div>
-        <JoinButton lang={lang} />
+
+        <div className="flex justify-center">
+            <JoinButton lang={lang} />
+        </div>
       </main>
 
       <Footer lang={lang} />
-    </>
+    </div>
   );
 }
