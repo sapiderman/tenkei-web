@@ -355,12 +355,12 @@ export default function RegisterForm() {
 
   if (isSuccess) {
     return (
-      <div className="bg-gradient-to-br from-zinc-50 to-slate-200 min-h-screen flex items-center justify-center font-sans text-gray-900 py-12 px-4">
-        <div className="w-full max-w-2xl p-8 bg-white/80 backdrop-blur-md border border-white/50 rounded-2xl shadow-2xl">
-          <div className="text-center py-8 fade-in">
-            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="flex items-center justify-center py-24 px-4">
+        <div className="w-full max-w-2xl p-8 glass border-white/10 rounded-3xl shadow-2xl">
+          <div className="text-center py-8 animate-fade-in">
+            <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg
-                className="w-8 h-8 text-emerald-600"
+                className="w-8 h-8 text-emerald-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -373,20 +373,20 @@ export default function RegisterForm() {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <h3 className="text-2xl font-bold text-white mb-3">
               {t("registration_complete")}
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-white/60 mb-4">
               {t("welcome_to_tenkei")}
-              <span className="text-emerald-600 font-semibold">
+              <span className="text-emerald-500 font-semibold mx-1">
                 {formData.name}
               </span>
               !
             </p>
-            <p className="text-gray-600 mb-6">{t("dojocho_contact_shortly")}</p>
+            <p className="text-white/60 mb-8">{t("dojocho_contact_shortly")}</p>
             <Link
               href="/"
-              className="inline-block bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-semibold py-2 px-6 rounded-lg transition-all shadow-lg shadow-emerald-500/20"
+              className="inline-block px-8 py-4 bg-white text-black font-semibold rounded-full hover:bg-white/90 transition-all transform hover:scale-105"
             >
               {t("return_to_site")}
             </Link>
@@ -397,18 +397,18 @@ export default function RegisterForm() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-zinc-50 to-slate-200 min-h-screen flex items-center justify-center font-sans text-gray-900 py-12 px-4">
-      <div className="w-full max-w-2xl p-8 bg-white/80 backdrop-blur-md border border-white/50 rounded-2xl shadow-2xl">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-emerald-600">
+    <div className="flex items-center justify-center py-24 px-4">
+      <div className="w-full max-w-2xl p-8 glass border-white/10 rounded-3xl shadow-2xl">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold tracking-tight text-white mb-4">
             {t("tenkei_registration")}
           </h1>
-          <p className="text-gray-500 mt-2">{t("complete_profile_register")}</p>
+          <p className="text-white/60">{t("complete_profile_register")}</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-600 px-4 py-3 rounded-lg text-sm flex items-center gap-2 fade-in animate-in">
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
               <svg
                 className="w-5 h-5 text-red-500 flex-shrink-0"
                 fill="none"
@@ -427,16 +427,16 @@ export default function RegisterForm() {
           )}
 
           {/* Personal Information Section */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-white border-l-4 border-blue-500 pl-4">
               {t("personal_information")}
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("full_name")} <span className="text-red-500">*</span>
                 </label>
@@ -447,15 +447,15 @@ export default function RegisterForm() {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-white/20"
                   placeholder={t("your_full_name") as string}
                 />
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("email_address")}
                 </label>
@@ -465,15 +465,15 @@ export default function RegisterForm() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-white/20"
                   placeholder="you@domain.com"
                 />
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label
                   htmlFor="whatsapp"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("whatsapp_number")} <span className="text-red-500">*</span>
                 </label>
@@ -484,15 +484,15 @@ export default function RegisterForm() {
                   value={formData.whatsapp}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-white/20"
                   placeholder="+62 812 3456 7890"
                 />
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label
                   htmlFor="date_of_birth"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("date_of_birth")}
                 </label>
@@ -502,23 +502,23 @@ export default function RegisterForm() {
                   name="date_of_birth"
                   value={formData.date_of_birth}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all [color-scheme:dark]"
                 />
               </div>
             </div>
           </div>
 
           {/* Account Security Section */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-white border-l-4 border-blue-500 pl-4">
               {t("account_security")}
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("password")} <span className="text-red-500">*</span>
                 </label>
@@ -529,16 +529,16 @@ export default function RegisterForm() {
                   value={formData.password}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-white/20"
                   placeholder="••••••••"
                 />
-                <p className="text-xs text-gray-500">{t("password_hint")}</p>
+                <p className="text-xs text-white/40 ml-1">{t("password_hint")}</p>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label
                   htmlFor="password_confirm"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("confirm_password")}{" "}
                   <span className="text-red-500">*</span>
@@ -550,7 +550,7 @@ export default function RegisterForm() {
                   value={formData.password_confirm}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-white/20"
                   placeholder="••••••••"
                 />
               </div>
@@ -558,17 +558,17 @@ export default function RegisterForm() {
           </div>
 
           {/* Training Information Section */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-white border-l-4 border-blue-500 pl-4">
               {t("training_information")}
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Dojo Dropdown */}
-              <div className="space-y-1" ref={dojoRef}>
+              <div className="space-y-2" ref={dojoRef}>
                 <label
                   htmlFor="dojo"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("dojo")}
                 </label>
@@ -588,19 +588,19 @@ export default function RegisterForm() {
                       setDojoOpen(true);
                     }}
                     onFocus={() => setDojoOpen(true)}
-                    className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-white/20"
                     placeholder={t("dojo_placeholder") as string}
                     autoComplete="off"
                   />
 
                   {dojoOpen && filteredDojos.length > 0 && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
-                      <ul className="py-1">
+                    <div className="absolute z-10 w-full mt-2 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
+                      <ul className="py-2">
                         {filteredDojos.map((dojo) => (
                           <li
                             key={dojo}
                             onClick={() => handleDojoSelect(dojo)}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 transition-colors"
+                            className="px-4 py-2.5 hover:bg-white/5 cursor-pointer text-white/80 hover:text-white transition-colors"
                           >
                             {dojo}
                           </li>
@@ -612,10 +612,10 @@ export default function RegisterForm() {
               </div>
 
               {/* Rank Selection */}
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label
                   htmlFor="rank"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("current_rank")}
                 </label>
@@ -624,21 +624,21 @@ export default function RegisterForm() {
                   name="rank"
                   value={formData.rank}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all [color-scheme:dark]"
                 >
-                  <option value="">{t("select_rank")}</option>
+                  <option value="" className="bg-zinc-900">{t("select_rank")}</option>
                   {RANK_OPTIONS.map((rankOption) => (
-                    <option key={rankOption} value={rankOption}>
+                    <option key={rankOption} value={rankOption} className="bg-zinc-900">
                       {rankOption}
                     </option>
                   ))}
                 </select>
               </div>
 
-              <div className="space-y-1 md:col-span-2">
+              <div className="space-y-2 md:col-span-2">
                 <label
                   htmlFor="last_grading_date"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("last_grading_date")}
                 </label>
@@ -648,23 +648,23 @@ export default function RegisterForm() {
                   name="last_grading_date"
                   value={formData.last_grading_date}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all [color-scheme:dark]"
                 />
               </div>
             </div>
           </div>
 
           {/* Emergency Contact Section */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-white border-l-4 border-blue-500 pl-4">
               {t("emergency_contact")}
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
                 <label
                   htmlFor="emergency_contact_name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("emergency_contact_name")}
                 </label>
@@ -674,15 +674,15 @@ export default function RegisterForm() {
                   name="emergency_contact_name"
                   value={formData.emergency_contact_name}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-white/20"
                   placeholder={t("contact_name") as string}
                 />
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label
                   htmlFor="emergency_contact_number"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white/70 ml-1"
                 >
                   {t("emergency_contact_number")}
                 </label>
@@ -692,7 +692,7 @@ export default function RegisterForm() {
                   name="emergency_contact_number"
                   value={formData.emergency_contact_number}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-white/20"
                   placeholder="+62 xxx xxxx xxxx"
                 />
               </div>
@@ -700,15 +700,15 @@ export default function RegisterForm() {
           </div>
 
           {/* Medical Information Section */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-white border-l-4 border-blue-500 pl-4">
               {t("medical_information")}
             </h2>
 
-            <div className="space-y-1">
+            <div className="space-y-2">
               <label
                 htmlFor="medical_conditions"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-white/70 ml-1"
               >
                 {t("medical_conditions")}
               </label>
@@ -718,50 +718,60 @@ export default function RegisterForm() {
                 value={formData.medical_conditions}
                 onChange={handleInputChange}
                 rows={3}
-                className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400 resize-none"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-white/20 resize-none"
                 placeholder={t("medical_conditions_placeholder") as string}
               />
             </div>
           </div>
 
           {/* Consent & Agreements Section */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-white border-l-4 border-blue-500 pl-4">
               {t("consent_and_agreements")}
             </h2>
 
-            <div className="space-y-3">
-              <label className="flex items-start gap-3 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  name="consent_datastore"
-                  checked={formData.consent_datastore}
-                  onChange={handleInputChange}
-                  required
-                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer"
-                />
-                <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+            <div className="space-y-4">
+              <label className="flex items-start gap-4 cursor-pointer group">
+                <div className="relative flex items-center mt-1">
+                    <input
+                    type="checkbox"
+                    name="consent_datastore"
+                    checked={formData.consent_datastore}
+                    onChange={handleInputChange}
+                    required
+                    className="peer w-6 h-6 bg-white/5 border-2 border-white/10 rounded-lg text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer appearance-none checked:bg-blue-500 checked:border-blue-500 transition-all"
+                    />
+                    <svg className="absolute w-4 h-4 text-white pointer-events-none opacity-0 peer-checked:opacity-100 left-1 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <span className="text-sm text-white/60 group-hover:text-white transition-colors leading-relaxed">
                   {t("consent_datastore_text")}{" "}
                   <span className="text-red-500">*</span>
                 </span>
               </label>
 
-              <label className="flex items-start gap-3 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  name="consent_marketing"
-                  checked={formData.consent_marketing}
-                  onChange={handleInputChange}
-                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer"
-                />
-                <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+              <label className="flex items-start gap-4 cursor-pointer group">
+                <div className="relative flex items-center mt-1">
+                    <input
+                    type="checkbox"
+                    name="consent_marketing"
+                    checked={formData.consent_marketing}
+                    onChange={handleInputChange}
+                    className="peer w-6 h-6 bg-white/5 border-2 border-white/10 rounded-lg text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer appearance-none checked:bg-blue-500 checked:border-blue-500 transition-all"
+                    />
+                    <svg className="absolute w-4 h-4 text-white pointer-events-none opacity-0 peer-checked:opacity-100 left-1 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <span className="text-sm text-white/60 group-hover:text-white transition-colors leading-relaxed">
                   {t("consent_marketing_text")}
                 </span>
               </label>
             </div>
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center py-4">
             <Turnstile
               siteKey={
                 process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
@@ -770,6 +780,7 @@ export default function RegisterForm() {
                   : "")
               }
               onSuccess={handleTurnstileSuccess}
+              options={{ theme: 'dark' }}
             />
           </div>
 
@@ -777,9 +788,9 @@ export default function RegisterForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 rounded-lg shadow-lg shadow-blue-500/20 transition-all transform active:scale-95 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-white/90 transition-all transform hover:scale-[1.02] active:scale-95 flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-white/5"
           >
-            <span>{t("complete_registration")}</span>
+            <span className="text-lg">{t("complete_registration")}</span>
             {isLoading && (
               <svg
                 className="animate-spin h-5 w-5 text-white"

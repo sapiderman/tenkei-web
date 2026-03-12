@@ -68,12 +68,12 @@ export default function LanguageSwitcher({
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50 text-left" ref={dropdownRef}>
+    <div className="relative text-left" ref={dropdownRef}>
       <div>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="inline-flex items-center gap-x-2 rounded-full bg-white/70 dark:bg-black/50 px-4 py-2 text-sm font-medium text-gray-900 dark:text-gray-100 shadow-md ring-1 ring-inset ring-black/5 dark:ring-white/10 hover:bg-white/90 dark:hover:bg-black/70 backdrop-blur-md transition-all duration-300"
+          className="inline-flex items-center gap-x-2 rounded-full bg-white/5 px-4 py-2 text-sm font-medium text-white shadow-md ring-1 ring-inset ring-white/10 hover:bg-white/10 backdrop-blur-md transition-all duration-300"
           id="language-menu-button"
           aria-expanded={isOpen}
           aria-haspopup="true"

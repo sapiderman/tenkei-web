@@ -64,7 +64,6 @@ export default async function Layout({
   return (
     <>
       <LocalBusinessSchema />
-      <LanguageSwitcher currentLang={lang} />
       {children}
     </>
   );
