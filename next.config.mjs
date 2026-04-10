@@ -33,6 +33,14 @@ const nextConfig = {
             key: "X-Frame-Options",
             value: "SAMEORIGIN", // Allows embedding only from your own domain
           },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains; preload",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://asset.tenkeiaikidojo.org; frame-src https://challenges.cloudflare.com; connect-src 'self';",
+          },
         ],
       },
     ];
