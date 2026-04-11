@@ -386,10 +386,16 @@ export async function POST(request: Request) {
 
     // Log backend errors for debugging (avoid logging the entire body which may contain sensitive info)
     if (!response.ok) {
+      const errorDetail = typeof data.error === 'string' 
+        ? data.error 
+        : typeof data.message === 'string' 
+          ? data.message 
+          : "Unknown backend error";
+
       console.error("Backend registration error:", {
         status: response.status,
         statusText: response.statusText,
-        error: data.error || data.message || "Unknown backend error",
+        error: errorDetail, 
         targetUrl: TARGET_API_URL,
       });
     }
