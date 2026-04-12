@@ -18,7 +18,7 @@ export default function LanguageSwitcher({
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
@@ -27,8 +27,10 @@ export default function LanguageSwitcher({
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, []);
 
@@ -72,7 +74,7 @@ export default function LanguageSwitcher({
       <div>
         <button
           type="button"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setIsOpen((prev) => !prev)}
           className="inline-flex items-center gap-x-2 rounded-full bg-white/70 dark:bg-black/50 px-4 py-2 text-sm font-medium text-gray-900 dark:text-gray-100 shadow-md ring-1 ring-inset ring-black/5 dark:ring-white/10 hover:bg-white/90 dark:hover:bg-black/70 backdrop-blur-md transition-all duration-300"
           id="language-menu-button"
           aria-expanded={isOpen}
@@ -84,7 +86,7 @@ export default function LanguageSwitcher({
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="h-4 w-4 text-gray-500 dark:text-gray-400"
+            className="h-4 w-4 text-gray-500 dark:text-gray-400 pointer-events-none"
           >
             <path
               strokeLinecap="round"
@@ -99,7 +101,7 @@ export default function LanguageSwitcher({
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={`h-4 w-4 text-gray-400 dark:text-gray-500 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+            className={`h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
             aria-hidden="true"
           >
             <path
