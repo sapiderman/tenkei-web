@@ -2,9 +2,6 @@ import { getT } from "../i18n";
 import { dir } from "i18next";
 import { languages } from "../i18n/settings";
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export async function generateStaticParams() {
@@ -63,7 +60,6 @@ export default async function Layout({
 
   return (
     <>
-      <LocalBusinessSchema />
       <LanguageSwitcher currentLang={lang} />
       {children}
     </>
