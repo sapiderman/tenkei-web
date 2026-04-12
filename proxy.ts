@@ -7,15 +7,12 @@ export function proxy(request: NextRequest) {
   // Must run before CSP so locale redirects are not blocked.
   const response = i18nRouter(request, i18n);
 
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
-
-  // Strict CSP:
-  // 'strict-dynamic' allows scripts loaded by nonced scripts to execute.
-  // Cloudflare Turnstile domain kept explicitly for safety.
+  // CSP without nonce/strict-dynamic — Next.js static scripts have no nonce attribute
+  // so strict-dynamic would block hydration. 'self' is sufficient for this site.
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://challenges.cloudflare.com;
-    style-src 'self' 'nonce-${nonce}';
+    script-src 'self' https://challenges.cloudflare.com;
+    style-src 'self';
     img-src 'self' data: https://asset.tenkeiaikidojo.org;
     font-src 'self';
     object-src 'none';
@@ -27,12 +24,8 @@ export function proxy(request: NextRequest) {
     upgrade-insecure-requests;
   `.replace(/\s{2,}/g, ' ').trim();
 
-  // Attach CSP and nonce to whatever response i18nRouter produced (redirect or next).
-  response.headers.set('x-nonce', nonce);
+  // Attach CSP to whatever response i18nRouter produced (redirect or next).
   response.headers.set('Content-Security-Policy', cspHeader);
-
-  // Forward x-nonce as a request header so server components can read it via headers().
-  response.headers.set('x-middleware-request-x-nonce', nonce);
 
   return response;
 }
