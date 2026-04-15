@@ -42,7 +42,10 @@ export function proxy(request: NextRequest) {
 
   // 4. Attach the CSP and the nonce to the response
   response.headers.set("Content-Security-Policy", cspHeader);
-  response.headers.set("x-middleware-request-content-security-policy", cspHeader);
+  response.headers.set(
+    "x-middleware-request-content-security-policy",
+    cspHeader,
+  );
   response.headers.set("x-nonce", nonce);
 
   return response;
