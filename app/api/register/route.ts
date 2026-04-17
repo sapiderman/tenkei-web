@@ -386,16 +386,17 @@ export async function POST(request: Request) {
 
     // Log backend errors for debugging (avoid logging the entire body which may contain sensitive info)
     if (!response.ok) {
-      const errorDetail = typeof data.error === 'string' 
-        ? data.error 
-        : typeof data.message === 'string' 
-          ? data.message 
-          : "Unknown backend error";
+      const errorDetail =
+        typeof data.error === "string"
+          ? data.error
+          : typeof data.message === "string"
+            ? data.message
+            : "Unknown backend error";
 
       console.error("Backend registration error:", {
         status: response.status,
         statusText: response.statusText,
-        error: errorDetail, 
+        error: errorDetail,
         targetUrl: TARGET_API_URL,
       });
     }
@@ -403,7 +404,10 @@ export async function POST(request: Request) {
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     // Avoid logging the entire error object if it could contain sensitive env vars or stack traces in production
-    console.error("Registration proxy error:", error instanceof Error ? error.message : "Handled internal error");
+    console.error(
+      "Registration proxy error:",
+      error instanceof Error ? error.message : "Handled internal error",
+    );
     return NextResponse.json(
       { error: "An unexpected error occurred during registration." },
       { status: 500 },

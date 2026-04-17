@@ -60,7 +60,9 @@ export default async function Layout({
 
   return (
     <>
-      <LanguageSwitcher currentLang={lang} />
+      <div id="lang-switcher-boundary">
+        <LanguageSwitcher currentLang={lang} />
+      </div>
       {children}
     </>
   );
