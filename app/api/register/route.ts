@@ -2,6 +2,84 @@ import { NextResponse } from "next/server";
 import { filterXSS } from "xss";
 import { VALID_RANKS } from "@/lib/constants";
 
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 10;
+const RATE_LIMIT_MAP = new Map<string, { count: number; expiresAt: number }>();
+
+function getRateLimitKey(request: Request): string {
+  const cfConnectingIp = request.headers.get("cf-connecting-ip");
+  const xForwardedFor = request.headers.get("x-forwarded-for");
+  const userAgent = request.headers.get("user-agent") || "unknown-agent";
+  const clientIp =
+    cfConnectingIp || xForwardedFor?.split(",")[0]?.trim() || "unknown-ip";
+  return `${clientIp}:${userAgent}`;
+}
+
+function isRateLimited(request: Request): boolean {
+  const key = getRateLimitKey(request);
+  const now = Date.now();
+  const existing = RATE_LIMIT_MAP.get(key);
+
+  if (!existing || existing.expiresAt <= now) {
+    RATE_LIMIT_MAP.set(key, {
+      count: 1,
+      expiresAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return false;
+  }
+
+  if (existing.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return true;
+  }
+
+  existing.count += 1;
+  return false;
+}
+
+async function verifyTurnstileToken(
+  token: string,
+  request: Request,
+): Promise<boolean> {
+  const secret = process.env.CF_TURNSTILE_SECRET;
+  if (!secret) {
+    return true;
+  }
+
+  const remoteIp =
+    request.headers.get("cf-connecting-ip") ||
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+
+  const params = new URLSearchParams({
+    secret,
+    response: token,
+  });
+
+  if (remoteIp) {
+    params.set("remoteip", remoteIp);
+  }
+
+  const response = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
+    },
+  );
+
+  if (!response.ok) {
+    console.warn(
+      "Turnstile verification request failed",
+      response.status,
+      response.statusText,
+    );
+    return false;
+  }
+
+  const result = await response.json();
+  return Boolean(result.success);
+}
+
 /**
  * Sanitize string input to prevent basic XSS and injection attacks.
  * Returns an empty string if input is not a string or is undefined.
@@ -135,6 +213,16 @@ export async function POST(request: Request) {
   }
 
   try {
+    if (isRateLimited(request)) {
+      return NextResponse.json(
+        {
+          error:
+            "Too many registration attempts. Please wait a few minutes before trying again.",
+        },
+        { status: 429 },
+      );
+    }
+
     const body: RegistrationBody = await request.json();
 
     // 1. Get turnstile token (use underscore key)
@@ -153,6 +241,14 @@ export async function POST(request: Request) {
     if (!isValidTurnstileToken(turnstileToken)) {
       return NextResponse.json(
         { error: "Invalid security verification token" },
+        { status: 400 },
+      );
+    }
+
+    const turnstileVerified = await verifyTurnstileToken(turnstileToken, request);
+    if (!turnstileVerified) {
+      return NextResponse.json(
+        { error: "Security verification failed" },
         { status: 400 },
       );
     }
@@ -361,9 +457,6 @@ export async function POST(request: Request) {
 
     const userAgent = request.headers.get("user-agent");
     if (userAgent) headers.set("User-Agent", userAgent);
-
-    const xForwardedFor = request.headers.get("x-forwarded-for");
-    if (xForwardedFor) headers.set("X-Forwarded-For", xForwardedFor);
 
     const acceptLanguage = request.headers.get("accept-language");
     if (acceptLanguage) headers.set("Accept-Language", acceptLanguage);
