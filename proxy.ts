@@ -7,29 +7,38 @@ export function proxy(request: NextRequest) {
   const response = i18nRouter(request, i18n);
 
   // 1. Build the CSP
-  // Allow unsafe-eval ONLY in development for Fast Refresh
   const isDev = process.env.NODE_ENV !== "production";
-  const evalDirective = isDev ? "'unsafe-eval'" : "";
+  const scriptSrc = [
+    "'self'",
+    "https://challenges.cloudflare.com",
+    "https://va.vercel-scripts.com",
+  ];
+  if (isDev) {
+    scriptSrc.unshift("'unsafe-eval'");
+  }
 
-  const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'unsafe-inline' ${evalDirective} https://challenges.cloudflare.com https://va.vercel-scripts.com;
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' data: https://asset.tenkeiaikidojo.org;
-    font-src 'self';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    frame-src https://challenges.cloudflare.com;
-    connect-src 'self' https://challenges.cloudflare.com https://vitals.vercel-insights.com;
-    upgrade-insecure-requests;
-  `
-    .replace(/\s{2,}/g, " ")
-    .trim();
+  const cspDirectives = [
+    "default-src 'self'",
+    `script-src ${scriptSrc.join(" ")} 'unsafe-inline'`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: https://asset.tenkeiaikidojo.org",
+    "font-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "frame-src https://challenges.cloudflare.com",
+    "connect-src 'self' https://challenges.cloudflare.com https://vitals.vercel-insights.com",
+    "upgrade-insecure-requests",
+  ];
+
+  const cspHeader = cspDirectives.join("; ");
+  const permissionsPolicy =
+    "camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=(), interest-cohort=()";
 
   // 2. Attach the CSP to the response
   response.headers.set("Content-Security-Policy", cspHeader);
+  response.headers.set("Permissions-Policy", permissionsPolicy);
   response.headers.set(
     "x-middleware-request-content-security-policy",
     cspHeader,

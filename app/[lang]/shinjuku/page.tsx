@@ -9,9 +9,21 @@ export async function generateMetadata(props: {
   const params = await props.params;
   const { lang } = params;
   const { t } = await getT(lang, "common");
+  const title = t("shinjuku_page_title");
+  const description = t("shinjuku_page_description");
+
   return {
-    title: t("shinjuku_page_title"),
-    description: t("shinjuku_page_description"),
+    title,
+    description,
+    alternates: {
+      canonical: `https://www.tenkeiaikidojo.org/${lang}/shinjuku`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://www.tenkeiaikidojo.org/${lang}/shinjuku`,
+      type: "website",
+    },
   };
 }
 
