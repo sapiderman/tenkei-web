@@ -3,6 +3,7 @@ import { dir } from "i18next";
 import { languages } from "../i18n/settings";
 import type { Metadata } from "next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 
 export async function generateStaticParams() {
   return languages.map((lang) => ({ lang }));
@@ -23,10 +24,18 @@ export async function generateMetadata(props: {
     description,
     keywords:
       "Aikido, Tenkei Aikidojo, Jakarta, martial arts, self-defense, dojo, training, martial arts classes",
+    alternates: {
+      canonical: `https://www.tenkeiaikidojo.org/${lang}`,
+      languages: {
+        en: "https://www.tenkeiaikidojo.org/en",
+        id: "https://www.tenkeiaikidojo.org/id",
+        ja: "https://www.tenkeiaikidojo.org/ja",
+      },
+    },
     openGraph: {
       title,
       description,
-      url: "https://www.tenkeiaikidojo.org",
+      url: `https://www.tenkeiaikidojo.org/${lang}`,
       siteName: "Tenkei Aikidojo",
       images: [
         {
@@ -60,6 +69,7 @@ export default async function Layout({
 
   return (
     <>
+      <LocalBusinessSchema lang={lang} />
       <div id="lang-switcher-boundary">
         <LanguageSwitcher currentLang={lang} />
       </div>

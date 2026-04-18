@@ -9,9 +9,21 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const { t } = await getT(lang, "common");
+  const title = t("register_page_title");
+  const description = t("register_page_description");
+
   return {
-    title: t("register_page_title"),
-    description: t("register_page_description"),
+    title,
+    description,
+    alternates: {
+      canonical: `https://www.tenkeiaikidojo.org/${lang}/register`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://www.tenkeiaikidojo.org/${lang}/register`,
+      type: "website",
+    },
   };
 }
 
