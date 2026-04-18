@@ -109,6 +109,25 @@ export default function RegisterForm() {
   const [dojoSearch, setDojoSearch] = useState("");
   const dojoRef = useRef<HTMLDivElement>(null);
 
+  const turnstileSiteKey =
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+    (process.env.NODE_ENV === "development"
+      ? "1x00000000000000000000AA"
+      : "");
+  const isTurnstileConfigured = Boolean(turnstileSiteKey);
+
+  const handleTurnstileError = () => {
+    setError(
+      "Security challenge failed to load. Please refresh the page and try again.",
+    );
+    setTurnstileToken("");
+  };
+
+  const handleTurnstileExpired = () => {
+    setTurnstileToken("");
+    setError("Security challenge has expired. Please complete it again.");
+  };
+
   const filteredDojos = DOJO_OPTIONS.filter((dojo) =>
     dojo.toLowerCase().includes(dojoSearch.toLowerCase()),
   );
@@ -761,16 +780,26 @@ export default function RegisterForm() {
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <Turnstile
-              siteKey={
-                process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
-                (process.env.NODE_ENV === "development"
-                  ? "1x00000000000000000000AA"
-                  : "")
-              }
-              onSuccess={handleTurnstileSuccess}
-            />
+          <div className="flex flex-col items-center gap-3">
+            {!isTurnstileConfigured ? (
+              <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                Security challenge is not configured. Please contact the site
+                administrator.
+              </div>
+            ) : (
+              <Turnstile
+                siteKey={turnstileSiteKey}
+                onSuccess={handleTurnstileSuccess}
+                onError={handleTurnstileError}
+                onTimeout={handleTurnstileExpired}
+                onUnsupported={() =>
+                  setError(
+                    "Security challenge is not supported in this browser.",
+                  )
+                }
+                scriptOptions={{ crossOrigin: "anonymous" }}
+              />
+            )}
           </div>
 
           {/* Submit Button */}
