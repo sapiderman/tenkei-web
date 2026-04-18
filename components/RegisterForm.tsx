@@ -111,9 +111,7 @@ export default function RegisterForm() {
 
   const turnstileSiteKey =
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
-    (process.env.NODE_ENV === "development"
-      ? "1x00000000000000000000AA"
-      : "");
+    (process.env.NODE_ENV === "development" ? "1x00000000000000000000AA" : "");
   const isTurnstileConfigured = Boolean(turnstileSiteKey);
 
   const handleTurnstileError = () => {

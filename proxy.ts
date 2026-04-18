@@ -8,7 +8,11 @@ export function proxy(request: NextRequest) {
 
   // 1. Build the CSP
   const isDev = process.env.NODE_ENV !== "production";
-  const scriptSrc = ["'self'", "https://challenges.cloudflare.com", "https://va.vercel-scripts.com"];
+  const scriptSrc = [
+    "'self'",
+    "https://challenges.cloudflare.com",
+    "https://va.vercel-scripts.com",
+  ];
   if (isDev) {
     scriptSrc.unshift("'unsafe-eval'");
   }

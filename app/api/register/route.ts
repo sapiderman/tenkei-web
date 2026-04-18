@@ -245,7 +245,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const turnstileVerified = await verifyTurnstileToken(turnstileToken, request);
+    const turnstileVerified = await verifyTurnstileToken(
+      turnstileToken,
+      request,
+    );
     if (!turnstileVerified) {
       return NextResponse.json(
         { error: "Security verification failed" },
