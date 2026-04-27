@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { filterXSS } from "xss";
+import DOMPurify from "isomorphic-dompurify";
 import { VALID_RANKS } from "@/lib/constants";
 
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
@@ -90,12 +90,10 @@ function sanitizeString(input: unknown): string {
   }
 
   const trimmed = input.trim();
-  // Use xss library to strip all HTML tags (whitelist: {})
-
-  const cleaned = filterXSS(trimmed, {
-    whiteList: {},
-    stripIgnoreTag: true,
-    stripIgnoreTagBody: ["script", "style"],
+  // Use DOMPurify to strip all HTML tags
+  const cleaned = DOMPurify.sanitize(trimmed, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: [],
   });
   // Normalize control characters to mitigate header/log injection vectors
   return cleaned

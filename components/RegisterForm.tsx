@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslation } from "@/app/i18n/client";
 import { Turnstile } from "@marsidev/react-turnstile";
-import { filterXSS } from "xss";
+import DOMPurify from "isomorphic-dompurify";
 import { VALID_RANKS as RANK_OPTIONS } from "@/lib/constants";
 
 interface RegisterFormData {
@@ -32,10 +32,9 @@ const DOJO_OPTIONS = [
   "Tenkei Natsu Aikidojo",
 ];
 
-const XSS_OPTIONS = {
-  whiteList: {},
-  stripIgnoreTag: true,
-  stripIgnoreTagBody: ["script", "style"],
+const DOMPURIFY_OPTIONS = {
+  ALLOWED_TAGS: [],
+  ALLOWED_ATTR: [],
 };
 
 const stripControlChars = (value: string) =>
@@ -45,10 +44,10 @@ const stripControlChars = (value: string) =>
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]+/g, "");
 
 const sanitizeTextInput = (value: string) =>
-  stripControlChars(filterXSS(value, XSS_OPTIONS));
+  stripControlChars(DOMPurify.sanitize(value, DOMPURIFY_OPTIONS));
 
 const sanitizeTextInputForSubmission = (value: string) =>
-  stripControlChars(filterXSS(value.trim(), XSS_OPTIONS));
+  stripControlChars(DOMPurify.sanitize(value.trim(), DOMPURIFY_OPTIONS));
 
 const sanitizePhoneInput = (value: string) =>
   stripControlChars(value.replace(/[^\d+\s().-]/g, "").trim());
