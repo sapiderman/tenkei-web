@@ -1,5 +1,5 @@
 import { getT } from "../app/i18n"; // Adjust path as needed
-
+import Link from "next/link";
 import pkg from "../package.json";
 export default async function Footer({ lang }: { lang: string }) {
   const { t } = await getT(lang, "common");
@@ -16,6 +16,12 @@ export default async function Footer({ lang }: { lang: string }) {
           >
             {t("contact_us")}
           </a>
+          <Link
+            href={`/${lang}/privacy`}
+            className="text-blue-500 hover:underline ml-4"
+          >
+            {t("privacy_policy")}
+          </Link>
         </p>
       </div>
     </footer>
