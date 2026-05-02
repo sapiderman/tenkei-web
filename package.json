@@ -18,7 +18,7 @@
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-resources-to-backend": "^1.2.1",
     "lilconfig": "^3.1.1",
-    "next": "16.1.7",
+    "next": "^16.2.3",
     "next-i18n-router": "^5.5.6",
     "prettier": "^3.8.0",
     "react": "^19.0.0",
@@ -34,12 +34,15 @@
     "baseline-browser-mapping": "^2.9.19",
     "eslint": "^9",
     "eslint-config-next": "16.1.5",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1",
+    "postcss": "^8.5.10",
+    "tailwindcss": "^3.4.19",
     "typescript": "^5.4.2"
   },
   "volta": {
     "node": "22.11.0"
   },
-  "packageManager": "yarn@4.13.0+sha512.5c20ba010c99815433e5c8453112165e673f1c7948d8d2b267f4b5e52097538658388ebc9f9580656d9b75c5cc996f990f611f99304a2197d4c56d21eea370e7"
+  "packageManager": "yarn@4.13.0+sha512.5c20ba010c99815433e5c8453112165e673f1c7948d8d2b267f4b5e52097538658388ebc9f9580656d9b75c5cc996f990f611f99304a2197d4c56d21eea370e7",
+  "resolutions": {
+    "postcss": "^8.5.10"
+  }
 }

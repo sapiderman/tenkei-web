@@ -18,6 +18,27 @@ const nextConfig = {
         source: "/:path*",
         headers: [
           {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self';",
+              "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://challenges.cloudflare.com;",
+              "style-src 'self' 'unsafe-inline';",
+              "img-src 'self' data: https://asset.tenkeiaikidojo.org https://www.tenkeiaikidojo.org;",
+              "connect-src 'self' https://vitals.vercel-insights.com https://challenges.cloudflare.com;",
+              "frame-src 'self' https://challenges.cloudflare.com;",
+              "font-src 'self' data:;",
+              "object-src 'none';",
+              "base-uri 'self';",
+              "form-action 'self';",
+              "frame-ancestors 'none';",
+              "upgrade-insecure-requests;",
+            ].join(" "),
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains; preload",
+          },
+          {
             key: "X-Content-Type-Options",
             value: "nosniff",
           },
