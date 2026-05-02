@@ -63,11 +63,10 @@ tenkei-web/
 │   ├── layout.tsx         # Root layout component
 │   └── globals.css        # Global CSS styles
 ├── components/            # Reusable React components
-│   ├── ui/               # UI primitives (buttons, cards, etc.) - if applicable
 │   └── [ComponentName].tsx # Component files
 ├── lib/                  # Utility functions and helpers
-│   ├── utils.ts         # General utilities
-│   └── locales/         # Potential locale-specific utilities
+│   └── constants.ts     # Shared constants
+├── .agents/             # AI agent skills and context (see below)
 ├── public/              # Static assets (images, fonts, etc.)
 │   ├── images/          # Image assets
 │   ├── fonts/           # Font files
@@ -322,7 +321,7 @@ When implementing new features, test:
 
 ### Forms
 
-- Client-side validation using React Hook Form (if implemented)
+- Client-side validation with native React state (React Hook Form is **not** currently installed)
 - Server-side validation using **Server Actions** (preferred over API routes)
 - Proper error handling and user feedback
 
@@ -334,7 +333,7 @@ When implementing new features, test:
 - Environment variables for secrets (never commit `.env.local`)
   - Common variables: `NEXT_PUBLIC_SITE_URL`, API keys, etc.
 - HTTPS enforced on production
-- CSP headers configured via Next.js config
+- CSP headers and i18n routing handled together in `proxy.ts` (Next.js 16 edge proxy convention — replaces the old `middleware.ts`)
 - Input validation on all user-submitted data
 
 ### Contact Forms
@@ -370,29 +369,18 @@ import Image from 'next/image'
 import { Metadata } from "next";
 import { getT } from "@/app/i18n";
 
+// In Next.js 15+, params is a Promise — always await it.
 export async function generateMetadata({
   params,
 }: {
-  params: { lang: string };
+  params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
-  const { t } = await getT(params.lang, "common");
+  const { lang } = await params;
+  const { t } = await getT(lang, "common");
   return {
     title: t("metadata.title"),
     description: t("metadata.description"),
   };
-}
-```
-
-### Utility Function Pattern
-
-```typescript
-// lib/utils.ts
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-// Combine Tailwind classes safely
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
 }
 ```
 
@@ -427,6 +415,23 @@ export default function Error({
 }
 ```
 
+## Agent Skills
+
+This repository ships a set of agent skill files under `.agents/skills/`. Before implementing features or making significant changes, AI agents should load the relevant skill:
+
+```
+.agents/skills/
+└── next-best-practices/   # Next.js 15/16 App Router best practices
+    ├── SKILL.md           # Entry point — read this first
+    ├── async-patterns.md  # Async params, cookies, headers (Next.js 15+)
+    ├── rsc-boundaries.md  # Server vs. Client component boundaries
+    ├── data-patterns.md   # Fetch, caching, revalidation
+    ├── metadata.md        # SEO metadata patterns
+    └── ...                # Other topic files
+```
+
+To use: read `.agents/skills/next-best-practices/SKILL.md` before working on any Next.js-related task. The SKILL.md file references the relevant topic files.
+
 ## When Making Changes
 
 ### Before Writing Code
@@ -453,7 +458,7 @@ export default function Error({
 
 ### AI Agent Guidelines
 
-When I (Gemini CLI) am working on this project:
+When I (an AI agent) am working on this project:
 
 1. **Always read relevant files first** before making changes
 2. **Follow the established patterns** in the codebase

@@ -1,17 +1,17 @@
 import React from "react";
 
 interface LocalBusinessSchemaProps {
-  // Define props if any parts of the schema become dynamic
+  lang: string;
 }
 
-const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = () => {
+const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = ({ lang }) => {
   const schema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "Tenkei Aikidojo",
     image: "https://www.tenkeiaikidojo.org/tenkei_logo.png",
-    url: "https://www.tenkeiaikidojo.org",
-    telephone: "+62-856-9329-55-four-five", //
+    url: `https://www.tenkeiaikidojo.org/${lang}`,
+    telephone: "+62-856-9329-5545",
     email: "info@tenkeiaikidojo.org",
     address: {
       "@type": "PostalAddress",

@@ -12,9 +12,21 @@ export async function generateMetadata(props: {
   const params = await props.params;
   const { lang } = params;
   const { t } = await getT(lang, "common");
+  const title = `${t("about_us")} - ${t("tenkei_aikidojo")}`;
+  const description = t("about_page_description");
+
   return {
-    title: `${t("about_us")} - ${t("tenkei_aikidojo")}`,
-    description: t("about_page_description"),
+    title,
+    description,
+    alternates: {
+      canonical: `https://www.tenkeiaikidojo.org/${lang}/about`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://www.tenkeiaikidojo.org/${lang}/about`,
+      type: "website",
+    },
   };
 }
 
