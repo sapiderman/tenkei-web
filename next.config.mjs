@@ -13,6 +13,7 @@ const nextConfig = {
     ],
   },
   async headers() {
+    const isProd = process.env.NODE_ENV !== "development";
     return [
       {
         source: "/:path*",
@@ -21,7 +22,7 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self';",
-              "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://challenges.cloudflare.com;",
+              `script-src 'self' 'unsafe-inline' ${isProd ? "" : "'unsafe-eval'"} https://va.vercel-scripts.com https://challenges.cloudflare.com;`,
               "style-src 'self' 'unsafe-inline';",
               "img-src 'self' data: https://asset.tenkeiaikidojo.org https://www.tenkeiaikidojo.org;",
               "connect-src 'self' https://vitals.vercel-insights.com https://challenges.cloudflare.com;",
