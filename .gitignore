@@ -225,3 +225,6 @@ dist
 # .pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/nextjs,yarn,visualstudiocode,node,git
+
+# graphify
+graphify-out
