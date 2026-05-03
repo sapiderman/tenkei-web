@@ -1,0 +1,51 @@
+# Dependency directories
+node_modules/
+.pnp
+.pnp.js
+
+# Build and output directories
+.next/
+dist/
+build/
+out/
+coverage/
+graphify-out/
+
+# Version control and IDE
+.git/
+.github/
+.vscode/
+.idea/
+.devcontainer/
+
+# Static assets and media
+public/
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.webp
+*.mp4
+*.webm
+
+# Lock files and logs
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment and secrets
+.env
+.env.*
+*.pem
+
+# Project-specific AI context
+.agents/
+
+# Graphify output
+graphify-out/
