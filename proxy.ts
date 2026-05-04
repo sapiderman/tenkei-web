@@ -20,15 +20,16 @@ export function proxy(request: NextRequest) {
   const cspDirectives = [
     "default-src 'self'",
     `script-src ${scriptSrc.join(" ")} 'unsafe-inline'`,
+    `script-src-elem ${scriptSrc.join(" ")} 'unsafe-inline'`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: https://asset.tenkeiaikidojo.org",
-    "font-src 'self'",
+    "img-src 'self' data: https://asset.tenkeiaikidojo.org https://www.tenkeiaikidojo.org",
+    "font-src 'self' data:",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    "frame-src https://challenges.cloudflare.com",
-    "connect-src 'self' https://challenges.cloudflare.com https://vitals.vercel-insights.com",
+    "frame-src 'self' https://challenges.cloudflare.com https://*.cloudflare.com",
+    "connect-src 'self' https://challenges.cloudflare.com https://*.cloudflare.com https://vitals.vercel-insights.com",
     "upgrade-insecure-requests",
   ];
 
@@ -44,9 +45,20 @@ export function proxy(request: NextRequest) {
     cspHeader,
   );
 
+  // 3. Standard security headers
+  response.headers.set(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains; preload",
+  );
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("X-Frame-Options", "SAMEORIGIN");
+  response.headers.set("X-XSS-Protection", "1; mode=block");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("x-tenkei-proxy", "active");
+
   return response;
 }
 
-export const config = {
+export const proxyConfig = {
   matcher: "/((?!api|static|.*\\..*|_next|favicon.ico).*)",
 };

@@ -235,11 +235,10 @@ export default function RegisterForm() {
       formData.dojo,
       formData.rank,
     ];
+    // Security: Basic check to ensure strings are valid
     for (const field of textFields) {
-      if (field && field !== sanitizeTextInput(field)) {
-        setError(
-          "Invalid characters detected. Please remove special characters.",
-        );
+      if (typeof field !== "string") {
+        setError("Invalid input data");
         return false;
       }
     }
