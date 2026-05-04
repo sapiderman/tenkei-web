@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslation } from "@/app/i18n/client";
 import { Turnstile } from "@marsidev/react-turnstile";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 import { VALID_RANKS as RANK_OPTIONS } from "@/lib/constants";
 
 interface RegisterFormData {
@@ -32,9 +32,9 @@ const DOJO_OPTIONS = [
   "Tenkei Natsu Aikidojo",
 ];
 
-const DOMPURIFY_OPTIONS = {
-  ALLOWED_TAGS: [],
-  ALLOWED_ATTR: [],
+const SANITIZE_OPTIONS = {
+  allowedTags: [],
+  allowedAttributes: {},
 };
 
 const stripControlChars = (value: string) =>
@@ -46,9 +46,9 @@ const stripControlChars = (value: string) =>
 const safeSanitize = (value: string) => {
   if (typeof value !== "string") return "";
   try {
-    return DOMPurify.sanitize(value, DOMPURIFY_OPTIONS);
+    return sanitizeHtml(value, SANITIZE_OPTIONS);
   } catch {
-    // Fallback: strip HTML tags manually if DOMPurify throws
+    // Fallback: strip HTML tags manually if sanitize-html throws
     return value.replace(/<[^>]*>/g, "");
   }
 };
