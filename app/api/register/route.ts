@@ -429,10 +429,10 @@ export async function POST(request: Request) {
         typeof data.error === "string"
           ? data.error
           : typeof data.message === "string"
-          ? data.message
-          : typeof data.detail === "string"
-          ? data.detail
-          : responseText || "Unknown backend error";
+            ? data.message
+            : typeof data.detail === "string"
+              ? data.detail
+              : responseText || "Unknown backend error";
 
       const truncatedResponseText =
         responseText.length > 1000

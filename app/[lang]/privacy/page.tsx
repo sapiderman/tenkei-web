@@ -33,42 +33,54 @@ export default async function PrivacyPolicy(props: {
           </div>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">{t("privacy_intro_title")}</h2>
+            <h2 className="text-2xl font-semibold">
+              {t("privacy_intro_title")}
+            </h2>
             <p className="text-gray-800 leading-relaxed">
               {t("privacy_intro_text")}
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">{t("privacy_collection_title")}</h2>
+            <h2 className="text-2xl font-semibold">
+              {t("privacy_collection_title")}
+            </h2>
             <p className="text-gray-800 leading-relaxed">
               {t("privacy_collection_text")}
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">{t("privacy_usage_title")}</h2>
+            <h2 className="text-2xl font-semibold">
+              {t("privacy_usage_title")}
+            </h2>
             <p className="text-gray-800 leading-relaxed">
               {t("privacy_usage_text")}
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">{t("privacy_security_title")}</h2>
+            <h2 className="text-2xl font-semibold">
+              {t("privacy_security_title")}
+            </h2>
             <p className="text-gray-800 leading-relaxed">
               {t("privacy_security_text")}
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">{t("privacy_cookies_title")}</h2>
+            <h2 className="text-2xl font-semibold">
+              {t("privacy_cookies_title")}
+            </h2>
             <p className="text-gray-800 leading-relaxed">
               {t("privacy_cookies_text")}
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">{t("privacy_contact_title")}</h2>
+            <h2 className="text-2xl font-semibold">
+              {t("privacy_contact_title")}
+            </h2>
             <p className="text-gray-800 leading-relaxed">
               {t("privacy_contact_text")}
             </p>
