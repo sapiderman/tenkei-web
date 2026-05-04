@@ -9,6 +9,9 @@ WORKDIR /app
 # Copy package files
 COPY package.json yarn.lock .yarnrc.yml ./
 
+# Enable Corepack to use Yarn version specified in package.json
+RUN corepack enable
+
 # Install dependencies
 RUN yarn install --frozen-lockfile
 
@@ -26,6 +29,9 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 # Set STANDALONE_BUILD=true to enable standalone output in next.config.mjs
 ENV STANDALONE_BUILD=true
+
+# Enable Corepack to use Yarn version specified in package.json
+RUN corepack enable
 
 # Build the application
 RUN yarn build
