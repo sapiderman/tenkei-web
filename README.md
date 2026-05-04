@@ -19,15 +19,14 @@ The official website for Tenkei Aikidojo, built with Next.js 16+, React 19, and 
 - **Internationalization:** `i18next`, `react-i18next`, `next-i18n-router`
 - **Styling:** Tailwind CSS
 - **Package Manager:** Yarn (Classic)
-- **Version Management:** Volta (Node.js 22+, Yarn 1.22.22)
+- **Version Management:** Mise (Node.js 22+, Yarn 1.22.22)
 - **Monitoring:** Vercel Analytics & Speed Insights
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (managed via Volta)
-- [Yarn](https://classic.yarnpkg.com/en/docs/install/)
+- [Node.js](https://nodejs.org/) (managed via Mise)
 
 ### Installation
 

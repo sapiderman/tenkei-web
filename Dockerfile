@@ -3,7 +3,7 @@
 # ===============================================
 # Stage 1: Dependencies
 # ===============================================
-FROM node:22-bookworm-slim AS deps
+FROM node:24-bookworm-slim AS deps
 WORKDIR /app
 
 # Copy package files
@@ -15,7 +15,7 @@ RUN yarn install --frozen-lockfile
 # ===============================================
 # Stage 2: Build
 # ===============================================
-FROM node:22-bookworm-slim AS builder
+FROM node:24-bookworm-slim AS builder
 WORKDIR /app
 
 # Copy dependencies from deps stage
@@ -33,7 +33,7 @@ RUN yarn build
 # ===============================================
 # Stage 3: Production Runner
 # ===============================================
-FROM gcr.io/distroless/nodejs22-debian12 AS runner
+FROM gcr.io/distroless/nodejs24-debian12 AS runner
 WORKDIR /app
 
 # Set production environment
