@@ -36,50 +36,6 @@ function isRateLimited(request: Request): boolean {
   return false;
 }
 
-async function verifyTurnstileToken(
-  token: string,
-  request: Request,
-): Promise<boolean> {
-  const secret = process.env.CF_TURNSTILE_SECRET;
-  if (!secret) {
-    return true;
-  }
-
-  const remoteIp =
-    request.headers.get("cf-connecting-ip") ||
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-
-  const params = new URLSearchParams({
-    secret,
-    response: token,
-  });
-
-  if (remoteIp) {
-    params.set("remoteip", remoteIp);
-  }
-
-  const response = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: params.toString(),
-    },
-  );
-
-  if (!response.ok) {
-    console.warn(
-      "Turnstile verification request failed",
-      response.status,
-      response.statusText,
-    );
-    return false;
-  }
-
-  const result = await response.json();
-  return Boolean(result.success);
-}
-
 /**
  * Sanitize string input to prevent basic XSS and injection attacks.
  * Returns an empty string if input is not a string or is undefined.
@@ -239,17 +195,6 @@ export async function POST(request: Request) {
     if (!isValidTurnstileToken(turnstileToken)) {
       return NextResponse.json(
         { error: "Invalid security verification token" },
-        { status: 400 },
-      );
-    }
-
-    const turnstileVerified = await verifyTurnstileToken(
-      turnstileToken,
-      request,
-    );
-    if (!turnstileVerified) {
-      return NextResponse.json(
-        { error: "Security verification failed" },
         { status: 400 },
       );
     }
@@ -478,30 +423,45 @@ export async function POST(request: Request) {
       data = { rawResponse: responseText };
     }
 
-    // Log backend errors for debugging (avoid logging the entire body which may contain sensitive info)
+    // Log backend errors for debugging in Vercel logs. Avoid logging raw payloads verbatim.
     if (!response.ok) {
       const errorDetail =
         typeof data.error === "string"
           ? data.error
           : typeof data.message === "string"
             ? data.message
-            : "Unknown backend error";
+            : typeof data.detail === "string"
+              ? data.detail
+              : responseText || "Unknown backend error";
+
+      const truncatedResponseText =
+        responseText.length > 1000
+          ? `${responseText.slice(0, 1000)}... (truncated)`
+          : responseText;
 
       console.error("Backend registration error:", {
         status: response.status,
         statusText: response.statusText,
         error: errorDetail,
+        responseText: truncatedResponseText,
         targetUrl: TARGET_API_URL,
       });
     }
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    // Avoid logging the entire error object if it could contain sensitive env vars or stack traces in production
-    console.error(
-      "Registration proxy error:",
-      error instanceof Error ? error.message : "Handled internal error",
-    );
+    // Avoid logging the entire error object if it could contain sensitive env vars or stack traces in production.
+    if (error instanceof Error) {
+      console.error("Registration proxy error:", {
+        message: error.message,
+        stack: error.stack?.split("\n").slice(0, 8).join("\n"),
+      });
+    } else {
+      console.error("Registration proxy error: unexpected non-error thrown", {
+        error,
+      });
+    }
+
     return NextResponse.json(
       { error: "An unexpected error occurred during registration." },
       { status: 500 },
