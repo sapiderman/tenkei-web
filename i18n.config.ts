@@ -4,4 +4,5 @@ export const i18n = {
   locales: ["en", "id", "ja"],
   localeCookie: "NEXT_LOCALE",
   localeDetection: true,
+  prefixDefault: true,
 };
