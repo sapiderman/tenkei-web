@@ -407,11 +407,21 @@ export async function POST(request: Request) {
     const acceptLanguage = request.headers.get("accept-language");
     if (acceptLanguage) headers.set("Accept-Language", acceptLanguage);
 
-    const response = await fetch(TARGET_API_URL, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(sanitizedPayload),
-    });
+    // Add timeout to prevent hanging requests
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+
+    let response: Response;
+    try {
+      response = await fetch(TARGET_API_URL, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(sanitizedPayload),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     // Handle non-JSON responses gracefully
     const responseText = await response.text();

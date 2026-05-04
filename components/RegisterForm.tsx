@@ -43,11 +43,21 @@ const stripControlChars = (value: string) =>
     .replace(/\t/g, " ")
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]+/g, "");
 
+const safeSanitize = (value: string) => {
+  if (typeof value !== "string") return "";
+  try {
+    return DOMPurify.sanitize(value, DOMPURIFY_OPTIONS);
+  } catch {
+    // Fallback: strip HTML tags manually if DOMPurify throws
+    return value.replace(/<[^>]*>/g, "");
+  }
+};
+
 const sanitizeTextInput = (value: string) =>
-  stripControlChars(DOMPurify.sanitize(value, DOMPURIFY_OPTIONS));
+  stripControlChars(safeSanitize(value));
 
 const sanitizeTextInputForSubmission = (value: string) =>
-  stripControlChars(DOMPurify.sanitize(value.trim(), DOMPURIFY_OPTIONS));
+  stripControlChars(safeSanitize(value.trim()));
 
 const sanitizePhoneInput = (value: string) =>
   stripControlChars(value.replace(/[^\d+\s().-]/g, "").trim());
@@ -57,7 +67,10 @@ const sanitizeDateInput = (value: string) =>
 
 const sanitizePasswordInput = (value: string) => stripControlChars(value);
 
-const sanitizeToken = (value: string) => stripControlChars(value.trim());
+const sanitizeToken = (value: string) => {
+  if (typeof value !== "string" || !value) return "";
+  return stripControlChars(value.trim());
+};
 
 const buildSanitizedPayload = (data: RegisterFormData) => ({
   name: sanitizeTextInputForSubmission(data.name),
@@ -331,13 +344,14 @@ export default function RegisterForm() {
     e.preventDefault();
     setError("");
 
-    if (!validateForm()) {
-      return;
-    }
-
     setIsLoading(true);
 
     try {
+      if (!validateForm()) {
+        setIsLoading(false);
+        return;
+      }
+
       const sanitizedSubmission = buildSanitizedPayload(formData);
       const response = await fetch("/api/register", {
         method: "POST",
