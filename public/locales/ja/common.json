@@ -100,5 +100,15 @@
   "privacy_cookies_title": "5. クッキー",
   "privacy_cookies_text": "当ウェブサイトでは、セキュリティの確保、人間であることの確認、およびスパムの防止のために、クッキーおよび同様の技術（Cloudflare Turnstileなど）を使用しています。Cloudflareによるデータの取り扱いについての詳細は、[Cloudflareプライバシーポリシー](https://www.cloudflare.com/privacypolicy/)をご覧ください。ブラウザの設定によりクッキーを拒否することができますが、その場合、登録やログインなどの機能が正しく動作しない可能性があります。",
   "privacy_contact_title": "6. お問い合わせ",
-  "privacy_contact_text": "このプライバシーポリシーまたは当社のプライバシー慣行に関するご質問がある場合は、info@tenkeiaikidojo.org までご連絡ください。"
+  "privacy_contact_text": "このプライバシーポリシーまたは当社のプライバシー慣行に関するご質問がある場合は、info@tenkeiaikidojo.org までご連絡ください。",
+  "event_1_title": "天恵2026演武会",
+  "event_1_desc": "天恵合気道場の門下生の進歩と精神を披露する毎年恒例の演武会です。",
+  "event_2_title": "天恵ファミリー",
+  "event_2_desc": "天恵は家族です。演武会やセミナーは、集まり、近況を報告し合い、食事を共にする良い機会です！",
+  "event_3_title": "エカ師範演武会",
+  "event_3_desc": "エカ・マチュディ・ラムダニ師範による特別演武。長年の合気道への献身を祝います。",
+  "event_4_title": "合気道キッズ",
+  "event_4_desc": "自信と協調性を養うために特別に設計された、子供向けの楽しくて規律ある合気道クラスです。",
+  "event_5_title": "女性合気道家",
+  "event_5_desc": "女性が合気道を稽古するための専用スペースで、エンパワーメントと護身術に焦点を当てています。"
 }
