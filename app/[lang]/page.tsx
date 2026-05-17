@@ -39,8 +39,9 @@ export default async function HomePage(props: {
             className="relative"
             src="/tenkei_text_logo.png"
             alt="Tenkei text banner"
-            width={1000}
-            height={150}
+            width={1624}
+            height={200}
+            style={{ maxWidth: "100%", height: "auto" }}
             priority
           />
         </div>
