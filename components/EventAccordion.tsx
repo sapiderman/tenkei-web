@@ -23,7 +23,10 @@ export default function EventAccordion({ items }: EventAccordionProps) {
     <div className="flex flex-col md:flex-row h-[600px] w-full overflow-hidden rounded-2xl shadow-xl border border-gray-800 bg-gray-900">
       {items.map((item, index) => {
         const isActive = activeIndex === index
-        const sanitizedDesc = sanitizeHtml(item.description)
+        const sanitizedDesc = sanitizeHtml(item.description, {
+          // CVE-2026-44990: xmp must be in nonTextTags to prevent raw-text passthrough XSS bypass
+          nonTextTags: ['script', 'style', 'textarea', 'option', 'xmp'],
+        })
 
         return (
           <div
