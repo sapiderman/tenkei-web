@@ -50,6 +50,8 @@ function sanitizeString(input: unknown): string {
   const cleaned = sanitizeHtml(trimmed, {
     allowedTags: [],
     allowedAttributes: {},
+    // CVE-2026-44990: xmp must be in nonTextTags to prevent raw-text passthrough XSS bypass
+    nonTextTags: ['script', 'style', 'textarea', 'option', 'xmp'],
   });
   // Normalize control characters to mitigate header/log injection vectors
   return cleaned

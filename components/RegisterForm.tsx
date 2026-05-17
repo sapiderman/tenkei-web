@@ -35,6 +35,8 @@ const DOJO_OPTIONS = [
 const SANITIZE_OPTIONS = {
   allowedTags: [],
   allowedAttributes: {},
+  // CVE-2026-44990: xmp must be in nonTextTags to prevent raw-text passthrough XSS bypass
+  nonTextTags: ['script', 'style', 'textarea', 'option', 'xmp'],
 };
 
 const stripControlChars = (value: string) =>
