@@ -20,6 +20,13 @@ export default async function Events({ lang }: { lang: string }) {
       altText: t("event_2_title"),
     },
     {
+      id: "event-3",
+      title: t("event_3_title"),
+      description: t("event_3_desc"),
+      imageUrl: "https://asset.tenkeiaikidojo.org/events/tenkei_sensei_embukai.png",
+      altText: t("event_3_title"),
+    },
+    {
       id: "event-4",
       title: t("event_4_title"),
       description: t("event_4_desc"),
