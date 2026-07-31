@@ -61,7 +61,7 @@
   "whatsapp_number": "WhatsApp番号",
   "date_of_birth": "生年月日",
   "account_security": "アカウントのセキュリティ",
-  "password": "Password",
+  "password": "パスワード",
   "confirm_password": "パスワード（確認用）",
   "password_hint": "8文字以上である必要があります。パスワードマネージャーの使用を強く推奨します。",
   "training_information": "稽古情報",

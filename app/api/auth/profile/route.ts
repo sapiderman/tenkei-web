@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import {
   getUpstreamUrl,
   getClientIp,
-  hashIdentifierForLog,
 } from "../_lib";
 
 export async function GET(request: Request) {

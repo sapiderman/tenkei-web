@@ -11,15 +11,13 @@
 
 /**
  * Returns the full upstream URL for the given auth path.
- * Throws if neither BE_API_BASE nor BE_API_URL is set.
+ * Throws if BE_API_BASE is not set.
  */
 export function getUpstreamUrl(path: string): string {
   const base = process.env.BE_API_BASE;
   if (base) {
     return `${base.replace(/\/+$/, "")}${path}`;
   }
-  // Legacy fallback for register compatibility — auth routes should always
-  // use BE_API_BASE, but return a useful error rather than crashing.
   throw new Error("BE_API_BASE is not configured");
 }
 
