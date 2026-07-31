@@ -158,14 +158,22 @@ interface RegistrationBody {
 }
 
 export async function POST(request: Request) {
-  const TARGET_API_URL = process.env.BE_API_URL;
+  const BE_API_BASE = process.env.BE_API_BASE;
+  const LEGACY_BE_API_URL = process.env.BE_API_URL;
+  const TARGET_API_URL = BE_API_BASE
+    ? `${BE_API_BASE.replace(/\/+$/, "")}/v1/register`
+    : LEGACY_BE_API_URL;
 
   if (!TARGET_API_URL) {
-    console.error("Server configuration error: BE_API_URL is missing");
+    console.error("Server configuration error: BE_API_BASE is missing");
     return NextResponse.json(
       { error: "Internal server configuration error" },
       { status: 500 },
     );
+  }
+
+  if (!BE_API_BASE && LEGACY_BE_API_URL) {
+    console.warn("BE_API_URL is deprecated; set BE_API_BASE instead");
   }
 
   try {
