@@ -1,5 +1,4 @@
 import { getT } from "../i18n";
-import { dir } from "i18next";
 import { languages } from "../i18n/settings";
 import type { Metadata } from "next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";

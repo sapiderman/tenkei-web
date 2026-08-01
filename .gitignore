@@ -228,3 +228,6 @@ dist
 
 # graphify
 graphify-out
+
+# harness specific
+.pi-subagents

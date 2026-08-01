@@ -18,8 +18,8 @@ The official website for Tenkei Aikidojo, built with Next.js 16+, React 19, and 
 - **Language:** TypeScript
 - **Internationalization:** `i18next`, `react-i18next`, `next-i18n-router`
 - **Styling:** Tailwind CSS
-- **Package Manager:** Yarn (Classic)
-- **Version Management:** Mise (Node.js 22+, Yarn 1.22.22)
+- **Package Manager:** Yarn v4 (Corepack)
+- **Version Management:** Mise (Node.js 24+)
 - **Monitoring:** Vercel Analytics & Speed Insights
 
 ## Getting Started
@@ -68,7 +68,7 @@ This project uses a localized routing strategy (`/[lang]/...`).
 - `components/`: Reusable React components.
 - `public/locales/`: Translation resource files.
 - `lib/`: Shared utilities and constants.
-- `GEMINI.md`: **Crucial** - Detailed technical standards and development mandates.
+- `AGENTS.md`: **Crucial** - Detailed technical standards and development mandates.
 
 ## Quality Standards
 
@@ -82,7 +82,7 @@ yarn check-format   # Verify formatting
 
 ## Contributing
 
-Please refer to [GEMINI.md](./GEMINI.md) for comprehensive coding standards, architectural patterns, and AI agent guidelines before making any changes.
+Please refer to [AGENTS.md](./AGENTS.md) for comprehensive coding standards, architectural patterns, and AI agent guidelines before making any changes.
 
 1. Ensure all code passes `yarn lint`.
 2. All user-facing strings must be localized.

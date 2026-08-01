@@ -1,7 +1,7 @@
 // app/i18n/client.ts
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import i18next from "i18next";
 import {
   initReactI18next,
@@ -9,7 +9,7 @@ import {
 } from "react-i18next";
 import resourcesToBackend from "i18next-resources-to-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { getOptions, languages } from "./settings";
+import { getOptions } from "./settings";
 
 // Initialize i18next for the client
 i18next

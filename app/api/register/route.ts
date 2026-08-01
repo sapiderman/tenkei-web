@@ -1,18 +1,29 @@
 import { NextResponse } from "next/server";
 import sanitizeHtml from "sanitize-html";
 import { VALID_RANKS } from "@/lib/constants";
+import {
+  isValidDate,
+  isValidEmail,
+  isValidPhone,
+  MAX_LENGTHS,
+} from "@/lib/validation";
 
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 10;
+// ponytail: in-memory limit — per-instance only, NOT shared across serverless
+// instances (cold starts / fan-out reset it). The backend (tenkei-register) is the
+// real rate-limit gate (5/min/IP). Move to Vercel KV / Upstash for a real
+// distributed edge limit.
 const RATE_LIMIT_MAP = new Map<string, { count: number; expiresAt: number }>();
 
 function getRateLimitKey(request: Request): string {
   const cfConnectingIp = request.headers.get("cf-connecting-ip");
   const xForwardedFor = request.headers.get("x-forwarded-for");
-  const userAgent = request.headers.get("user-agent") || "unknown-agent";
-  const clientIp =
-    cfConnectingIp || xForwardedFor?.split(",")[0]?.trim() || "unknown-ip";
-  return `${clientIp}:${userAgent}`;
+  // cf-connecting-ip is set by Cloudflare and trusted; the x-forwarded-for
+  // fallback is best-effort (client-controllable if not behind a trusted proxy).
+  // Keyed on IP only — including User-Agent let attackers rotate UAs for fresh
+  // budgets. (See RATE_LIMIT_MAP caveat above re: serverless per-instance scope.)
+  return cfConnectingIp || xForwardedFor?.split(",")[0]?.trim() || "unknown-ip";
 }
 
 function isRateLimited(request: Request): boolean {
@@ -51,72 +62,13 @@ function sanitizeString(input: unknown): string {
     allowedTags: [],
     allowedAttributes: {},
     // CVE-2026-44990: xmp must be in nonTextTags to prevent raw-text passthrough XSS bypass
-    nonTextTags: ['script', 'style', 'textarea', 'option', 'xmp'],
+    nonTextTags: ["script", "style", "textarea", "option", "xmp"],
   });
   // Normalize control characters to mitigate header/log injection vectors
   return cleaned
     .replace(/\r?\n/g, " ")
     .replace(/\t/g, " ")
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]+/g, "");
-}
-
-/**
- * Validates email format using a standard regex.
- */
-function isValidEmail(email: string): boolean {
-  // Regex:
-  // 1. No whitespace or @ in local part
-  // 2. @ symbol
-  // 3. No whitespace or @ in domain part
-  // 4. Dot
-  // 5. At least 2 chars for TLD
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  return emailRegex.test(email);
-}
-
-/**
- * Validates phone number format.
- * Accepts international formats, strips formatting chars before check.
- * Min 7 digits, Max 15 digits (E.164 standard is max 15).
- */
-function isValidPhone(phone: string): boolean {
-  if (!phone) return false;
-  // Remove spaces, hyphens, parentheses, and dots
-  const cleaned = phone.replace(/[\s\-().]/g, "");
-  // Optional '+' followed by 7 to 15 digits
-  const phoneRegex = /^\+?\d{7,15}$/;
-  return phoneRegex.test(cleaned);
-}
-
-/**
- * Validates date format (YYYY-MM-DD).
- * Checks if it's a valid date and not in the future.
- */
-function isValidDate(dateStr: string): boolean {
-  if (!dateStr) return true; // Optional field
-
-  const matches = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(dateStr);
-  if (!matches) {
-    return false;
-  }
-
-  const year = Number(matches[1]);
-  const month = Number(matches[2]);
-  const day = Number(matches[3]);
-
-  const candidate = new Date(year, month - 1, day);
-  if (
-    candidate.getFullYear() !== year ||
-    candidate.getMonth() !== month - 1 ||
-    candidate.getDate() !== day
-  ) {
-    return false;
-  }
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  return candidate <= today;
 }
 
 /**
@@ -265,59 +217,69 @@ export async function POST(request: Request) {
     }
 
     // 4. Length validation (prevent payload attacks / DB truncation issues)
-    if (name.length > 100) {
+    if (name.length > MAX_LENGTHS.name) {
       return NextResponse.json(
-        { error: "Name is too long (max 100 characters)" },
+        { error: `Name is too long (max ${MAX_LENGTHS.name} characters)` },
         { status: 400 },
       );
     }
 
     // Standard email max length in databases is often 255, but 100 is safe strict limit for this app
-    if (email.length > 100) {
+    if (email.length > MAX_LENGTHS.email) {
       return NextResponse.json(
-        { error: "Email is too long (max 100 characters)" },
+        { error: `Email is too long (max ${MAX_LENGTHS.email} characters)` },
         { status: 400 },
       );
     }
 
-    if (whatsapp.length > 20) {
+    if (whatsapp.length > MAX_LENGTHS.whatsapp) {
       return NextResponse.json(
-        { error: "WhatsApp number is too long" },
+        {
+          error: `WhatsApp number is too long (max ${MAX_LENGTHS.whatsapp} characters)`,
+        },
         { status: 400 },
       );
     }
 
-    if (password.length > 128) {
+    if (password.length > MAX_LENGTHS.password) {
       return NextResponse.json(
-        { error: "Password is too long (max 128 characters)" },
+        {
+          error: `Password is too long (max ${MAX_LENGTHS.password} characters)`,
+        },
         { status: 400 },
       );
     }
 
-    if (emergencyContactName.length > 100) {
+    if (emergencyContactName.length > MAX_LENGTHS.emergencyContactName) {
       return NextResponse.json(
-        { error: "Emergency contact name is too long (max 100 characters)" },
+        {
+          error: `Emergency contact name is too long (max ${MAX_LENGTHS.emergencyContactName} characters)`,
+        },
         { status: 400 },
       );
     }
 
-    if (emergencyContactNumber.length > 20) {
+    if (emergencyContactNumber.length > MAX_LENGTHS.emergencyContactNumber) {
       return NextResponse.json(
-        { error: "Emergency contact number is too long" },
+        {
+          error: `Emergency contact number is too long (max ${MAX_LENGTHS.emergencyContactNumber} characters)`,
+        },
         { status: 400 },
       );
     }
 
-    if (medicalConditions.length > 500) {
+    if (medicalConditions.length > MAX_LENGTHS.medicalConditions) {
       return NextResponse.json(
-        { error: "Medical conditions text is too long (max 500 characters)" },
+        {
+          error: `Medical conditions text is too long (max ${MAX_LENGTHS.medicalConditions} characters)`,
+        },
         { status: 400 },
       );
     }
 
-    if (dojo.length > 100) {
+    if (dojo.length > MAX_LENGTHS.dojo) {
       return NextResponse.json(
-        { error: "Dojo name is too long (max 100 characters)" },
+        { error: `Dojo name is too long (max ${MAX_LENGTHS.dojo} characters)` },
         { status: 400 },
       );
     }
@@ -407,9 +369,17 @@ export async function POST(request: Request) {
     headers.set("Content-Type", "application/json");
     headers.set("Accept", "application/json");
     headers.set("Accept-Language", "en");
-    if (process.env.CLOUDFLARE_BYPASS_SECRET) {
-      headers.set("x-cf-bypass", process.env.CLOUDFLARE_BYPASS_SECRET);
+    const bypassSecret = process.env.CLOUDFLARE_BYPASS_SECRET;
+    if (!bypassSecret) {
+      console.error(
+        "Server configuration error: CLOUDFLARE_BYPASS_SECRET is missing",
+      );
+      return NextResponse.json(
+        { error: "Internal server configuration error" },
+        { status: 500 },
+      );
     }
+    headers.set("x-cf-bypass", bypassSecret);
 
     const userAgent = request.headers.get("user-agent");
     if (userAgent) headers.set("User-Agent", userAgent);

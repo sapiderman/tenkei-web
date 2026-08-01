@@ -23,7 +23,8 @@ export default async function Events({ lang }: { lang: string }) {
       id: "event-3",
       title: t("event_3_title"),
       description: t("event_3_desc"),
-      imageUrl: "https://asset.tenkeiaikidojo.org/events/tenkei_sensei_embukai.png",
+      imageUrl:
+        "https://asset.tenkeiaikidojo.org/events/tenkei_sensei_embukai.png",
       altText: t("event_3_title"),
     },
     {

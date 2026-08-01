@@ -7,6 +7,12 @@ import { useTranslation } from "@/app/i18n/client";
 import { Turnstile } from "@marsidev/react-turnstile";
 import sanitizeHtml from "sanitize-html";
 import { VALID_RANKS as RANK_OPTIONS } from "@/lib/constants";
+import {
+  isValidDate,
+  isValidEmail,
+  isValidPhone,
+  MAX_LENGTHS,
+} from "@/lib/validation";
 
 interface RegisterFormData {
   name: string;
@@ -36,7 +42,7 @@ const SANITIZE_OPTIONS = {
   allowedTags: [],
   allowedAttributes: {},
   // CVE-2026-44990: xmp must be in nonTextTags to prevent raw-text passthrough XSS bypass
-  nonTextTags: ['script', 'style', 'textarea', 'option', 'xmp'],
+  nonTextTags: ["script", "style", "textarea", "option", "xmp"],
 };
 
 const stripControlChars = (value: string) =>
@@ -212,32 +218,45 @@ export default function RegisterForm() {
 
   const validateForm = (): boolean => {
     // Security: Basic length checks to prevent massive payloads
-    if (formData.name.length > 100) {
-      setError("Name is too long (max 100 characters)");
+    if (formData.name.length > MAX_LENGTHS.name) {
+      setError(`Name is too long (max ${MAX_LENGTHS.name} characters)`);
       return false;
     }
-    if (formData.email.length > 100) {
-      setError("Email is too long (max 100 characters)");
+    if (formData.email.length > MAX_LENGTHS.email) {
+      setError(`Email is too long (max ${MAX_LENGTHS.email} characters)`);
       return false;
     }
-    if (formData.whatsapp.length > 20) {
-      setError("WhatsApp number is too long");
+    if (formData.whatsapp.length > MAX_LENGTHS.whatsapp) {
+      setError(
+        `WhatsApp number is too long (max ${MAX_LENGTHS.whatsapp} characters)`,
+      );
       return false;
     }
-    if (formData.password.length > 128) {
-      setError("Password is too long (max 128 characters)");
+    if (formData.password.length > MAX_LENGTHS.password) {
+      setError(`Password is too long (max ${MAX_LENGTHS.password} characters)`);
       return false;
     }
-    if (formData.emergency_contact_name.length > 100) {
-      setError("Emergency contact name is too long (max 100 characters)");
+    if (
+      formData.emergency_contact_name.length > MAX_LENGTHS.emergencyContactName
+    ) {
+      setError(
+        `Emergency contact name is too long (max ${MAX_LENGTHS.emergencyContactName} characters)`,
+      );
       return false;
     }
-    if (formData.emergency_contact_number.length > 20) {
-      setError("Emergency contact number is too long");
+    if (
+      formData.emergency_contact_number.length >
+      MAX_LENGTHS.emergencyContactNumber
+    ) {
+      setError(
+        `Emergency contact number is too long (max ${MAX_LENGTHS.emergencyContactNumber} characters)`,
+      );
       return false;
     }
-    if (formData.medical_conditions.length > 500) {
-      setError("Medical conditions text is too long (max 500 characters)");
+    if (formData.medical_conditions.length > MAX_LENGTHS.medicalConditions) {
+      setError(
+        `Medical conditions text is too long (max ${MAX_LENGTHS.medicalConditions} characters)`,
+      );
       return false;
     }
 
@@ -264,48 +283,44 @@ export default function RegisterForm() {
     }
 
     // Email validation (if provided)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (formData.email && !emailRegex.test(formData.email)) {
+    if (formData.email && !isValidEmail(formData.email)) {
       setError("Please enter a valid email address");
       return false;
     }
 
-    // International phone format: 7-15 digits, optionally starting with +
-    const cleanedPhone = formData.whatsapp.replace(/[\s\-().]/g, "");
-    const phoneRegex = /^\+?\d{7,15}$/;
-    if (!formData.whatsapp.trim() || !phoneRegex.test(cleanedPhone)) {
+    // Phone validation
+    if (!formData.whatsapp.trim() || !isValidPhone(formData.whatsapp)) {
       setError("Please enter a valid phone number");
       return false;
     }
 
     // Date of Birth validation (if provided)
-    if (formData.date_of_birth) {
-      const [y, m, d] = formData.date_of_birth.split("-").map(Number);
-      const dob = new Date(y, m - 1, d);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+    if (formData.date_of_birth && !isValidDate(formData.date_of_birth)) {
+      setError("Date of birth cannot be in the future");
+      return false;
+    }
 
-      if (isNaN(dob.getTime()) || dob > today) {
-        setError("Date of birth cannot be in the future");
-        return false;
-      }
+    // Last grading date validation (if provided) — parity with server
+    if (
+      formData.last_grading_date &&
+      !isValidDate(formData.last_grading_date)
+    ) {
+      setError("Please enter a valid last grading date");
+      return false;
     }
 
     // Emergency Contact Number validation (if provided)
-    if (formData.emergency_contact_number) {
-      const cleanedEmergency = formData.emergency_contact_number.replace(
-        /[\s\-().]/g,
-        "",
-      );
-      if (!phoneRegex.test(cleanedEmergency)) {
-        setError("Please enter a valid Emergency Contact number");
-        return false;
-      }
+    if (
+      formData.emergency_contact_number &&
+      !isValidPhone(formData.emergency_contact_number)
+    ) {
+      setError("Please enter a valid Emergency Contact number");
+      return false;
     }
 
     // Validate dojo length
-    if (formData.dojo.length > 100) {
-      setError("Dojo name is too long (max 100 characters)");
+    if (formData.dojo.length > MAX_LENGTHS.dojo) {
+      setError(`Dojo name is too long (max ${MAX_LENGTHS.dojo} characters)`);
       return false;
     }
 
