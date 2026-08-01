@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
-import {
-  getUpstreamUrl,
-  clearSessionCookieHeader,
-} from "../_lib";
+import { getUpstreamUrl, clearSessionCookieHeader } from "../_lib";
 
 export async function POST(request: Request) {
   // 1. Env guard

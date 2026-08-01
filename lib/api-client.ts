@@ -26,8 +26,7 @@ export async function login(
     const body = await res.json().catch(() => ({}));
     return {
       ok: false,
-      error:
-        typeof body.error === "string" ? body.error : "An error occurred",
+      error: typeof body.error === "string" ? body.error : "An error occurred",
       status: res.status,
     };
   } catch {

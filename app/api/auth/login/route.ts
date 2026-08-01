@@ -24,7 +24,10 @@ export async function POST(request: Request) {
   // 2. Rate limit (defense in depth)
   if (isRateLimited(request)) {
     return NextResponse.json(
-      { error: "Too many login attempts. Please wait a few minutes before trying again." },
+      {
+        error:
+          "Too many login attempts. Please wait a few minutes before trying again.",
+      },
       { status: 429 },
     );
   }
@@ -94,10 +97,7 @@ export async function POST(request: Request) {
   } catch {
     clearTimeout(timeoutId);
     // Network error or timeout → generic 500
-    return NextResponse.json(
-      { error: "login failed" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "login failed" }, { status: 500 });
   } finally {
     clearTimeout(timeoutId);
   }
@@ -143,15 +143,9 @@ export async function POST(request: Request) {
 
   // 5xx from backend → 500 to client (server error)
   if (response.status >= 500) {
-    return NextResponse.json(
-      { error: "login failed" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "login failed" }, { status: 500 });
   }
 
   // 4xx or 200-with-non-ok-body → 401 to client (credential failure)
-  return NextResponse.json(
-    { error: "invalid credentials" },
-    { status: 401 },
-  );
+  return NextResponse.json({ error: "invalid credentials" }, { status: 401 });
 }

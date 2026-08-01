@@ -36,8 +36,9 @@ async function importRoute() {
 
 describe("POST /api/auth/logout", () => {
   it("forwards the cookie upstream when present", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -51,8 +52,9 @@ describe("POST /api/auth/logout", () => {
   });
 
   it("sends x-cf-bypass header", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -65,8 +67,9 @@ describe("POST /api/auth/logout", () => {
   });
 
   it("2xx upstream → clears browser cookie and passes status/body", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -91,8 +94,9 @@ describe("POST /api/auth/logout", () => {
   it("sets Secure attribute when NODE_ENV=production", async () => {
     vi.stubEnv("NODE_ENV", "production");
 
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -104,8 +108,11 @@ describe("POST /api/auth/logout", () => {
   });
 
   it("5xx upstream → still clears cookie, returns 200", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ error: "internal error" }), { status: 500 }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ error: "internal error" }), {
+          status: 500,
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -190,8 +197,9 @@ describe("POST /api/auth/logout", () => {
   });
 
   it("clear header attributes match login set header (Path, HttpOnly, SameSite)", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
     );
     vi.stubGlobal("fetch", mockFetch);
 

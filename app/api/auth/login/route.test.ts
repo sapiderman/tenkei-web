@@ -19,9 +19,11 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-
 // Helper to build a login request
-function loginRequest(body: Record<string, unknown>, headers?: Record<string, string>) {
+function loginRequest(
+  body: Record<string, unknown>,
+  headers?: Record<string, string>,
+) {
   return new Request("http://localhost/api/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json", ...headers },
@@ -43,16 +45,22 @@ async function importRoute() {
 
 describe("POST /api/auth/login", () => {
   it("forwards correct upstream URL", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), {
-        status: 200,
-        headers: { "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly" },
-      }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), {
+          status: 200,
+          headers: {
+            "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly",
+          },
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
     const POST = await importRoute();
-    const req = loginRequest({ identifier: "user@test.com", password: "password123" });
+    const req = loginRequest({
+      identifier: "user@test.com",
+      password: "password123",
+    });
     await POST(req);
 
     expect(mockFetch).toHaveBeenCalledOnce();
@@ -61,16 +69,22 @@ describe("POST /api/auth/login", () => {
   });
 
   it("sends x-cf-bypass header and Content-Type", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), {
-        status: 200,
-        headers: { "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly" },
-      }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), {
+          status: 200,
+          headers: {
+            "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly",
+          },
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
     const POST = await importRoute();
-    const req = loginRequest({ identifier: "user@test.com", password: "password123" });
+    const req = loginRequest({
+      identifier: "user@test.com",
+      password: "password123",
+    });
     await POST(req);
 
     const call = mockFetch.mock.calls[0] as unknown[];
@@ -81,11 +95,14 @@ describe("POST /api/auth/login", () => {
   });
 
   it("forwards identifier + password only (no extra fields)", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), {
-        status: 200,
-        headers: { "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly" },
-      }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), {
+          status: 200,
+          headers: {
+            "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly",
+          },
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -100,16 +117,22 @@ describe("POST /api/auth/login", () => {
     const call = mockFetch.mock.calls[0] as unknown[];
     const init = call[1] as RequestInit;
     const sentBody = JSON.parse(init.body as string);
-    expect(sentBody).toEqual({ identifier: "user@test.com", password: "pass1234" });
+    expect(sentBody).toEqual({
+      identifier: "user@test.com",
+      password: "pass1234",
+    });
     expect(sentBody).not.toHaveProperty("extraField");
   });
 
   it("forwards User-Agent and Accept-Language to backend", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), {
-        status: 200,
-        headers: { "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly" },
-      }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), {
+          status: 200,
+          headers: {
+            "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly",
+          },
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -182,16 +205,23 @@ describe("POST /api/auth/login", () => {
   });
 
   it("on success: returns 200 and sets browser cookie", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), {
-        status: 200,
-        headers: { "set-cookie": "tenkei_session=abc123; Path=/v1/auth; HttpOnly; Secure; SameSite=Lax" },
-      }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), {
+          status: 200,
+          headers: {
+            "set-cookie":
+              "tenkei_session=abc123; Path=/v1/auth; HttpOnly; Secure; SameSite=Lax",
+          },
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
     const POST = await importRoute();
-    const req = loginRequest({ identifier: "user@test.com", password: "password123" });
+    const req = loginRequest({
+      identifier: "user@test.com",
+      password: "password123",
+    });
     const res = await POST(req);
 
     expect(res.status).toBe(200);
@@ -212,16 +242,22 @@ describe("POST /api/auth/login", () => {
   it("sets Secure attribute when NODE_ENV=production", async () => {
     vi.stubEnv("NODE_ENV", "production");
 
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), {
-        status: 200,
-        headers: { "set-cookie": "tenkei_session=abc123; Path=/v1/auth; HttpOnly" },
-      }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), {
+          status: 200,
+          headers: {
+            "set-cookie": "tenkei_session=abc123; Path=/v1/auth; HttpOnly",
+          },
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
     const POST = await importRoute();
-    const req = loginRequest({ identifier: "user@test.com", password: "password123" });
+    const req = loginRequest({
+      identifier: "user@test.com",
+      password: "password123",
+    });
     const res = await POST(req);
 
     const cookie = getSetCookie(res);
@@ -229,13 +265,19 @@ describe("POST /api/auth/login", () => {
   });
 
   it("on backend 401: returns 401 generic error, no cookie", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ error: "invalid credentials" }), { status: 401 }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ error: "invalid credentials" }), {
+          status: 401,
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
     const POST = await importRoute();
-    const req = loginRequest({ identifier: "user@test.com", password: "wrongpass" });
+    const req = loginRequest({
+      identifier: "user@test.com",
+      password: "wrongpass",
+    });
     const res = await POST(req);
 
     expect(res.status).toBe(401);
@@ -245,8 +287,11 @@ describe("POST /api/auth/login", () => {
   });
 
   it("on backend 500: returns 500 generic error, no cookie", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ error: "internal error" }), { status: 500 }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ error: "internal error" }), {
+          status: 500,
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -264,11 +309,14 @@ describe("POST /api/auth/login", () => {
   });
 
   it("on backend non-ok status body: returns 401 generic error, no cookie", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "2fa_required" }), {
-        status: 200,
-        headers: { "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly" },
-      }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "2fa_required" }), {
+          status: 200,
+          headers: {
+            "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly",
+          },
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -289,7 +337,10 @@ describe("POST /api/auth/login", () => {
     delete process.env.BE_API_BASE;
 
     const POST = await importRoute();
-    const req = loginRequest({ identifier: "user@test.com", password: "password123" });
+    const req = loginRequest({
+      identifier: "user@test.com",
+      password: "password123",
+    });
     const res = await POST(req);
 
     expect(res.status).toBe(500);
@@ -357,11 +408,14 @@ describe("POST /api/auth/login", () => {
     // module-level RATE_LIMIT_MAP not being shared across dynamic imports.
     // Since vitest reuses the module, we must test incrementally.
     // This test sends 11 requests and expects the 11th to be 429.
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ status: "ok" }), {
-        status: 200,
-        headers: { "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly" },
-      }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), {
+          status: 200,
+          headers: {
+            "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly",
+          },
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 

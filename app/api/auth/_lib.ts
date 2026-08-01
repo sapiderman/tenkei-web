@@ -75,11 +75,8 @@ export function parseTenkeiSessionCookie(
 // ---------------------------------------------------------------------------
 
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 min (matches register route)
-const RATE_LIMIT_MAX_REQUESTS = 10;           // 10 per window (matches register route)
-const RATE_LIMIT_MAP = new Map<
-  string,
-  { count: number; expiresAt: number }
->();
+const RATE_LIMIT_MAX_REQUESTS = 10; // 10 per window (matches register route)
+const RATE_LIMIT_MAP = new Map<string, { count: number; expiresAt: number }>();
 
 /**
  * Returns a rate-limit key derived from the client IP and user agent.
@@ -151,7 +148,5 @@ export async function hashIdentifierForLog(
 export function getClientIp(request: Request): string {
   const cfConnectingIp = request.headers.get("cf-connecting-ip");
   const xForwardedFor = request.headers.get("x-forwarded-for");
-  return (
-    cfConnectingIp || xForwardedFor?.split(",")[0]?.trim() || "unknown-ip"
-  );
+  return cfConnectingIp || xForwardedFor?.split(",")[0]?.trim() || "unknown-ip";
 }

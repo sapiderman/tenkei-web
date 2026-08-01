@@ -46,8 +46,8 @@ const MOCK_PROFILE = {
 
 describe("GET /api/auth/profile", () => {
   it("forwards the tenkei_session cookie upstream", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify(MOCK_PROFILE), { status: 200 }),
+    const mockFetch = vi.fn(
+      async () => new Response(JSON.stringify(MOCK_PROFILE), { status: 200 }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -61,8 +61,8 @@ describe("GET /api/auth/profile", () => {
   });
 
   it("sends x-cf-bypass header", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify(MOCK_PROFILE), { status: 200 }),
+    const mockFetch = vi.fn(
+      async () => new Response(JSON.stringify(MOCK_PROFILE), { status: 200 }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -75,8 +75,8 @@ describe("GET /api/auth/profile", () => {
   });
 
   it("2xx: passes status + body through unchanged", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify(MOCK_PROFILE), { status: 200 }),
+    const mockFetch = vi.fn(
+      async () => new Response(JSON.stringify(MOCK_PROFILE), { status: 200 }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -89,8 +89,11 @@ describe("GET /api/auth/profile", () => {
   });
 
   it("401: passes through unchanged", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ error: "invalid session" }), { status: 401 }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ error: "invalid session" }), {
+          status: 401,
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -103,8 +106,11 @@ describe("GET /api/auth/profile", () => {
   });
 
   it("5xx: returns 500 generic error, raw body not forwarded", async () => {
-    const mockFetch = vi.fn(async () =>
-      new Response(JSON.stringify({ error: "database connection failed" }), { status: 500 }),
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ error: "database connection failed" }), {
+          status: 500,
+        }),
     );
     vi.stubGlobal("fetch", mockFetch);
 

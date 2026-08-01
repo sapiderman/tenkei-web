@@ -55,7 +55,10 @@ export default function LoginForm({ lang }: { lang: string }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="identifier" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="identifier"
+              className="block text-sm font-medium mb-1"
+            >
               {t("identifier")}
             </label>
             <input
@@ -72,7 +75,10 @@ export default function LoginForm({ lang }: { lang: string }) {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium mb-1"
+            >
               {t("password")}
             </label>
             <input

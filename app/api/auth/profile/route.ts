@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
-import {
-  getUpstreamUrl,
-  getClientIp,
-} from "../_lib";
+import { getUpstreamUrl, getClientIp } from "../_lib";
 
 export async function GET(request: Request) {
   // 1. Env guard
@@ -23,10 +20,7 @@ export async function GET(request: Request) {
   const sessionValue = match?.[1];
 
   if (!sessionValue) {
-    return NextResponse.json(
-      { error: "no_session" },
-      { status: 401 },
-    );
+    return NextResponse.json({ error: "no_session" }, { status: 401 });
   }
 
   // 3. Forward to backend
@@ -52,10 +46,7 @@ export async function GET(request: Request) {
     });
   } catch {
     clearTimeout(timeoutId);
-    return NextResponse.json(
-      { error: "profile_unavailable" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "profile_unavailable" }, { status: 500 });
   } finally {
     clearTimeout(timeoutId);
   }
@@ -92,8 +83,5 @@ export async function GET(request: Request) {
     responseText: truncated,
   });
 
-  return NextResponse.json(
-    { error: "profile_unavailable" },
-    { status: 500 },
-  );
+  return NextResponse.json({ error: "profile_unavailable" }, { status: 500 });
 }

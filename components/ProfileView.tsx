@@ -85,9 +85,18 @@ export default function ProfileView({ lang }: { lang: string }) {
       label: t("profile_consent_marketing"),
       value: profile.consent_marketing ? t("yes") : t("no"),
     },
-    { label: t("profile_medical_conditions"), value: profile.medical_conditions },
-    { label: t("profile_emergency_contact_name"), value: profile.emergency_contact_name },
-    { label: t("profile_emergency_contact_number"), value: profile.emergency_contact_number },
+    {
+      label: t("profile_medical_conditions"),
+      value: profile.medical_conditions,
+    },
+    {
+      label: t("profile_emergency_contact_name"),
+      value: profile.emergency_contact_name,
+    },
+    {
+      label: t("profile_emergency_contact_number"),
+      value: profile.emergency_contact_number,
+    },
   ];
 
   return (
