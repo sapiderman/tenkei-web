@@ -102,9 +102,18 @@ export default function ProfileView({ lang }: { lang: string }) {
   return (
     <div className="flex min-h-screen flex-col items-center p-4 md:p-24">
       <div className="w-full max-w-lg">
-        <h1 className="text-2xl font-bold mb-6 text-center">
-          {t("profile_page_title")}
-        </h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">
+            {t("profile_page_title").split("|")[0].trim()}
+          </h1>
+          <button
+            type="button"
+            onClick={() => router.push(`/${lang}/profile/edit`)}
+            className="text-sm text-blue-700 hover:text-blue-900 underline"
+          >
+            {t("edit_profile")}
+          </button>
+        </div>
 
         <dl className="space-y-3">
           {fields.map(({ label, value }) => (

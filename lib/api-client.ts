@@ -61,6 +61,50 @@ export async function getProfile(): Promise<ProfileResult> {
 }
 
 // ---------------------------------------------------------------------------
+// Update Profile
+// ---------------------------------------------------------------------------
+
+export type UpdateProfileResult =
+  | { ok: true; data: ProfileResponse }
+  | { ok: false; error: "validation"; fields: Record<string, string> }
+  | { ok: false; error: "unauthorized" }
+  | { ok: false; error: "server" };
+
+export async function updateProfile(
+  fields: Record<string, unknown>,
+): Promise<UpdateProfileResult> {
+  try {
+    const res = await fetch("/api/auth/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(fields),
+    });
+
+    if (res.ok) {
+      const data = (await res.json()) as ProfileResponse;
+      return { ok: true, data };
+    }
+
+    if (res.status === 401) {
+      return { ok: false, error: "unauthorized" };
+    }
+
+    if (res.status === 400) {
+      const body = await res.json().catch(() => ({}));
+      return {
+        ok: false,
+        error: "validation",
+        fields: typeof body.fields === "object" ? body.fields : {},
+      };
+    }
+
+    return { ok: false, error: "server" };
+  } catch {
+    return { ok: false, error: "server" };
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Logout
 // ---------------------------------------------------------------------------
 
