@@ -162,6 +162,5 @@
   "edit_profile_error_cannot_clear": "This field cannot be cleared.",
   "edit_profile_error_400": "Please check your input and try again.",
   "edit_profile_error_500": "Server error. Please try again later.",
-  "logout_success": "You have been signed out.",
-  "_todo_translate": "The following keys need id/ja translations: sign_in, my_profile, sign_out, login_page_title, login_page_description, identifier, identifier_placeholder, password, login_button, login_loading, login_failed, session_expired_notice, profile_page_title, profile_page_description, profile_name, profile_email, profile_whatsapp, profile_dojo, profile_rank, profile_date_of_birth, profile_join_date, profile_last_grading_date, profile_role, profile_consent_datastore, profile_consent_marketing, profile_medical_conditions, profile_emergency_contact_name, profile_emergency_contact_number, profile_loading, profile_load_failed, logout_success"
+  "logout_success": "You have been signed out."
 }

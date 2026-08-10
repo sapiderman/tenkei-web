@@ -162,6 +162,5 @@
   "edit_profile_error_cannot_clear": "Kolom ini tidak dapat dikosongkan.",
   "edit_profile_error_400": "Periksa masukan Anda dan coba lagi.",
   "edit_profile_error_500": "Kesalahan server. Silakan coba lagi nanti.",
-  "logout_success": "Anda telah keluar.",
-  "_todo_translate": "All new keys translated. Pre-existing keys (password, profile_role, etc.) remain in English pending native review."
+  "logout_success": "Anda telah keluar."
 }

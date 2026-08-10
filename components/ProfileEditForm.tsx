@@ -573,7 +573,7 @@ export default function ProfileEditForm({ lang }: Props) {
             </label>
             <input
               id="emergency_contact_number"
-              type="text"
+              type="tel"
               value={formData.emergencyContactNumber}
               onChange={(e) =>
                 setField("emergencyContactNumber", e.target.value)

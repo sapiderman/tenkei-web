@@ -162,6 +162,5 @@
   "edit_profile_error_cannot_clear": "この項目は消去できません。",
   "edit_profile_error_400": "入力を確認して、もう一度お試しください。",
   "edit_profile_error_500": "サーバーエラーです。後でもう一度お試しください。",
-  "logout_success": "サインアウトしました。",
-  "_todo_translate": "All new keys translated. Pre-existing keys (password, profile_role, etc.) remain in English pending native review."
+  "logout_success": "サインアウトしました。"
 }

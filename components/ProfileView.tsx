@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/app/i18n/client";
 import { getProfile, logout } from "@/lib/api-client";
@@ -111,13 +112,12 @@ export default function ProfileView({
       <div className="w-full max-w-lg">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">{t("profile_heading")}</h1>
-          <button
-            type="button"
-            onClick={() => router.push(`/${lang}/profile/edit`)}
+          <Link
+            href={`/${lang}/profile/edit`}
             className="text-sm text-blue-700 hover:text-blue-900 underline"
           >
             {t("edit_profile")}
-          </button>
+          </Link>
         </div>
 
         {showSaved && (
