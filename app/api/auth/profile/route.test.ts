@@ -278,11 +278,29 @@ describe("PUT /api/auth/profile", () => {
     expect(sentBody.role).toBeUndefined();
   });
 
-  it("2xx: passes status + body through unchanged", async () => {
-    const updatedProfile = { ...MOCK_PROFILE, name: "New Name" };
+  it("forwards whatsapp when provided", async () => {
+    const mockFetch = vi.fn(
+      async () => new Response(JSON.stringify(MOCK_PROFILE), { status: 200 }),
+    );
+    vi.stubGlobal("fetch", mockFetch);
+
+    const PUT = await importPut();
+    await PUT(
+      putRequest(
+        { name: "New Name", whatsapp: "08123456789" },
+        "tenkei_session=abc123",
+      ),
+    );
+
+    const [, init] = mockFetch.mock.calls[0] as unknown[];
+    const sentBody = JSON.parse((init as RequestInit).body as string);
+    expect(sentBody.whatsapp).toBe("08123456789");
+  });
+
+  it("2xx: passes status + body through unchanged (backend returns {status:ok})", async () => {
     const mockFetch = vi.fn(
       async () =>
-        new Response(JSON.stringify(updatedProfile), { status: 200 }),
+        new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
     );
     vi.stubGlobal("fetch", mockFetch);
 
@@ -293,14 +311,14 @@ describe("PUT /api/auth/profile", () => {
 
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.name).toBe("New Name");
+    expect(body).toEqual({ status: "ok" });
   });
 
   it("400: passes through validation errors", async () => {
     const mockFetch = vi.fn(
       async () =>
         new Response(
-          JSON.stringify({ error: "validation", fields: { name: "too long" } }),
+          JSON.stringify({ error: "Name must be at most 255 characters" }),
           { status: 400 },
         ),
     );
@@ -313,7 +331,7 @@ describe("PUT /api/auth/profile", () => {
 
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body.fields.name).toBe("too long");
+    expect(body.error).toBe("Name must be at most 255 characters");
   });
 
   it("401: passes through unchanged", async () => {

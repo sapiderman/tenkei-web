@@ -21,10 +21,13 @@ export async function generateMetadata({
 
 export default async function ProfilePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ lang: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { lang } = await params;
+  const sp = await searchParams;
 
   // Next.js 16: cookies() is async
   const cookieStore = await cookies();
@@ -33,5 +36,5 @@ export default async function ProfilePage({
     redirect(`/${lang}/login`);
   }
 
-  return <ProfileView lang={lang} />;
+  return <ProfileView lang={lang} saved={sp.saved === "1"} />;
 }

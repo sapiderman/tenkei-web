@@ -6,10 +6,17 @@ import { useTranslation } from "@/app/i18n/client";
 import { getProfile, logout } from "@/lib/api-client";
 import type { ProfileResponse } from "@/lib/types";
 
-export default function ProfileView({ lang }: { lang: string }) {
+export default function ProfileView({
+  lang,
+  saved = false,
+}: {
+  lang: string;
+  saved?: boolean;
+}) {
   const { t } = useTranslation(lang, "common");
   const router = useRouter();
 
+  const [showSaved, setShowSaved] = useState(saved);
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -103,9 +110,7 @@ export default function ProfileView({ lang }: { lang: string }) {
     <div className="flex min-h-screen flex-col items-center p-4 md:p-24">
       <div className="w-full max-w-lg">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">
-            {t("profile_page_title").split("|")[0].trim()}
-          </h1>
+          <h1 className="text-2xl font-bold">{t("profile_heading")}</h1>
           <button
             type="button"
             onClick={() => router.push(`/${lang}/profile/edit`)}
@@ -114,6 +119,24 @@ export default function ProfileView({ lang }: { lang: string }) {
             {t("edit_profile")}
           </button>
         </div>
+
+        {showSaved && (
+          <div
+            className="mb-6 p-3 bg-green-50 border border-green-300 text-green-800 rounded-md flex items-start justify-between gap-3"
+            role="status"
+            aria-live="polite"
+          >
+            <span className="text-sm">{t("profile_saved")}</span>
+            <button
+              type="button"
+              onClick={() => setShowSaved(false)}
+              aria-label={t("dismiss")}
+              className="text-green-700 hover:text-green-900 text-sm leading-none"
+            >
+              ✕
+            </button>
+          </div>
+        )}
 
         <dl className="space-y-3">
           {fields.map(({ label, value }) => (

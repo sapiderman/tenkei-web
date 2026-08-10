@@ -16,6 +16,21 @@ export const MAX_LENGTHS = {
   dojo: 100,
 } as const;
 
+/**
+ * Max lengths for the profile EDIT form — mirrors the backend's PUT
+ * /v1/auth/profile update caps (tenkei-register auth/model.go), which are
+ * looser than registration. Separate from MAX_LENGTHS so registration keeps
+ * its stricter caps (register.go caps emergency_contact_number at 20).
+ */
+export const EDIT_MAX_LENGTHS = {
+  name: 255,
+  dojo: 255,
+  whatsapp: 20,
+  emergencyContactName: 255,
+  emergencyContactNumber: 50,
+  medicalConditions: 2000,
+} as const;
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_REGEX = /^\+?\d{7,15}$/;
 

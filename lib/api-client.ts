@@ -64,9 +64,11 @@ export async function getProfile(): Promise<ProfileResult> {
 // Update Profile
 // ---------------------------------------------------------------------------
 
+// Backend PUT /v1/auth/profile returns {"status":"ok"} with no body data on
+// success — there is no Profile to return. The caller re-fetches via getProfile().
 export type UpdateProfileResult =
-  | { ok: true; data: ProfileResponse }
-  | { ok: false; error: "validation"; fields: Record<string, string> }
+  | { ok: true }
+  | { ok: false; error: "validation"; message: string }
   | { ok: false; error: "unauthorized" }
   | { ok: false; error: "server" };
 
@@ -81,8 +83,7 @@ export async function updateProfile(
     });
 
     if (res.ok) {
-      const data = (await res.json()) as ProfileResponse;
-      return { ok: true, data };
+      return { ok: true };
     }
 
     if (res.status === 401) {
@@ -94,7 +95,7 @@ export async function updateProfile(
       return {
         ok: false,
         error: "validation",
-        fields: typeof body.fields === "object" ? body.fields : {},
+        message: typeof body.error === "string" ? body.error : "",
       };
     }
 

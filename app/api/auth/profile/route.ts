@@ -12,10 +12,12 @@ const EDITABLE_FIELDS = new Set([
   "emergency_contact_name",
   "emergency_contact_number",
   "consent_marketing",
-  // "whatsapp", // TODO Phase 4: uncomment when backend drops WhatsApp unique index
+  "whatsapp",
 ]);
 
-function filterEditable(body: Record<string, unknown>): Record<string, unknown> {
+function filterEditable(
+  body: Record<string, unknown>,
+): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const key of EDITABLE_FIELDS) {
     if (key in body) out[key] = body[key];
@@ -23,11 +25,17 @@ function filterEditable(body: Record<string, unknown>): Record<string, unknown> 
   return out;
 }
 
-function forwardHeaders(request: Request): Headers {
-  const headers = new Headers();
+/** Extracts the tenkei_session cookie value, or null. */
+function getSessionCookie(request: Request): string | null {
   const cookieHeader = request.headers.get("cookie") || "";
   const match = /(?:^|;\s*)tenkei_session=([^;]+)/.exec(cookieHeader);
-  if (match?.[1]) headers.set("Cookie", `tenkei_session=${match[1]}`);
+  return match?.[1] ?? null;
+}
+
+function forwardHeaders(request: Request): Headers {
+  const headers = new Headers();
+  const session = getSessionCookie(request);
+  if (session) headers.set("Cookie", `tenkei_session=${session}`);
   if (process.env.CLOUDFLARE_BYPASS_SECRET) {
     headers.set("x-cf-bypass", process.env.CLOUDFLARE_BYPASS_SECRET);
   }
@@ -52,9 +60,7 @@ export async function GET(request: Request) {
   }
 
   // 2. Read session cookie
-  const cookieHeader = request.headers.get("cookie") || "";
-  const match = /(?:^|;\s*)tenkei_session=([^;]+)/.exec(cookieHeader);
-  if (!match?.[1]) {
+  if (!getSessionCookie(request)) {
     return NextResponse.json({ error: "no_session" }, { status: 401 });
   }
 
@@ -126,9 +132,7 @@ export async function PUT(request: Request) {
   }
 
   // 2. Read session cookie
-  const cookieHeader = request.headers.get("cookie") || "";
-  const match = /(?:^|;\s*)tenkei_session=([^;]+)/.exec(cookieHeader);
-  if (!match?.[1]) {
+  if (!getSessionCookie(request)) {
     return NextResponse.json({ error: "no_session" }, { status: 401 });
   }
 
