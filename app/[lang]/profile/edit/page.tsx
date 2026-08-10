@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { getT } from "@/app/i18n";
-import ProfileView from "@/components/ProfileView";
+import ProfileEditForm from "@/components/ProfileEditForm";
 
 export async function generateMetadata({
   params,
@@ -13,28 +13,24 @@ export async function generateMetadata({
   const { t } = await getT(lang, "common");
 
   return {
-    title: t("profile_page_title"),
-    description: t("profile_page_description"),
+    title: t("edit_profile_page_title"),
+    description: t("edit_profile_page_description"),
     robots: { index: false, follow: true },
   };
 }
 
-export default async function ProfilePage({
+export default async function ProfileEditPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ lang: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { lang } = await params;
-  const sp = await searchParams;
 
-  // Next.js 16: cookies() is async
   const cookieStore = await cookies();
   const session = cookieStore.get("tenkei_session");
   if (!session?.value) {
     redirect(`/${lang}/login`);
   }
 
-  return <ProfileView lang={lang} saved={sp.saved === "1"} />;
+  return <ProfileEditForm lang={lang} />;
 }

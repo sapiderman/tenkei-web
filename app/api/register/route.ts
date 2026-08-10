@@ -187,13 +187,6 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!whatsapp) {
-      return NextResponse.json(
-        { error: "WhatsApp number is required" },
-        { status: 400 },
-      );
-    }
-
     if (!password) {
       return NextResponse.json(
         { error: "Password is required" },
@@ -284,7 +277,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!isValidPhone(whatsapp)) {
+    if (whatsapp && !isValidPhone(whatsapp)) {
       return NextResponse.json(
         { error: "Please enter a valid WhatsApp number (e.g. 0812...)" },
         { status: 400 },

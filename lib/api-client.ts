@@ -61,6 +61,51 @@ export async function getProfile(): Promise<ProfileResult> {
 }
 
 // ---------------------------------------------------------------------------
+// Update Profile
+// ---------------------------------------------------------------------------
+
+// Backend PUT /v1/auth/profile returns {"status":"ok"} with no body data on
+// success — there is no Profile to return. The caller re-fetches via getProfile().
+export type UpdateProfileResult =
+  | { ok: true }
+  | { ok: false; error: "validation"; message: string }
+  | { ok: false; error: "unauthorized" }
+  | { ok: false; error: "server" };
+
+export async function updateProfile(
+  fields: Record<string, unknown>,
+): Promise<UpdateProfileResult> {
+  try {
+    const res = await fetch("/api/auth/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(fields),
+    });
+
+    if (res.ok) {
+      return { ok: true };
+    }
+
+    if (res.status === 401) {
+      return { ok: false, error: "unauthorized" };
+    }
+
+    if (res.status === 400) {
+      const body = await res.json().catch(() => ({}));
+      return {
+        ok: false,
+        error: "validation",
+        message: typeof body.error === "string" ? body.error : "",
+      };
+    }
+
+    return { ok: false, error: "server" };
+  } catch {
+    return { ok: false, error: "server" };
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Logout
 // ---------------------------------------------------------------------------
 
