@@ -23,8 +23,9 @@ const safeSanitize = (value: string) => {
   try {
     return sanitizeHtml(value, SANITIZE_OPTIONS);
   } catch {
-    // Fallback: strip HTML tags manually if sanitize-html throws
-    return value.replace(/<[^>]*>/g, "");
+    // Fail closed: if sanitize-html throws, drop the value entirely.
+    // A regex fallback would risk passing unterminated tags like `<script`.
+    return "";
   }
 };
 

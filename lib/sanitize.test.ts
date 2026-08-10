@@ -8,8 +8,7 @@ import {
   sanitizeToken,
 } from "./sanitize";
 
-describe("lib/sanitize", () => {
-  it("strips HTML tags from text inputs", () => {
+describe("lib/sanitize", () => {  it("strips HTML tags from text inputs", () => {
     // CVE-2026-44990: script content removed entirely (nonTextTags)
     expect(sanitizeTextInput("<script>alert(1)</script>Budhi")).toBe("Budhi");
     expect(sanitizeTextInputForSubmission(" <b>dojo</b> ")).toBe("dojo");
