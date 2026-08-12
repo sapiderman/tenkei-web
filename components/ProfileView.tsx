@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useTranslation } from "@/app/i18n/client";
 import { getProfile, logout } from "@/lib/api-client";
 import type { ProfileResponse } from "@/lib/types";
@@ -67,6 +68,9 @@ export default function ProfileView({ lang }: { lang: string }) {
 
   if (!profile) return null;
 
+  const isAdminLike = profile.role === "admin" || profile.role === "superuser";
+  const isPending = profile.role === "new";
+
   const fields: { label: string; value: string | boolean }[] = [
     { label: t("profile_name"), value: profile.name },
     { label: t("profile_email"), value: profile.email },
@@ -105,6 +109,27 @@ export default function ProfileView({ lang }: { lang: string }) {
         <h1 className="text-2xl font-bold mb-6 text-center">
           {t("profile_page_title")}
         </h1>
+
+        {isPending && (
+          <div
+            className="mb-6 p-4 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded text-center"
+            role="status"
+            aria-live="polite"
+          >
+            {t("admin_pending_notice")}
+          </div>
+        )}
+
+        {isAdminLike && (
+          <div className="mb-6 text-center">
+            <Link
+              href={`/${lang}/admin/users`}
+              className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              {t("admin_manage_users")}
+            </Link>
+          </div>
+        )}
 
         <dl className="space-y-3">
           {fields.map(({ label, value }) => (
