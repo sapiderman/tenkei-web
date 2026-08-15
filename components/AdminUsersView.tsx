@@ -32,15 +32,22 @@ export default function AdminUsersView({ lang }: { lang: string }) {
   // Debounce the search box into the query param + reset to first page.
   // setState here runs in a timer callback (not the effect body), so it does
   // not trip react-hooks/set-state-in-effect.
+  //
+  // Guard: only act when the trimmed query actually changed. Without it the
+  // mount-time timer fires 300ms in and flips loading back on — after a fast
+  // initial fetch (<300ms) already cleared it — and since q/page are
+  // unchanged no refetch ever clears loading again (stuck "Loading…").
   useEffect(() => {
+    const next = searchInput.trim();
+    if (next === q) return;
     const id = setTimeout(() => {
-      setQ(searchInput.trim());
+      setQ(next);
       setPage(1);
       setLoading(true);
       setError(null);
     }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(id);
-  }, [searchInput]);
+  }, [searchInput, q]);
 
   // Fetch whenever a query driver changes. All setState runs after `await`
   // (async continuation), never synchronously in the effect body.
