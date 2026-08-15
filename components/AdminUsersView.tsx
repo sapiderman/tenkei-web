@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "@/app/i18n/client";
 import { useAdminRole } from "@/app/[lang]/admin/AdminRoleContext";
-import { adminListUsers } from "@/lib/api-client";
+import { adminListUsers, logout } from "@/lib/api-client";
 import type { UserSummary } from "@/lib/types";
 
 // Backend caps page size at 100 (default 25). The selector never offers more.
@@ -81,6 +81,11 @@ export default function AdminUsersView({ lang }: { lang: string }) {
     };
   }, [page, size, q, pendingOnly, lang, router, t]);
 
+  async function handleLogout() {
+    await logout();
+    router.push(`/${lang}`);
+  }
+
   function changeSize(next: number) {
     setSize(next);
     setPage(1);
@@ -104,9 +109,16 @@ export default function AdminUsersView({ lang }: { lang: string }) {
   return (
     <div className="flex min-h-screen flex-col items-center p-4 md:p-12">
       <div className="w-full max-w-5xl">
-        <h1 className="text-2xl font-bold mb-6 text-center">
-          {t("admin_users_heading")}
-        </h1>
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <h1 className="text-2xl font-bold">{t("admin_users_heading")}</h1>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors flex-shrink-0"
+          >
+            {t("sign_out")}
+          </button>
+        </div>
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
