@@ -441,8 +441,11 @@ describe("POST /api/auth/login", () => {
     // 11th should be rate limited
     const res11 = await POST(makeReq());
     expect(res11.status).toBe(429);
+    expect(res11.headers.get("retry-after")).toMatch(/^\d+$/);
     const body = await res11.json();
     expect(body.error).toContain("Too many");
+    expect(typeof body.retry_after_seconds).toBe("number");
+    expect(body.retry_after_seconds).toBeGreaterThan(0);
     // Should NOT have called fetch on the 11th
     // (fetch was called 10 times in the loop, not 11)
     expect(mockFetch).toHaveBeenCalledTimes(10);

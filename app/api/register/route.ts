@@ -83,7 +83,7 @@ export async function POST(request: Request) {
   const TARGET_API_URL = `${BE_API_BASE.replace(/\/+$/, "")}/v1/register`;
 
   try {
-    if (isRateLimited(request, "register")) {
+    if (isRateLimited(request, "register").limited) {
       return NextResponse.json(
         {
           error:

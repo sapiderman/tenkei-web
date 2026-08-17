@@ -21,14 +21,16 @@ export async function POST(request: Request) {
     );
   }
 
-  // 2. Rate limit (defense in depth)
-  if (isRateLimited(request)) {
+  // 2. Rate limit (defense in depth). Cooldown is revealed to the caller —
+  // safe: bucket is IP-keyed, so it says nothing about identifier validity.
+  const rl = isRateLimited(request);
+  if (rl.limited) {
     return NextResponse.json(
       {
-        error:
-          "Too many login attempts. Please wait a few minutes before trying again.",
+        error: "Too many login attempts. Please try again later.",
+        retry_after_seconds: rl.retryAfterSeconds,
       },
-      { status: 429 },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
     );
   }
 
@@ -149,6 +151,19 @@ export async function POST(request: Request) {
   // 5xx from backend → 500 to client (server error)
   if (response.status >= 500) {
     return NextResponse.json({ error: "login failed" }, { status: 500 });
+  }
+
+  // Backend 429 → pass through as 429 so the UI can show a lockout message
+  // instead of a misleading "invalid credentials". Same anti-enumeration
+  // posture: a 429 is IP-keyed and leaks nothing about the identifier.
+  if (response.status === 429) {
+    return NextResponse.json(
+      {
+        error: "Too many login attempts. Please try again later.",
+        retry_after_seconds: 60,
+      },
+      { status: 429, headers: { "Retry-After": "60" } },
+    );
   }
 
   // 4xx or 200-with-non-ok-body → 401 to client (credential failure)

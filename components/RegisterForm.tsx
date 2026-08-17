@@ -82,7 +82,7 @@ export default function RegisterForm() {
     emergency_contact_name: "",
     emergency_contact_number: "",
     medical_conditions: "",
-    consent_datastore: true,
+    consent_datastore: false,
     consent_marketing: false,
   });
 
@@ -312,6 +312,11 @@ export default function RegisterForm() {
 
     if (formData.password !== formData.password_confirm) {
       setError("Passwords do not match");
+      return false;
+    }
+
+    if (!formData.consent_datastore) {
+      setError(t("consent_datastore_required"));
       return false;
     }
 
@@ -743,16 +748,16 @@ export default function RegisterForm() {
             </h2>
 
             <div className="space-y-3">
-              <label className="flex items-start gap-3">
-                {/* Mandatory, non-negotiable consent: locked on. Server keeps
-                    enforcing consent_datastore === true at the boundary. */}
+              <label className="flex items-start gap-3 cursor-pointer group">
+                {/* Mandatory consent: user must actively tick it — pre-ticked
+                    boxes are not valid consent. Server still enforces
+                    consent_datastore === true at the boundary. */}
                 <input
                   type="checkbox"
                   name="consent_datastore"
                   checked={formData.consent_datastore}
-                  disabled
-                  aria-readonly="true"
-                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-blue-500 cursor-not-allowed"
+                  onChange={handleInputChange}
+                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer"
                 />
                 <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
                   {t("consent_datastore_text")}{" "}

@@ -6,7 +6,7 @@ import type { ProfileResponse, UserListResponse } from "@/lib/types";
 
 export type LoginResult =
   | { ok: true }
-  | { ok: false; error: string; status: number };
+  | { ok: false; error: string; status: number; retryAfterSeconds?: number };
 
 export async function login(
   identifier: string,
@@ -28,6 +28,10 @@ export async function login(
       ok: false,
       error: typeof body.error === "string" ? body.error : "An error occurred",
       status: res.status,
+      retryAfterSeconds:
+        typeof body.retry_after_seconds === "number"
+          ? body.retry_after_seconds
+          : undefined,
     };
   } catch {
     return { ok: false, error: "Network error", status: 0 };
