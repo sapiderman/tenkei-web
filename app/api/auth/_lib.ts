@@ -81,9 +81,29 @@ export function parseTenkeiSessionCookie(
 // rate-limit gate (register: 5/min/IP). Move to Vercel KV / Upstash for a
 // real distributed edge limit.
 
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 min
-const RATE_LIMIT_MAX_REQUESTS = 10; // 10 per window
-const RATE_LIMIT_MAP = new Map<string, { count: number; expiresAt: number }>();
+// Env-tunable with sane fallbacks; unset/garbage → defaults. Read per call
+// so changing the env takes effect without a rebuild of the constant.
+const DEFAULT_RATE_LIMIT_MAX_REQUESTS = 10;
+const DEFAULT_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+
+function rateLimitMaxRequests(): number {
+  const n = Number(process.env.RATE_LIMIT_MAX_REQUESTS);
+  return Number.isInteger(n) && n > 0
+    ? n
+    : DEFAULT_RATE_LIMIT_MAX_REQUESTS;
+}
+
+function rateLimitWindowMs(): number {
+  const n = Number(process.env.RATE_LIMIT_WINDOW_MINUTES);
+  return Number.isFinite(n) && n > 0
+    ? n * 60 * 1000
+    : DEFAULT_RATE_LIMIT_WINDOW_MS;
+}
+
+const RATE_LIMIT_MAP = new Map<
+  string,
+  { count: number; expiresAt: number }
+>();
 
 /**
  * Returns a rate-limit key derived from the client IP only.
@@ -99,11 +119,18 @@ export function getRateLimitKey(request: Request): string {
 }
 
 /**
- * Returns true if the request is over the rate limit.
- * Increments the counter for the given key. `bucket` keeps separate budgets
- * per route family ("login", "register") while sharing one map.
+ * Checks the rate-limit bucket for the request. Increments the counter when
+ * under the limit. `bucket` keeps separate budgets per route family
+ * ("login", "register") while sharing one map.
+ *
+ * Returns the full window (not the live remaining time) on limit — always an
+ * upper bound, one less moving part. Safe to reveal: the bucket is keyed on
+ * IP, not identifier, so it leaks nothing about whether an account exists.
  */
-export function isRateLimited(request: Request, bucket = "login"): boolean {
+export function isRateLimited(
+  request: Request,
+  bucket = "login",
+): { limited: boolean; retryAfterSeconds: number } {
   const key = `${bucket}:${getRateLimitKey(request)}`;
   const now = Date.now();
   const existing = RATE_LIMIT_MAP.get(key);
@@ -111,17 +138,22 @@ export function isRateLimited(request: Request, bucket = "login"): boolean {
   if (!existing || existing.expiresAt <= now) {
     RATE_LIMIT_MAP.set(key, {
       count: 1,
-      expiresAt: now + RATE_LIMIT_WINDOW_MS,
+      expiresAt: now + rateLimitWindowMs(),
     });
-    return false;
+    return { limited: false, retryAfterSeconds: 0 };
   }
 
-  if (existing.count >= RATE_LIMIT_MAX_REQUESTS) {
-    return true;
+  if (existing.count >= rateLimitMaxRequests()) {
+    // ponytail: static window-length cooldown, not live remaining — compute
+    // from expiresAt if users complain about over-waiting.
+    return {
+      limited: true,
+      retryAfterSeconds: Math.ceil(rateLimitWindowMs() / 1000),
+    };
   }
 
   existing.count += 1;
-  return false;
+  return { limited: false, retryAfterSeconds: 0 };
 }
 
 // ---------------------------------------------------------------------------

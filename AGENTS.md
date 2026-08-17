@@ -10,6 +10,7 @@ Next.js 16 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS · Ya
 - **i18n**: `i18next` / `react-i18next` / `next-i18n-router` — 3 locales: `en`, `id`, `ja`
 - **Routing**: `proxy.ts` handles CSP headers + i18n routing (Next.js 16 edge proxy — replaces `middleware.ts`)
 - **Forms**: Native React state for client-side validation. Do not introduce React Hook Form or other form libraries without explicit user approval.
+- **Rate limiting**: in-memory per-IP limiter in `app/api/auth/_lib.ts`, env-tunable via `RATE_LIMIT_MAX_REQUESTS` (default 10) and `RATE_LIMIT_WINDOW_MINUTES` (default 15). See `.env.example`. Per-instance only — the Go backend's limiter is the authoritative gate.
 
 ## Key Directories
 

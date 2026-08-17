@@ -29,6 +29,16 @@ export default function LoginForm({ lang }: { lang: string }) {
         router.push(`/${lang}/profile`);
         return;
       }
+      // 429 is a lockout, not a credential failure — show the cooldown so
+      // the user waits instead of hammering (and re-tripping) the limiter.
+      if (result.status === 429) {
+        const minutes = Math.max(
+          1,
+          Math.ceil((result.retryAfterSeconds ?? 300) / 60),
+        );
+        setError(t("login_rate_limited", { minutes }));
+        return;
+      }
       setError(t("login_failed"));
     } catch {
       setError(t("login_failed"));
