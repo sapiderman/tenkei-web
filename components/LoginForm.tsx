@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { useTranslation } from "@/app/i18n/client";
 import { login } from "@/lib/api-client";
 
@@ -39,6 +40,19 @@ export default function LoginForm({ lang }: { lang: string }) {
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md">
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/tenkei_logo.png"
+            alt="Tenkei Aikidojo emblem"
+            width={64}
+            height={64}
+            className="object-contain opacity-60"
+            style={{
+              filter:
+                "grayscale(1) sepia(1) hue-rotate(180deg) saturate(1.3) brightness(1)",
+            }}
+          />
+        </div>
         <h1 className="text-2xl font-bold mb-6 text-center">
           {t("login_page_title")}
         </h1>

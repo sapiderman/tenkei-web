@@ -31,6 +31,9 @@ export function getUpstreamUrl(path: string): string {
  *
  * Attributes: Path=/; HttpOnly; SameSite=Lax; [Secure in production]
  * No Domain — host-only cookie.
+ *
+ * CSRF posture: SameSite=Lax + JSON-only fetch mutations (no HTML form
+ * posts) is this app's CSRF defense — Lax blocks cross-site POST/PUT.
  */
 export function buildSessionCookieAttributes(): string {
   const parts = ["Path=/", "HttpOnly", "SameSite=Lax"];
@@ -73,30 +76,35 @@ export function parseTenkeiSessionCookie(
 // ---------------------------------------------------------------------------
 // Rate limiting (in-memory, per-instance)
 // ---------------------------------------------------------------------------
+// ponytail: in-memory limit — per-instance only, NOT shared across serverless
+// instances (cold starts / fan-out reset it). The backend is the real
+// rate-limit gate (register: 5/min/IP). Move to Vercel KV / Upstash for a
+// real distributed edge limit.
 
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 min (matches register route)
-const RATE_LIMIT_MAX_REQUESTS = 10; // 10 per window (matches register route)
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 min
+const RATE_LIMIT_MAX_REQUESTS = 10; // 10 per window
 const RATE_LIMIT_MAP = new Map<string, { count: number; expiresAt: number }>();
 
 /**
- * Returns a rate-limit key derived from the client IP and user agent.
- * Matches the register route's key derivation exactly.
+ * Returns a rate-limit key derived from the client IP only.
+ * cf-connecting-ip is set by Cloudflare and trusted; the x-forwarded-for
+ * fallback is best-effort (client-controllable if not behind a trusted proxy).
+ * Keyed on IP only — including User-Agent would let attackers rotate UAs for
+ * fresh budgets.
  */
 export function getRateLimitKey(request: Request): string {
   const cfConnectingIp = request.headers.get("cf-connecting-ip");
   const xForwardedFor = request.headers.get("x-forwarded-for");
-  const userAgent = request.headers.get("user-agent") || "unknown-agent";
-  const clientIp =
-    cfConnectingIp || xForwardedFor?.split(",")[0]?.trim() || "unknown-ip";
-  return `${clientIp}:${userAgent}`;
+  return cfConnectingIp || xForwardedFor?.split(",")[0]?.trim() || "unknown-ip";
 }
 
 /**
  * Returns true if the request is over the rate limit.
- * Increments the counter for the given key.
+ * Increments the counter for the given key. `bucket` keeps separate budgets
+ * per route family ("login", "register") while sharing one map.
  */
-export function isRateLimited(request: Request): boolean {
-  const key = getRateLimitKey(request);
+export function isRateLimited(request: Request, bucket = "login"): boolean {
+  const key = `${bucket}:${getRateLimitKey(request)}`;
   const now = Date.now();
   const existing = RATE_LIMIT_MAP.get(key);
 

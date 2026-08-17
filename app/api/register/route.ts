@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import sanitizeHtml from "sanitize-html";
+import { isRateLimited } from "../auth/_lib";
 import { VALID_RANKS } from "@/lib/constants";
 import {
   isValidDate,
@@ -7,45 +8,6 @@ import {
   isValidPhone,
   MAX_LENGTHS,
 } from "@/lib/validation";
-
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 10;
-// ponytail: in-memory limit — per-instance only, NOT shared across serverless
-// instances (cold starts / fan-out reset it). The backend (tenkei-register) is the
-// real rate-limit gate (5/min/IP). Move to Vercel KV / Upstash for a real
-// distributed edge limit.
-const RATE_LIMIT_MAP = new Map<string, { count: number; expiresAt: number }>();
-
-function getRateLimitKey(request: Request): string {
-  const cfConnectingIp = request.headers.get("cf-connecting-ip");
-  const xForwardedFor = request.headers.get("x-forwarded-for");
-  // cf-connecting-ip is set by Cloudflare and trusted; the x-forwarded-for
-  // fallback is best-effort (client-controllable if not behind a trusted proxy).
-  // Keyed on IP only — including User-Agent let attackers rotate UAs for fresh
-  // budgets. (See RATE_LIMIT_MAP caveat above re: serverless per-instance scope.)
-  return cfConnectingIp || xForwardedFor?.split(",")[0]?.trim() || "unknown-ip";
-}
-
-function isRateLimited(request: Request): boolean {
-  const key = getRateLimitKey(request);
-  const now = Date.now();
-  const existing = RATE_LIMIT_MAP.get(key);
-
-  if (!existing || existing.expiresAt <= now) {
-    RATE_LIMIT_MAP.set(key, {
-      count: 1,
-      expiresAt: now + RATE_LIMIT_WINDOW_MS,
-    });
-    return false;
-  }
-
-  if (existing.count >= RATE_LIMIT_MAX_REQUESTS) {
-    return true;
-  }
-
-  existing.count += 1;
-  return false;
-}
 
 /**
  * Sanitize string input to prevent basic XSS and injection attacks.
@@ -121,7 +83,7 @@ export async function POST(request: Request) {
   const TARGET_API_URL = `${BE_API_BASE.replace(/\/+$/, "")}/v1/register`;
 
   try {
-    if (isRateLimited(request)) {
+    if (isRateLimited(request, "register")) {
       return NextResponse.json(
         {
           error:
@@ -179,7 +141,7 @@ export async function POST(request: Request) {
     const consentDatastore = body.consent_datastore === true;
     const consentMarketing = body.consent_marketing === true;
 
-    // 3. Required field validation
+    // 3. Required field validation (whatsapp is optional now)
     if (!name || name.length < 1) {
       return NextResponse.json(
         { error: "Full name is required" },
@@ -353,7 +315,6 @@ export async function POST(request: Request) {
     const headers = new Headers();
     headers.set("Content-Type", "application/json");
     headers.set("Accept", "application/json");
-    headers.set("Accept-Language", "en");
     const bypassSecret = process.env.CLOUDFLARE_BYPASS_SECRET;
     if (!bypassSecret) {
       console.error(

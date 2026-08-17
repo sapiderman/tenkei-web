@@ -75,6 +75,9 @@ export default function ProfileView({
 
   if (!profile) return null;
 
+  const isAdminLike = profile.role === "admin" || profile.role === "superuser";
+  const isPending = profile.role === "new";
+
   const fields: { label: string; value: string | boolean }[] = [
     { label: t("profile_name"), value: profile.name },
     { label: t("profile_email"), value: profile.email },
@@ -135,6 +138,27 @@ export default function ProfileView({
             >
               ✕
             </button>
+          </div>
+        )}
+
+        {isPending && (
+          <div
+            className="mb-6 p-4 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded text-center"
+            role="status"
+            aria-live="polite"
+          >
+            {t("admin_pending_notice")}
+          </div>
+        )}
+
+        {isAdminLike && (
+          <div className="mb-6 text-center">
+            <Link
+              href={`/${lang}/admin/users`}
+              className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              {t("admin_manage_users")}
+            </Link>
           </div>
         )}
 

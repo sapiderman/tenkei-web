@@ -1,4 +1,4 @@
-import type { ProfileResponse } from "@/lib/types";
+import type { ProfileResponse, UserListResponse } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
 // Login
@@ -103,6 +103,127 @@ export async function updateProfile(
   } catch {
     return { ok: false, error: "server" };
   }
+}
+
+// ---------------------------------------------------------------------------
+// Logout
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Admin: list members
+// ---------------------------------------------------------------------------
+
+export interface AdminListParams {
+  page?: number;
+  size?: number;
+  q?: string;
+  pending?: boolean;
+}
+
+export type AdminListResult =
+  | { ok: true; data: UserListResponse }
+  | { ok: false; status: number };
+
+/**
+ * Fetches the member list via the admin proxy. `status` is 0 on network error,
+ * 401 on missing/expired session, 403 on insufficient role.
+ */
+export async function adminListUsers(
+  params: AdminListParams = {},
+): Promise<AdminListResult> {
+  const search = new URLSearchParams();
+  if (params.page != null) search.set("page", String(params.page));
+  if (params.size != null) search.set("size", String(params.size));
+  if (params.q) search.set("q", params.q);
+  if (params.pending) search.set("pending", "true");
+  const qs = search.toString();
+
+  try {
+    const res = await fetch(`/api/admin/users${qs ? `?${qs}` : ""}`, {
+      method: "GET",
+    });
+
+    if (res.ok) {
+      const data = (await res.json()) as UserListResponse;
+      return { ok: true, data };
+    }
+
+    return { ok: false, status: res.status };
+  } catch {
+    return { ok: false, status: 0 };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Admin: get / update / verify / change-role a single member
+// ---------------------------------------------------------------------------
+
+export type AdminUserResult =
+  | { ok: true; profile: ProfileResponse }
+  | { ok: false; status: number };
+
+export async function adminGetUser(
+  id: number | string,
+): Promise<AdminUserResult> {
+  try {
+    const res = await fetch(`/api/admin/users/${id}`, { method: "GET" });
+    if (res.ok) {
+      const profile = (await res.json()) as ProfileResponse;
+      return { ok: true, profile };
+    }
+    return { ok: false, status: res.status };
+  } catch {
+    return { ok: false, status: 0 };
+  }
+}
+
+/** A mutation that surfaces the backend's error message on failure. */
+export type AdminMutationResult =
+  | { ok: true }
+  | { ok: false; status: number; error: string };
+
+async function adminMutate(
+  url: string,
+  method: "PUT" | "POST",
+  body?: unknown,
+): Promise<AdminMutationResult> {
+  try {
+    const res = await fetch(url, {
+      method,
+      headers:
+        body !== undefined ? { "Content-Type": "application/json" } : undefined,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+    if (res.ok) return { ok: true };
+    const data = (await res.json().catch(() => ({}))) as { error?: unknown };
+    return {
+      ok: false,
+      status: res.status,
+      error: typeof data.error === "string" ? data.error : "",
+    };
+  } catch {
+    return { ok: false, status: 0, error: "" };
+  }
+}
+
+export function adminUpdateUser(
+  id: number | string,
+  body: Record<string, unknown>,
+): Promise<AdminMutationResult> {
+  return adminMutate(`/api/admin/users/${id}`, "PUT", body);
+}
+
+export function adminVerifyUser(
+  id: number | string,
+): Promise<AdminMutationResult> {
+  return adminMutate(`/api/admin/users/${id}/verify`, "POST");
+}
+
+export function adminChangeRole(
+  id: number | string,
+  role: string,
+): Promise<AdminMutationResult> {
+  return adminMutate(`/api/admin/users/${id}/role`, "PUT", { role });
 }
 
 // ---------------------------------------------------------------------------

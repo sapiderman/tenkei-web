@@ -47,15 +47,10 @@ const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = ({ lang }) => {
       },
     ],
     hasMap: "https://maps.app.goo.gl/fqy3Cek7FYJbf8Bj6",
-    priceRange: "$",
+    priceRange: "IDR",
     areaServed: {
       "@type": "AdministrativeArea",
       name: "Jakarta",
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "5",
-      reviewCount: "5",
     },
     sameAs: ["https://www.tenkeiaikidojo.org"],
   };

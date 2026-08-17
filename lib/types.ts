@@ -2,11 +2,11 @@
  * Response shape from `GET /v1/auth/profile`.
  *
  * Field names match the backend snake_case exactly.
- * `id` is assumed to be a string UUID; date fields are strings (YYYY-MM-DD or "").
- * TODO: confirm against the tenkei-register backend struct before merge.
+ * `id` is a numeric database identifier (backend int64); date fields are
+ * strings (YYYY-MM-DD or "").
  */
 export interface ProfileResponse {
-  id: string;
+  id: number;
   name: string;
   email: string;
   whatsapp: string;
@@ -21,4 +21,36 @@ export interface ProfileResponse {
   medical_conditions: string;
   emergency_contact_name: string;
   emergency_contact_number: string;
+}
+
+// ---------------------------------------------------------------------------
+// Administration (roles & member management)
+// ---------------------------------------------------------------------------
+
+/** The four role values used across the admin surface. */
+export type UserRole = "new" | "user" | "admin" | "superuser";
+
+/**
+ * Summary row from `GET /v1/admin/users`. No PII (no DOB, medical, emergency
+ * contact) — summary fields only, per the roles PRD.
+ */
+export interface UserSummary {
+  id: number;
+  name: string;
+  email: string;
+  whatsapp: string;
+  dojo: string;
+  role: string; // UserRole
+}
+
+/**
+ * Envelope for `GET /v1/admin/users` (matches backend ListUsersResponse).
+ * `total` is the matching-row count across all pages; `page` is 1-based and
+ * `size` is the applied (backend-clamped) page size.
+ */
+export interface UserListResponse {
+  members: UserSummary[];
+  total: number;
+  page: number;
+  size: number;
 }
