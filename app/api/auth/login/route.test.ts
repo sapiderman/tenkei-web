@@ -19,14 +19,22 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-// Helper to build a login request
+// Helper to build a login request. Each request gets a unique client IP so
+// the module-level rate-limit map (keyed on IP only) doesn't bleed state
+// across tests — tests that exercise the limiter pass an explicit IP.
+let ipCounter = 0;
 function loginRequest(
   body: Record<string, unknown>,
   headers?: Record<string, string>,
 ) {
+  ipCounter += 1;
   return new Request("http://localhost/api/auth/login", {
     method: "POST",
-    headers: { "content-type": "application/json", ...headers },
+    headers: {
+      "content-type": "application/json",
+      "cf-connecting-ip": `10.0.0.${ipCounter}`,
+      ...headers,
+    },
     body: JSON.stringify(body),
   });
 }
@@ -404,10 +412,6 @@ describe("POST /api/auth/login", () => {
   });
 
   it("rate limiting: 11th request from same key → 429", async () => {
-    // Note: rate limiter is per-module state; this test depends on the
-    // module-level RATE_LIMIT_MAP not being shared across dynamic imports.
-    // Since vitest reuses the module, we must test incrementally.
-    // This test sends 11 requests and expects the 11th to be 429.
     const mockFetch = vi.fn(
       async () =>
         new Response(JSON.stringify({ status: "ok" }), {
@@ -426,9 +430,8 @@ describe("POST /api/auth/login", () => {
         { "cf-connecting-ip": "1.2.3.4", "user-agent": "rate-test-agent" },
       );
 
-    // Send 10 requests — all should pass (may count from prior tests if
-    // they share the same ip:ua key, but each test uses a unique user-agent
-    // so the rate limiter keys are distinct).
+    // Send 10 requests — all should pass. (Each request's default unique IP
+    // is overridden to 1.2.3.4, shared only within this test.)
     for (let i = 0; i < 10; i++) {
       const res = await POST(makeReq());
       // May be 200 or could be 401 depending on stub, but not 429
@@ -442,6 +445,42 @@ describe("POST /api/auth/login", () => {
     expect(body.error).toContain("Too many");
     // Should NOT have called fetch on the 11th
     // (fetch was called 10 times in the loop, not 11)
+    expect(mockFetch).toHaveBeenCalledTimes(10);
+  });
+
+  it("rate limiting: rotating User-Agent does not reset the budget (regression)", async () => {
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), {
+          status: 200,
+          headers: {
+            "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly",
+          },
+        }),
+    );
+    vi.stubGlobal("fetch", mockFetch);
+
+    const POST = await importRoute();
+
+    // 10 requests, same IP, different User-Agents each time — an attacker
+    // rotating UAs must not get fresh budgets.
+    for (let i = 0; i < 10; i++) {
+      const res = await POST(
+        loginRequest(
+          { identifier: "user@test.com", password: "password123" },
+          { "cf-connecting-ip": "5.6.7.8", "user-agent": `agent-${i}` },
+        ),
+      );
+      expect(res.status).not.toBe(429);
+    }
+
+    const res11 = await POST(
+      loginRequest(
+        { identifier: "user@test.com", password: "password123" },
+        { "cf-connecting-ip": "5.6.7.8", "user-agent": "agent-final" },
+      ),
+    );
+    expect(res11.status).toBe(429);
     expect(mockFetch).toHaveBeenCalledTimes(10);
   });
 });

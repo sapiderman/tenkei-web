@@ -288,8 +288,8 @@ export default function RegisterForm() {
       return false;
     }
 
-    // Phone validation
-    if (!formData.whatsapp.trim() || !isValidPhone(formData.whatsapp)) {
+    // Phone validation (optional — but must be valid if provided)
+    if (formData.whatsapp.trim() && !isValidPhone(formData.whatsapp)) {
       setError("Please enter a valid phone number");
       return false;
     }
@@ -517,7 +517,7 @@ export default function RegisterForm() {
                   htmlFor="whatsapp"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  {t("whatsapp_number")} <span className="text-red-500">*</span>
+                  {t("whatsapp_number")}
                 </label>
                 <input
                   type="tel"
@@ -525,7 +525,6 @@ export default function RegisterForm() {
                   name="whatsapp"
                   value={formData.whatsapp}
                   onChange={handleInputChange}
-                  required
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder="+62 812 3456 7890"
                 />

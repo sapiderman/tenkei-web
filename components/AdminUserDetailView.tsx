@@ -23,8 +23,9 @@ import type { ProfileResponse } from "@/lib/types";
 
 /** The editable field whitelist — matches backend UpdateProfileRequest
  * (name, email, whatsapp, date_of_birth, dojo, rank, last_grading_date,
- *  medical_conditions, emergency_contact_name, emergency_contact_number,
- *  consent_datastore, consent_marketing). role/id/join_date are read-only. */
+ *  medical_conditions, emergency_contact_name, emergency_contact_number).
+ *  role/id/join_date are read-only, and consent_* is registration-mandated
+ *  so it is never editable here (nor sent on update). */
 
 const ROLES = ["new", "user", "admin", "superuser"] as const;
 
@@ -42,8 +43,6 @@ function toForm(p: ProfileResponse): FormState {
     medical_conditions: p.medical_conditions,
     emergency_contact_name: p.emergency_contact_name,
     emergency_contact_number: p.emergency_contact_number,
-    consent_datastore: p.consent_datastore,
-    consent_marketing: p.consent_marketing,
   };
 }
 
@@ -537,27 +536,6 @@ export default function AdminUserDetailView({
               className={inputCls}
               placeholder={t("medical_conditions_placeholder")}
             />
-          </div>
-
-          <div className="space-y-2">
-            <label className="flex items-start gap-2 text-sm text-gray-700">
-              <input
-                type="checkbox"
-                checked={Boolean(form.consent_datastore)}
-                onChange={(e) => update("consent_datastore", e.target.checked)}
-                className="mt-1 h-4 w-4"
-              />
-              <span>{t("consent_datastore_text")}</span>
-            </label>
-            <label className="flex items-start gap-2 text-sm text-gray-700">
-              <input
-                type="checkbox"
-                checked={Boolean(form.consent_marketing)}
-                onChange={(e) => update("consent_marketing", e.target.checked)}
-                className="mt-1 h-4 w-4"
-              />
-              <span>{t("consent_marketing_text")}</span>
-            </label>
           </div>
 
           {saveError && (

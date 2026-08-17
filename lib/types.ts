@@ -2,8 +2,8 @@
  * Response shape from `GET /v1/auth/profile`.
  *
  * Field names match the backend snake_case exactly.
- * `id` is assumed to be a string UUID; date fields are strings (YYYY-MM-DD or "").
- * TODO: confirm against the tenkei-register backend struct before merge.
+ * `id` is a numeric database identifier (backend int64); date fields are
+ * strings (YYYY-MM-DD or "").
  */
 export interface ProfileResponse {
   id: number;

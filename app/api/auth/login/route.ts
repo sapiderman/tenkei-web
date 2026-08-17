@@ -112,9 +112,14 @@ export async function POST(request: Request) {
     data = {};
   }
 
-  // 7. Success path: 2xx + status "ok" + Set-Cookie present
-  const upstreamSetCookie = response.headers.get("set-cookie");
-  const sessionValue = parseTenkeiSessionCookie(upstreamSetCookie);
+  // 7. Success path: 2xx + status "ok" + Set-Cookie present.
+  // getSetCookie() splits joined Set-Cookie headers (undici joins multiple
+  // values with ", " — headers.get() would miss the session if the backend
+  // ever sets a second cookie).
+  const upstreamSetCookies = response.headers.getSetCookie();
+  const sessionValue = upstreamSetCookies
+    .map(parseTenkeiSessionCookie)
+    .find((v): v is string => v !== null);
 
   if (response.ok && data.status === "ok" && sessionValue) {
     const nextResponse = NextResponse.json({ status: "ok" }, { status: 200 });

@@ -40,10 +40,6 @@ export function proxy(request: NextRequest) {
   // 2. Attach the CSP to the response
   response.headers.set("Content-Security-Policy", cspHeader);
   response.headers.set("Permissions-Policy", permissionsPolicy);
-  response.headers.set(
-    "x-middleware-request-content-security-policy",
-    cspHeader,
-  );
 
   // 3. Standard security headers
   response.headers.set(
@@ -52,7 +48,6 @@ export function proxy(request: NextRequest) {
   );
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("X-Frame-Options", "SAMEORIGIN");
-  response.headers.set("X-XSS-Protection", "1; mode=block");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("x-tenkei-proxy", "active");
 
