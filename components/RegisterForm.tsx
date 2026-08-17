@@ -5,7 +5,14 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslation } from "@/app/i18n/client";
 import { Turnstile } from "@marsidev/react-turnstile";
-import sanitizeHtml from "sanitize-html";
+import {
+  sanitizeDateInput,
+  sanitizePasswordInput,
+  sanitizePhoneInput,
+  sanitizeTextInput,
+  sanitizeTextInputForSubmission,
+  sanitizeToken,
+} from "@/lib/sanitize";
 import { VALID_RANKS as RANK_OPTIONS } from "@/lib/constants";
 import {
   isValidDate,
@@ -37,48 +44,6 @@ const DOJO_OPTIONS = [
   "Tenkei Taman Menteng",
   "Tenkei Natsu Aikidojo",
 ];
-
-const SANITIZE_OPTIONS = {
-  allowedTags: [],
-  allowedAttributes: {},
-  // CVE-2026-44990: xmp must be in nonTextTags to prevent raw-text passthrough XSS bypass
-  nonTextTags: ["script", "style", "textarea", "option", "xmp"],
-};
-
-const stripControlChars = (value: string) =>
-  value
-    .replace(/\r?\n/g, " ")
-    .replace(/\t/g, " ")
-    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]+/g, "");
-
-const safeSanitize = (value: string) => {
-  if (typeof value !== "string") return "";
-  try {
-    return sanitizeHtml(value, SANITIZE_OPTIONS);
-  } catch {
-    // Fallback: strip HTML tags manually if sanitize-html throws
-    return value.replace(/<[^>]*>/g, "");
-  }
-};
-
-const sanitizeTextInput = (value: string) =>
-  stripControlChars(safeSanitize(value));
-
-const sanitizeTextInputForSubmission = (value: string) =>
-  stripControlChars(safeSanitize(value.trim()));
-
-const sanitizePhoneInput = (value: string) =>
-  stripControlChars(value.replace(/[^\d+\s().-]/g, "").trim());
-
-const sanitizeDateInput = (value: string) =>
-  stripControlChars(value.replace(/[^0-9-]/g, "").trim());
-
-const sanitizePasswordInput = (value: string) => stripControlChars(value);
-
-const sanitizeToken = (value: string) => {
-  if (typeof value !== "string" || !value) return "";
-  return stripControlChars(value.trim());
-};
 
 const buildSanitizedPayload = (data: RegisterFormData) => ({
   name: sanitizeTextInputForSubmission(data.name),
@@ -282,8 +247,13 @@ export default function RegisterForm() {
       return false;
     }
 
-    // Email validation (if provided)
-    if (formData.email && !isValidEmail(formData.email)) {
+    // Email is required
+    if (!formData.email.trim()) {
+      setError(t("email_address_required"));
+      return false;
+    }
+
+    if (!isValidEmail(formData.email)) {
       setError("Please enter a valid email address");
       return false;
     }
@@ -499,7 +469,7 @@ export default function RegisterForm() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  {t("email_address")}
+                  {t("email_address")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
@@ -507,6 +477,7 @@ export default function RegisterForm() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
+                  required
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder="you@domain.com"
                 />
