@@ -321,6 +321,11 @@ export default function RegisterForm() {
       return false;
     }
 
+    if (!formData.consent_datastore) {
+      setError(t("consent_datastore_required"));
+      return false;
+    }
+
     if (!sanitizeToken(turnstileToken)) {
       setError(t("error_security_required"));
       return false;
