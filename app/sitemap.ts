@@ -4,7 +4,7 @@ import { languages } from "./i18n/settings";
 const BASE_URL = "https://www.tenkeiaikidojo.org";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ["", "/about", "/dojos", "/shinjuku", "/register"];
+  const routes = ["", "/about", "/dojos", "/shinjuku", "/register", "/privacy"];
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
   routes.forEach((route) => {

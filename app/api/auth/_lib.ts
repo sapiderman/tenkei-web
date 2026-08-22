@@ -88,9 +88,7 @@ const DEFAULT_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 
 function rateLimitMaxRequests(): number {
   const n = Number(process.env.RATE_LIMIT_MAX_REQUESTS);
-  return Number.isInteger(n) && n > 0
-    ? n
-    : DEFAULT_RATE_LIMIT_MAX_REQUESTS;
+  return Number.isInteger(n) && n > 0 ? n : DEFAULT_RATE_LIMIT_MAX_REQUESTS;
 }
 
 function rateLimitWindowMs(): number {
@@ -100,10 +98,7 @@ function rateLimitWindowMs(): number {
     : DEFAULT_RATE_LIMIT_WINDOW_MS;
 }
 
-const RATE_LIMIT_MAP = new Map<
-  string,
-  { count: number; expiresAt: number }
->();
+const RATE_LIMIT_MAP = new Map<string, { count: number; expiresAt: number }>();
 
 /**
  * Returns a rate-limit key derived from the client IP only.

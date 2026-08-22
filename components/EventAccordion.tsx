@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import sanitizeHtml from "sanitize-html";
 
 export interface AccordionItem {
   id: string;
@@ -23,10 +22,6 @@ export default function EventAccordion({ items }: EventAccordionProps) {
     <div className="flex flex-col md:flex-row h-[600px] w-full overflow-hidden rounded-2xl shadow-xl border border-gray-800 bg-gray-900">
       {items.map((item, index) => {
         const isActive = activeIndex === index;
-        const sanitizedDesc = sanitizeHtml(item.description, {
-          // CVE-2026-44990: xmp must be in nonTextTags to prevent raw-text passthrough XSS bypass
-          nonTextTags: ["script", "style", "textarea", "option", "xmp"],
-        });
 
         return (
           <div
@@ -80,10 +75,9 @@ export default function EventAccordion({ items }: EventAccordionProps) {
                     : "max-h-0 opacity-0"
                 }`}
               >
-                <div
-                  className="text-gray-300 text-sm md:text-base leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: sanitizedDesc }}
-                />
+                <div className="text-gray-300 text-sm md:text-base leading-relaxed">
+                  {item.description}
+                </div>
               </div>
             </div>
 
