@@ -229,7 +229,7 @@
   "error_password_mismatch": "Passwords do not match",
   "error_emergency_name_too_long": "Emergency contact name is too long (max {{max}} characters)",
   "error_emergency_number_too_long": "Emergency contact number is too long (max {{max}} characters)",
-  "error_emergency_phone_invalid": "Please enter a valid Emergency Contact number",
+  "error_emergency_phone_invalid": "Please enter a valid emergency contact number",
   "error_medical_too_long": "Medical conditions text is too long (max {{max}} characters)",
   "error_dojo_too_long": "Dojo name is too long (max {{max}} characters)",
   "error_rank_invalid": "Please select a valid rank from the list",
