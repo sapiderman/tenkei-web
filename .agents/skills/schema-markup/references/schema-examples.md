@@ -387,6 +387,7 @@ export default function ProductPage({ product }) {
   return (
     <>
       <Head>
+        {/* Safe: `schema` is our own object serialized via JSON.stringify. Never feed untrusted or user input to dangerouslySetInnerHTML. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}

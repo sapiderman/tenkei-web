@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useTranslation } from "@/app/i18n/client";
 import { login } from "@/lib/api-client";
+import PasswordInput from "@/components/PasswordInput";
 
 export default function LoginForm({ lang }: { lang: string }) {
   const { t } = useTranslation(lang, "common");
@@ -105,14 +106,15 @@ export default function LoginForm({ lang }: { lang: string }) {
             >
               {t("password")}
             </label>
-            <input
+            <PasswordInput
               id="password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               disabled={loading}
               required
+              showLabel={t("show_password")}
+              hideLabel={t("hide_password")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
             />
           </div>

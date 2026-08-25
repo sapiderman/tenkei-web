@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, ChangeEvent, FormEvent } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslation } from "@/app/i18n/client";
+import PasswordInput from "@/components/PasswordInput";
 import { Turnstile } from "@marsidev/react-turnstile";
 import {
   sanitizeDateInput,
@@ -100,15 +101,13 @@ export default function RegisterForm() {
   const isTurnstileConfigured = Boolean(turnstileSiteKey);
 
   const handleTurnstileError = () => {
-    setError(
-      "Security challenge failed to load. Please refresh the page and try again.",
-    );
+    setError(t("error_security_load_failed"));
     setTurnstileToken("");
   };
 
   const handleTurnstileExpired = () => {
     setTurnstileToken("");
-    setError("Security challenge has expired. Please complete it again.");
+    setError(t("error_security_expired"));
   };
 
   const filteredDojos = DOJO_OPTIONS.filter((dojo) =>
@@ -184,28 +183,28 @@ export default function RegisterForm() {
   const validateForm = (): boolean => {
     // Security: Basic length checks to prevent massive payloads
     if (formData.name.length > MAX_LENGTHS.name) {
-      setError(`Name is too long (max ${MAX_LENGTHS.name} characters)`);
+      setError(t("error_name_too_long", { max: MAX_LENGTHS.name }));
       return false;
     }
     if (formData.email.length > MAX_LENGTHS.email) {
-      setError(`Email is too long (max ${MAX_LENGTHS.email} characters)`);
+      setError(t("error_email_too_long", { max: MAX_LENGTHS.email }));
       return false;
     }
     if (formData.whatsapp.length > MAX_LENGTHS.whatsapp) {
-      setError(
-        `WhatsApp number is too long (max ${MAX_LENGTHS.whatsapp} characters)`,
-      );
+      setError(t("error_whatsapp_too_long", { max: MAX_LENGTHS.whatsapp }));
       return false;
     }
     if (formData.password.length > MAX_LENGTHS.password) {
-      setError(`Password is too long (max ${MAX_LENGTHS.password} characters)`);
+      setError(t("error_password_too_long", { max: MAX_LENGTHS.password }));
       return false;
     }
     if (
       formData.emergency_contact_name.length > MAX_LENGTHS.emergencyContactName
     ) {
       setError(
-        `Emergency contact name is too long (max ${MAX_LENGTHS.emergencyContactName} characters)`,
+        t("error_emergency_name_too_long", {
+          max: MAX_LENGTHS.emergencyContactName,
+        }),
       );
       return false;
     }
@@ -214,13 +213,15 @@ export default function RegisterForm() {
       MAX_LENGTHS.emergencyContactNumber
     ) {
       setError(
-        `Emergency contact number is too long (max ${MAX_LENGTHS.emergencyContactNumber} characters)`,
+        t("error_emergency_number_too_long", {
+          max: MAX_LENGTHS.emergencyContactNumber,
+        }),
       );
       return false;
     }
     if (formData.medical_conditions.length > MAX_LENGTHS.medicalConditions) {
       setError(
-        `Medical conditions text is too long (max ${MAX_LENGTHS.medicalConditions} characters)`,
+        t("error_medical_too_long", { max: MAX_LENGTHS.medicalConditions }),
       );
       return false;
     }
@@ -237,13 +238,13 @@ export default function RegisterForm() {
     // Security: Basic check to ensure strings are valid
     for (const field of textFields) {
       if (typeof field !== "string") {
-        setError("Invalid input data");
+        setError(t("error_invalid_input"));
         return false;
       }
     }
 
     if (!formData.name.trim()) {
-      setError("Full name is required");
+      setError(t("error_name_required"));
       return false;
     }
 
@@ -254,19 +255,19 @@ export default function RegisterForm() {
     }
 
     if (!isValidEmail(formData.email)) {
-      setError("Please enter a valid email address");
+      setError(t("error_email_invalid"));
       return false;
     }
 
     // Phone validation (optional — but must be valid if provided)
     if (formData.whatsapp.trim() && !isValidPhone(formData.whatsapp)) {
-      setError("Please enter a valid phone number");
+      setError(t("error_phone_invalid"));
       return false;
     }
 
     // Date of Birth validation (if provided)
     if (formData.date_of_birth && !isValidDate(formData.date_of_birth)) {
-      setError("Date of birth cannot be in the future");
+      setError(t("error_dob_future"));
       return false;
     }
 
@@ -275,7 +276,7 @@ export default function RegisterForm() {
       formData.last_grading_date &&
       !isValidDate(formData.last_grading_date)
     ) {
-      setError("Please enter a valid last grading date");
+      setError(t("error_grading_date_invalid"));
       return false;
     }
 
@@ -284,34 +285,34 @@ export default function RegisterForm() {
       formData.emergency_contact_number &&
       !isValidPhone(formData.emergency_contact_number)
     ) {
-      setError("Please enter a valid Emergency Contact number");
+      setError(t("error_emergency_phone_invalid"));
       return false;
     }
 
     // Validate dojo length
     if (formData.dojo.length > MAX_LENGTHS.dojo) {
-      setError(`Dojo name is too long (max ${MAX_LENGTHS.dojo} characters)`);
+      setError(t("error_dojo_too_long", { max: MAX_LENGTHS.dojo }));
       return false;
     }
 
     // Validate rank selection (must be from predefined list)
     if (formData.rank && !RANK_OPTIONS.includes(formData.rank)) {
-      setError("Please select a valid rank from the list");
+      setError(t("error_rank_invalid"));
       return false;
     }
 
     if (!formData.password) {
-      setError("Password is required");
+      setError(t("error_password_required"));
       return false;
     }
 
     if (formData.password.length < 8) {
-      setError("Password must be at least 8 characters");
+      setError(t("error_password_too_short", { min: 8 }));
       return false;
     }
 
     if (formData.password !== formData.password_confirm) {
-      setError("Passwords do not match");
+      setError(t("error_password_mismatch"));
       return false;
     }
 
@@ -321,7 +322,7 @@ export default function RegisterForm() {
     }
 
     if (!sanitizeToken(turnstileToken)) {
-      setError("Please complete the security challenge");
+      setError(t("error_security_required"));
       return false;
     }
 
@@ -353,15 +354,13 @@ export default function RegisterForm() {
       });
 
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: "Registration failed" }));
-        setError(errorData.error || "Registration failed");
+        const errorData = await response.json().catch(() => ({ error: "" }));
+        setError(errorData.error || t("error_registration_failed"));
       } else {
         setIsSuccess(true);
       }
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      setError(t("error_generic"));
       if (process.env.NODE_ENV === "development") {
         console.error("Registration error:", err);
       }
@@ -539,13 +538,14 @@ export default function RegisterForm() {
                 >
                   {t("password")} <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="password"
+                <PasswordInput
                   id="password"
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
                   required
+                  showLabel={t("show_password")}
+                  hideLabel={t("hide_password")}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder="••••••••"
                 />
@@ -560,13 +560,14 @@ export default function RegisterForm() {
                   {t("confirm_password")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="password"
+                <PasswordInput
                   id="password_confirm"
                   name="password_confirm"
                   value={formData.password_confirm}
                   onChange={handleInputChange}
                   required
+                  showLabel={t("show_password")}
+                  hideLabel={t("hide_password")}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder="••••••••"
                 />
@@ -783,8 +784,7 @@ export default function RegisterForm() {
           <div className="flex flex-col items-center gap-3">
             {!isTurnstileConfigured ? (
               <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-                Security challenge is not configured. Please contact the site
-                administrator.
+                {t("error_security_unconfigured")}
               </div>
             ) : (
               <Turnstile
@@ -792,11 +792,7 @@ export default function RegisterForm() {
                 onSuccess={handleTurnstileSuccess}
                 onError={handleTurnstileError}
                 onTimeout={handleTurnstileExpired}
-                onUnsupported={() =>
-                  setError(
-                    "Security challenge is not supported in this browser.",
-                  )
-                }
+                onUnsupported={() => setError(t("error_security_unsupported"))}
                 scriptOptions={{ crossOrigin: "anonymous" }}
               />
             )}

@@ -2448,7 +2448,7 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
 
 Component first renders with default value (`light`), then updates after hydration, causing a visible flash of incorrect content.
 
-**Correct: no flicker, no hydration mismatch**
+**Correct: no flicker, no hydration mismatch** (the inline script is a static string — never build `__html` from untrusted or user input)
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
