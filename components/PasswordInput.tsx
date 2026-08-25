@@ -2,8 +2,10 @@
 
 import { useState, InputHTMLAttributes } from "react";
 
-interface PasswordInputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
+interface PasswordInputProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "type"
+> {
   /** i18n label for the toggle when the password is masked */
   showLabel: string;
   /** i18n label for the toggle when the password is visible */

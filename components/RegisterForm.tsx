@@ -354,9 +354,7 @@ export default function RegisterForm() {
       });
 
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: "" }));
+        const errorData = await response.json().catch(() => ({ error: "" }));
         setError(errorData.error || t("error_registration_failed"));
       } else {
         setIsSuccess(true);
