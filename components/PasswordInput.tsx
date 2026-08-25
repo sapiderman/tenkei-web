@@ -2,7 +2,8 @@
 
 import { useState, InputHTMLAttributes } from "react";
 
-interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface PasswordInputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   /** i18n label for the toggle when the password is masked */
   showLabel: string;
   /** i18n label for the toggle when the password is visible */
@@ -17,6 +18,7 @@ export default function PasswordInput({
   showLabel,
   hideLabel,
   className = "",
+  disabled,
   ...props
 }: PasswordInputProps) {
   const [visible, setVisible] = useState(false);
@@ -25,14 +27,16 @@ export default function PasswordInput({
     <div className="relative">
       <input
         {...props}
+        disabled={disabled}
         type={visible ? "text" : "password"}
         className={`${className} pr-11`}
       />
       <button
         type="button"
+        disabled={disabled}
         onClick={() => setVisible((v) => !v)}
         aria-label={visible ? hideLabel : showLabel}
-        className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700 focus:outline-none"
+        className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-r-md disabled:cursor-not-allowed disabled:opacity-50"
       >
         {visible ? (
           // eye-off (heroicons outline)
