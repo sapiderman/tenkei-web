@@ -35,20 +35,20 @@ export default async function Shinjuku(props: {
   const { t } = await getT(lang, "common");
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center p-8 md:p-24 max-w-4xl mx-auto">
+      <main className="flex min-h-screen flex-col items-center px-4 py-16 sm:px-6 max-w-4xl mx-auto">
         <div className="space-y-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-center">
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-center">
             {t("about_shinjuku_aikikai")}
           </h1>
 
-          <p className="text-lg leading-relaxed text-gray-800">
+          <p className="text-lg leading-relaxed text-ink/70">
             {t("shinjuku_aikikai_text")}
           </p>
 
           <div className="text-center space-y-4">
             <p className="text-lg font-medium">{t("to_learn_more_shinjuku")}</p>
             <Link
-              className="inline-block px-6 py-3 text-lg text-blue-600 hover:text-blue-800 
+              className="inline-block px-6 py-3 text-lg text-ai hover:text-ai-deep 
                          hover:underline transition-colors duration-200"
               href="https://www.shinjukuaikikai.com/"
               target="_blank"

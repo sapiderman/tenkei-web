@@ -37,11 +37,11 @@ export default async function Dojo(props: {
   const { t } = await getT(lang, "common");
   return (
     <>
-      <main className="flex min-h-screen flex-col items-left justify-between p-24">
+      <main className="flex min-h-screen flex-col items-start px-4 py-16 sm:px-6 max-w-6xl mx-auto w-full">
         {/* Flex container to align heading and logo */}
         <div className="flex items-center justify-left gap-4 sm:gap-6">
           {/* Heading - text-center removed as flex container handles centering */}
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+          <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold">
             {t("dojo_locations_schedules_contacts")}
           </h1>
           {/* Sized container for the logo */}
@@ -59,11 +59,11 @@ export default async function Dojo(props: {
         </div>
 
         {schedules.map((schedule, index) => (
-          <div key={index} className="my-4">
-            <h2 className="text-lg font-bold">{schedule.title}</h2>
+          <div key={index} className="my-4 border-b border-hairline pb-4">
+            <h2 className="font-display text-xl font-bold">{schedule.title}</h2>
             <p>{schedule.description}</p>
             <a
-              className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              className="text-ai hover:text-ai-deep underline"
               href={schedule.location}
               target="_blank"
               rel="noopener noreferrer"
@@ -77,7 +77,7 @@ export default async function Dojo(props: {
                 <p>
                   ig:{" "}
                   <a
-                    className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                    className="text-ai hover:text-ai-deep underline"
                     href={schedule.ig}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -91,15 +91,15 @@ export default async function Dojo(props: {
         ))}
 
         <div className="my-6">
-          <h2 className="text-lg font-bold mb-2">{t("dojo_fees")}</h2>
+          <h2 className="font-display text-xl font-bold mb-2">
+            {t("dojo_fees")}
+          </h2>
           <div className="overflow-x-auto">
             <table className="w-full max-w-lg text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-300">
-                  <th className="py-1 font-semibold text-gray-900">
-                    {t("type")}
-                  </th>
-                  <th className="py-1 pl-4 font-semibold text-gray-900">
+                <tr className="border-b border-ink/30">
+                  <th className="py-1 font-medium text-ai-deep">{t("type")}</th>
+                  <th className="py-1 pl-4 font-medium text-ai-deep">
                     {t("cost")}
                   </th>
                 </tr>
@@ -108,16 +108,16 @@ export default async function Dojo(props: {
                 {Object.entries(fees).map(([key, value]) => (
                   <tr
                     key={key}
-                    className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"
+                    className="border-b border-hairline last:border-0 hover:bg-ink/[0.03] transition-colors"
                   >
-                    <td className="py-1 text-gray-700">{key}</td>
-                    <td className="py-1 pl-4 text-gray-600">{value}</td>
+                    <td className="py-1 text-ink/80">{key}</td>
+                    <td className="py-1 pl-4 text-ink/60">{value}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-sm text-gray-500 italic">{t("fees_note")}</p>
+          <p className="mt-2 text-sm text-ink/70 italic">{t("fees_note")}</p>
         </div>
         <JoinButton lang={lang} />
       </main>

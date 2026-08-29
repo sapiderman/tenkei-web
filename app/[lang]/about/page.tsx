@@ -37,10 +37,10 @@ export default async function About(props: {
   const { t } = await getT(lang, "common");
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-16 lg:p-24 max-w-4xl mx-auto">
+      <main className="flex min-h-screen flex-col items-center px-4 py-16 sm:px-6 max-w-4xl mx-auto">
         <div className="space-y-6 sm:space-y-8">
           <div className="flex items-center justify-center gap-4 sm:gap-6">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold">
               {t("about_tenkei_aikidojo")}
             </h1>
             <div className="relative w-10 h-10 sm:w-20 sm:h-20 md:w-24 md:h-24 flex-shrink-0">
@@ -55,14 +55,14 @@ export default async function About(props: {
             </div>
           </div>
 
-          <p className="text-base sm:text-lg leading-relaxed text-gray-800 text-left sm:text-left">
+          <p className="text-base sm:text-lg leading-relaxed text-ink/70 text-left sm:text-left">
             {t("about_page_text_p1")}
           </p>
 
           <div className="text-center">
             <a
               href="https://blog.tenkeiaikidojo.org/2013/07/sejarah-tenkei-aikidojo.html"
-              className="inline-block px-4 sm:px-6 py-2 sm:py-3 text-base sm:text-lg text-blue-600 hover:text-blue-800 
+              className="inline-block px-4 sm:px-6 py-2 sm:py-3 text-base sm:text-lg text-ai hover:text-ai-deep 
                        hover:underline transition-colors duration-200"
               target="_blank"
               rel="noopener noreferrer"

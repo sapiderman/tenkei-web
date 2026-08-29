@@ -19,7 +19,7 @@ export default function EventAccordion({ items }: EventAccordionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div className="flex flex-col md:flex-row h-[600px] w-full overflow-hidden rounded-2xl shadow-xl border border-gray-800 bg-gray-900">
+    <div className="flex flex-col md:flex-row h-[600px] w-full overflow-hidden rounded-sharp shadow-sm border border-ink/20 bg-ink">
       {items.map((item, index) => {
         const isActive = activeIndex === index;
 
@@ -28,7 +28,7 @@ export default function EventAccordion({ items }: EventAccordionProps) {
             key={item.id}
             className={`relative flex transition-all duration-500 ease-in-out overflow-hidden group ${
               isActive ? "flex-[6]" : "flex-1 cursor-pointer"
-            } ${index !== items.length - 1 ? "border-b md:border-b-0 md:border-r border-gray-800" : ""}`}
+            } ${index !== items.length - 1 ? "border-b md:border-b-0 md:border-r border-white/10" : ""}`}
             onClick={() => setActiveIndex(index)}
           >
             {/* Background Image */}
@@ -75,7 +75,7 @@ export default function EventAccordion({ items }: EventAccordionProps) {
                     : "max-h-0 opacity-0"
                 }`}
               >
-                <div className="text-gray-300 text-sm md:text-base leading-relaxed">
+                <div className="text-paper/70 text-sm md:text-base leading-relaxed">
                   {item.description}
                 </div>
               </div>

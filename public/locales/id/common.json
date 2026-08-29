@@ -239,5 +239,10 @@
   "error_security_unsupported": "Verifikasi keamanan tidak didukung di browser ini.",
   "error_security_unconfigured": "Verifikasi keamanan belum dikonfigurasi. Hubungi administrator situs.",
   "error_generic": "Terjadi kesalahan. Silakan coba lagi.",
-  "error_registration_failed": "Pendaftaran gagal"
+  "error_registration_failed": "Pendaftaran gagal",
+  "hero_statement": "Jalan Keharmonisan",
+  "hero_subline": "Latihan Aikido di Jakarta — untuk dewasa dan anak-anak, dalam semangat keharmonisan.",
+  "learn_more": "Selengkapnya",
+  "join_band_title": "Mulai Latihan Anda",
+  "join_band_text": "Murid baru diterima sepanjang tahun. Tidak perlu pengalaman — cukup bawa pakaian yang nyaman dan kemauan untuk memulai."
 }

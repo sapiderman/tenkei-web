@@ -264,7 +264,7 @@ export default function ProfileEditForm({ lang }: Props) {
     return `w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 disabled:opacity-50 ${
       hasError
         ? "border-red-400 focus:ring-red-500"
-        : "border-gray-300 focus:ring-blue-500"
+        : "border-gray-300 focus:ring-ai"
     }`;
   }
 
@@ -611,7 +611,7 @@ export default function ProfileEditForm({ lang }: Props) {
                 checked={formData.consentMarketing}
                 onChange={(e) => setField("consentMarketing", e.target.checked)}
                 disabled={saving}
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-ai focus:ring-ai"
               />
               <span className="text-sm">{t("consent_marketing_text")}</span>
             </label>
@@ -660,7 +660,7 @@ export default function ProfileEditForm({ lang }: Props) {
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 py-2 px-4 bg-blue-700 text-white rounded-md hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 py-2 px-4 bg-ai text-paper rounded-sharp hover:bg-ai-deep disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {saving ? t("edit_profile_saving") : t("edit_profile_save")}
             </button>
@@ -668,7 +668,7 @@ export default function ProfileEditForm({ lang }: Props) {
               type="button"
               onClick={handleCancel}
               disabled={saving}
-              className="flex-1 py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 disabled:opacity-50 transition-colors"
+              className="flex-1 py-2 px-4 bg-ink/10 text-ink rounded-sharp hover:bg-ink/20 disabled:opacity-50 transition-colors"
             >
               {t("edit_profile_cancel")}
             </button>

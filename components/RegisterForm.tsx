@@ -371,12 +371,12 @@ export default function RegisterForm() {
 
   if (isSuccess) {
     return (
-      <div className="bg-gradient-to-br from-zinc-50 to-slate-200 min-h-screen flex items-center justify-center font-sans text-gray-900 py-12 px-4">
-        <div className="w-full max-w-2xl p-8 bg-white/80 backdrop-blur-md border border-white/50 rounded-2xl shadow-2xl">
+      <div className="bg-paper min-h-screen flex items-center justify-center font-sans text-gray-900 py-12 px-4">
+        <div className="w-full max-w-2xl p-8 bg-white border border-hairline rounded-sharp shadow-sm">
           <div className="text-center py-8 fade-in">
-            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-ai/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-8 h-8 text-emerald-600"
+                className="w-8 h-8 text-ai"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -394,15 +394,12 @@ export default function RegisterForm() {
             </h3>
             <p className="text-gray-600 mb-4">
               {t("welcome_to_tenkei")}
-              <span className="text-emerald-600 font-semibold">
-                {formData.name}
-              </span>
-              !
+              <span className="text-ai font-semibold">{formData.name}</span>!
             </p>
             <p className="text-gray-600 mb-6">{t("dojocho_contact_shortly")}</p>
             <Link
               href="/"
-              className="inline-block bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-semibold py-2 px-6 rounded-lg transition-all shadow-lg shadow-emerald-500/20"
+              className="inline-block bg-ai hover:bg-ai-deep text-paper font-semibold py-2 px-6 rounded-sharp transition-colors"
             >
               {t("return_to_site")}
             </Link>
@@ -413,10 +410,10 @@ export default function RegisterForm() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-zinc-50 to-slate-200 min-h-screen flex items-center justify-center font-sans text-gray-900 py-12 px-4">
-      <div className="w-full max-w-2xl p-8 bg-white/80 backdrop-blur-md border border-white/50 rounded-2xl shadow-2xl">
+    <div className="bg-paper min-h-screen flex items-center justify-center font-sans text-gray-900 py-12 px-4">
+      <div className="w-full max-w-2xl p-8 bg-white border border-hairline rounded-sharp shadow-sm">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-emerald-600">
+          <h1 className="text-3xl font-bold text-ink">
             {t("tenkei_registration")}
           </h1>
           <p className="text-gray-500 mt-2">{t("complete_profile_register")}</p>
@@ -444,7 +441,7 @@ export default function RegisterForm() {
 
           {/* Personal Information Section */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+            <h2 className="text-lg font-semibold text-gray-800 border-b border-hairline pb-2">
               {t("personal_information")}
             </h2>
 
@@ -463,7 +460,7 @@ export default function RegisterForm() {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder={t("your_full_name") as string}
                 />
               </div>
@@ -482,7 +479,7 @@ export default function RegisterForm() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder="you@domain.com"
                 />
               </div>
@@ -500,7 +497,7 @@ export default function RegisterForm() {
                   name="whatsapp"
                   value={formData.whatsapp}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder="+62 812 3456 7890"
                 />
               </div>
@@ -518,7 +515,7 @@ export default function RegisterForm() {
                   name="date_of_birth"
                   value={formData.date_of_birth}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all"
                 />
               </div>
             </div>
@@ -526,7 +523,7 @@ export default function RegisterForm() {
 
           {/* Account Security Section */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+            <h2 className="text-lg font-semibold text-gray-800 border-b border-hairline pb-2">
               {t("account_security")}
             </h2>
 
@@ -546,7 +543,7 @@ export default function RegisterForm() {
                   required
                   showLabel={t("show_password")}
                   hideLabel={t("hide_password")}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder="••••••••"
                 />
                 <p className="text-xs text-gray-500">{t("password_hint")}</p>
@@ -568,7 +565,7 @@ export default function RegisterForm() {
                   required
                   showLabel={t("show_password")}
                   hideLabel={t("hide_password")}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder="••••••••"
                 />
               </div>
@@ -577,7 +574,7 @@ export default function RegisterForm() {
 
           {/* Training Information Section */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+            <h2 className="text-lg font-semibold text-gray-800 border-b border-hairline pb-2">
               {t("training_information")}
             </h2>
 
@@ -606,7 +603,7 @@ export default function RegisterForm() {
                       setDojoOpen(true);
                     }}
                     onFocus={() => setDojoOpen(true)}
-                    className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                    className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
                     placeholder={t("dojo_placeholder") as string}
                     autoComplete="off"
                   />
@@ -618,7 +615,7 @@ export default function RegisterForm() {
                           <li
                             key={dojo}
                             onClick={() => handleDojoSelect(dojo)}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 transition-colors"
+                            className="px-4 py-2 hover:bg-ai/10 cursor-pointer text-ink transition-colors"
                           >
                             {dojo}
                           </li>
@@ -642,7 +639,7 @@ export default function RegisterForm() {
                   name="rank"
                   value={formData.rank}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all"
                 >
                   <option value="">{t("select_rank")}</option>
                   {RANK_OPTIONS.map((rankOption) => (
@@ -666,7 +663,7 @@ export default function RegisterForm() {
                   name="last_grading_date"
                   value={formData.last_grading_date}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all"
                 />
               </div>
             </div>
@@ -674,7 +671,7 @@ export default function RegisterForm() {
 
           {/* Emergency Contact Section */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+            <h2 className="text-lg font-semibold text-gray-800 border-b border-hairline pb-2">
               {t("emergency_contact")}
             </h2>
 
@@ -692,7 +689,7 @@ export default function RegisterForm() {
                   name="emergency_contact_name"
                   value={formData.emergency_contact_name}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder={t("contact_name") as string}
                 />
               </div>
@@ -710,7 +707,7 @@ export default function RegisterForm() {
                   name="emergency_contact_number"
                   value={formData.emergency_contact_number}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
                   placeholder="+62 xxx xxxx xxxx"
                 />
               </div>
@@ -719,7 +716,7 @@ export default function RegisterForm() {
 
           {/* Medical Information Section */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+            <h2 className="text-lg font-semibold text-gray-800 border-b border-hairline pb-2">
               {t("medical_information")}
             </h2>
 
@@ -736,7 +733,7 @@ export default function RegisterForm() {
                 value={formData.medical_conditions}
                 onChange={handleInputChange}
                 rows={3}
-                className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400 resize-none"
+                className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400 resize-none"
                 placeholder={t("medical_conditions_placeholder") as string}
               />
             </div>
@@ -744,7 +741,7 @@ export default function RegisterForm() {
 
           {/* Consent & Agreements Section */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+            <h2 className="text-lg font-semibold text-gray-800 border-b border-hairline pb-2">
               {t("consent_and_agreements")}
             </h2>
 
@@ -758,7 +755,7 @@ export default function RegisterForm() {
                   name="consent_datastore"
                   checked={formData.consent_datastore}
                   onChange={handleInputChange}
-                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer"
+                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-ai focus:ring-2 focus:ring-ai focus:ring-offset-0 cursor-pointer"
                 />
                 <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
                   {t("consent_datastore_text")}{" "}
@@ -772,7 +769,7 @@ export default function RegisterForm() {
                   name="consent_marketing"
                   checked={formData.consent_marketing}
                   onChange={handleInputChange}
-                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer"
+                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-ai focus:ring-2 focus:ring-ai focus:ring-offset-0 cursor-pointer"
                 />
                 <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
                   {t("consent_marketing_text")}
@@ -802,7 +799,7 @@ export default function RegisterForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 rounded-lg shadow-lg shadow-blue-500/20 transition-all transform active:scale-95 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-ai hover:bg-ai-deep text-paper font-semibold py-3 rounded-sharp shadow-sm transition-colors transform active:scale-95 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span>{t("complete_registration")}</span>
             {isLoading && (

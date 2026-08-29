@@ -10,16 +10,16 @@ export default async function JoinButton({ lang }: { lang: string }) {
   const hasSession = Boolean(cookieStore.get("tenkei_session")?.value);
 
   return (
-    <div className="mt-4 block mx-auto text-center w-full md:w-1/2">
+    <div className="flex flex-col items-center gap-3 text-center">
       <Link
         href={`/${lang}/register`}
-        className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800 block transition-colors"
+        className="rounded-sharp bg-ai px-8 py-3 text-paper transition-colors hover:bg-ai-deep"
       >
         {t("join_now")}
       </Link>
       <Link
         href={hasSession ? `/${lang}/profile` : `/${lang}/login`}
-        className="mt-2 text-sm text-blue-600 hover:text-blue-800 underline block"
+        className="text-sm text-ai underline-offset-4 transition-colors hover:text-ai-deep hover:underline"
       >
         {hasSession ? t("my_profile") : t("sign_in")}
       </Link>
