@@ -7,7 +7,7 @@
   "about_tenkei_desc": "Short history of Tenkei Aikidojo and our Sensei",
   "explore_dojos_desc": "Explore all dojo locations and practice schedules",
   "read_blogs_desc": "Read about past events, articles and essays",
-  "shinjuku_desc": "A little about Shinjuku Aikikai",
+  "shinjuku_label": "Shinjuku",
   "home": "Home",
   "events": "Events",
   "footer_text": "© 2026 Tenkei Aikidojo. All rights reserved.",
@@ -239,5 +239,10 @@
   "error_security_unsupported": "Security challenge is not supported in this browser.",
   "error_security_unconfigured": "Security challenge is not configured. Please contact the site administrator.",
   "error_generic": "An error occurred. Please try again.",
-  "error_registration_failed": "Registration failed"
+  "error_registration_failed": "Registration failed",
+  "hero_statement": "The Way of Harmony",
+  "hero_subline": "Aikido training in Jakarta — for adults and children, in the spirit of harmony.",
+  "learn_more": "Learn more",
+  "join_band_title": "Begin Your Practice",
+  "join_band_text": "New students are welcome year-round. No experience needed — just comfortable clothes and the willingness to begin."
 }

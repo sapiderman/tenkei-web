@@ -129,12 +129,12 @@ const Yudansha = async ({ lang }: { lang: string }) => {
   const { t } = await getT(lang, "common");
   return (
     <div className="w-full">
-      <h4 className="text-xl sm:text-2xl font-semibold mb-4">
+      <h4 className="font-display text-xl sm:text-3xl font-bold mb-4">
         {t("students_yudansha_ranking")}
       </h4>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <div className="relative overflow-x-auto sm:rounded-sharp border border-hairline">
+        <table className="w-full text-sm text-left text-ink/70">
+          <thead className="text-xs uppercase tracking-widest text-ai-deep">
             <tr>
               <th scope="col" className="px-2 py-2 sm:px-4 sm:py-3">
                 {t("no_short")}
@@ -154,9 +154,9 @@ const Yudansha = async ({ lang }: { lang: string }) => {
             {yudansha.map((person, index) => (
               <tr
                 key={index}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                className="border-b border-hairline hover:bg-ink/[0.03] transition-colors"
               >
-                <td className="px-2 py-2 sm:px-4 sm:py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td className="px-2 py-2 sm:px-4 sm:py-4 font-medium text-ink whitespace-nowrap">
                   {index + 1}
                 </td>
                 <td className="px-2 py-2 sm:px-6 sm:py-4">{person.name}</td>
@@ -172,7 +172,7 @@ const Yudansha = async ({ lang }: { lang: string }) => {
         href="https://en.wikipedia.org/wiki/Dan_(rank)"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-sm text-blue-600 dark:text-blue-500 hover:underline"
+        className="text-sm text-ai hover:text-ai-deep hover:underline"
       >
         {t("dan_ranking_explanation")}
       </a>

@@ -70,12 +70,12 @@ export default function LanguageSwitcher({
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50 text-left" ref={dropdownRef}>
+    <div className="relative text-left" ref={dropdownRef}>
       <div>
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="inline-flex items-center gap-x-2 rounded-full bg-white/70 dark:bg-black/50 px-4 py-2 text-sm font-medium text-gray-900 dark:text-gray-100 shadow-md ring-1 ring-inset ring-black/5 dark:ring-white/10 hover:bg-white/90 dark:hover:bg-black/70 backdrop-blur-md transition-all duration-300"
+          className="inline-flex items-center gap-x-1.5 rounded-sharp px-2.5 py-1.5 text-sm font-medium text-ink hover:bg-ink/5 transition-colors"
           id="language-menu-button"
           aria-expanded={isOpen}
           aria-haspopup="true"
@@ -86,7 +86,7 @@ export default function LanguageSwitcher({
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="h-4 w-4 text-gray-500 dark:text-gray-400 pointer-events-none"
+            className="h-4 w-4 text-ai pointer-events-none"
           >
             <path
               strokeLinecap="round"
@@ -101,7 +101,7 @@ export default function LanguageSwitcher({
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={`h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+            className={`h-4 w-4 text-ink/40 pointer-events-none transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
             aria-hidden="true"
           >
             <path
@@ -115,7 +115,7 @@ export default function LanguageSwitcher({
 
       {isOpen && (
         <div
-          className="absolute right-0 z-10 mt-3 w-40 origin-top-right rounded-2xl bg-white/80 dark:bg-zinc-900/80 p-2 shadow-lg ring-1 ring-black/5 dark:ring-white/10 backdrop-blur-md focus:outline-none animate-in fade-in zoom-in-95 duration-200"
+          className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-sharp bg-paper p-1.5 shadow-lg border border-hairline focus:outline-none"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="language-menu-button"
@@ -126,10 +126,10 @@ export default function LanguageSwitcher({
               <button
                 key={lang}
                 onClick={() => changeLanguage(lang)}
-                className={`block w-full rounded-lg px-3 py-2 text-left text-sm transition-all duration-200 ${
+                className={`block w-full rounded-sharp px-3 py-2 text-left text-sm transition-colors ${
                   currentLang === lang
-                    ? "bg-indigo-50/80 dark:bg-indigo-500/10 font-medium text-indigo-600 dark:text-indigo-400"
-                    : "text-gray-700 dark:text-gray-200 hover:bg-gray-100/80 dark:hover:bg-white/5"
+                    ? "bg-ai/10 font-medium text-ai-deep"
+                    : "text-ink/80 hover:bg-ink/5"
                 }`}
                 role="menuitem"
                 tabIndex={-1}

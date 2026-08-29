@@ -117,7 +117,7 @@ export default function ProfileView({
           <h1 className="text-2xl font-bold">{t("profile_heading")}</h1>
           <Link
             href={`/${lang}/profile/edit`}
-            className="text-sm text-blue-700 hover:text-blue-900 underline"
+            className="text-sm text-ai hover:text-ai-deep underline"
           >
             {t("edit_profile")}
           </Link>
@@ -155,7 +155,7 @@ export default function ProfileView({
           <div className="mb-6 text-center">
             <Link
               href={`/${lang}/admin/users`}
-              className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              className="inline-block px-4 py-2 bg-ai text-paper rounded-sharp hover:bg-ai-deep transition-colors"
             >
               {t("admin_manage_users")}
             </Link>
@@ -181,7 +181,7 @@ export default function ProfileView({
         <button
           type="button"
           onClick={handleLogout}
-          className="mt-8 w-full py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
+          className="mt-8 w-full py-2 px-4 bg-ink/10 text-ink rounded-sharp hover:bg-ink/20 transition-colors"
         >
           {t("sign_out")}
         </button>

@@ -95,7 +95,7 @@ export default function LoginForm({ lang }: { lang: string }) {
               autoComplete="username"
               disabled={loading}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              className="w-full px-3 py-2 border border-ink/20 rounded-sharp focus:outline-none focus:ring-2 focus:ring-ai disabled:opacity-50"
             />
           </div>
 
@@ -115,7 +115,7 @@ export default function LoginForm({ lang }: { lang: string }) {
               required
               showLabel={t("show_password")}
               hideLabel={t("hide_password")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              className="w-full px-3 py-2 border border-ink/20 rounded-sharp focus:outline-none focus:ring-2 focus:ring-ai disabled:opacity-50"
             />
           </div>
 
@@ -132,7 +132,7 @@ export default function LoginForm({ lang }: { lang: string }) {
           <button
             type="submit"
             disabled={loading || !identifier || !password}
-            className="w-full py-2 px-4 bg-blue-700 text-white rounded-md hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-2 px-4 bg-ai text-paper rounded-sharp hover:bg-ai-deep disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? t("login_loading") : t("login_button")}
           </button>

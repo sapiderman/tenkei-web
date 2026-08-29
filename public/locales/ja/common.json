@@ -7,7 +7,7 @@
   "about_tenkei_desc": "天恵合気道場の先生と短い歴史",
   "explore_dojos_desc": "すべての道場場所と稽古スケジュールを探す",
   "read_blogs_desc": "過去のイベント、記事、エッセイを読む",
-  "shinjuku_desc": "新宿合気会について",
+  "shinjuku_label": "新宿",
   "home": "ホーム",
   "events": "イベント",
   "footer_text": "© 2026 天恵合気道場。無断転載を禁じます。",
@@ -239,5 +239,10 @@
   "error_security_unsupported": "このブラウザではセキュリティ認証がサポートされていません。",
   "error_security_unconfigured": "セキュリティ認証が設定されていません。サイト管理者に連絡してください。",
   "error_generic": "エラーが発生しました。もう一度お試しください。",
-  "error_registration_failed": "登録に失敗しました"
+  "error_registration_failed": "登録に失敗しました",
+  "hero_statement": "和の道",
+  "hero_subline": "調和の精神のもと、ジャカルタで大人から子どもまで稽古しています。",
+  "learn_more": "詳しくはこちら",
+  "join_band_title": "稽古を始めましょう",
+  "join_band_text": "新規生徒を随時受け付けています。経験は不要です。動きやすい服装と、始める気持ちだけご持参ください。"
 }

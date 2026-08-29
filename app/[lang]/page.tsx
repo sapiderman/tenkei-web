@@ -1,119 +1,157 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getT } from "../i18n"; // Adjust path for i18n helper
+import { getT } from "../i18n";
 
-import Footer from "@/components/footer"; // Will need to be updated to be language aware
-import Events from "@/components/events"; // Will need to be updated to be language aware
+import Events from "@/components/events";
+import JoinButton from "@/components/joinButton";
+import { schedules } from "./dojos/data";
+
+// Shared "learn more" teaser link styling (About / Dojos / Shinjuku sections)
+const TEASER_LINK =
+  "border-b border-ai pb-0.5 text-ai transition-colors hover:text-ai-deep hover:border-ai-deep";
 
 export default async function HomePage(props: {
   params: Promise<{ lang: string }>;
 }) {
   const params = await props.params;
   const { lang } = params;
-  const { t } = await getT(lang, "common"); // Get translation function for 'common' namespace
+  const { t } = await getT(lang, "common");
 
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-          <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4">
-            {t("welcome_message")}&nbsp;
-          </p>
+      <main>
+        {/* Hero */}
+        <section className="relative flex min-h-[calc(100vh-4rem)] items-center overflow-hidden">
+          <div className="seigaiha absolute inset-0" aria-hidden="true" />
+          <div
+            className="vertical-kanji absolute right-6 top-1/2 hidden -translate-y-1/2 select-none font-display text-8xl text-ink/15 lg:block"
+            aria-hidden="true"
+          >
+            合気道
+          </div>
 
-          <div className="fixed bottom-0 left-0 flex w-full items-end justify-center bg-gradient-to-t from-white via-white lg:static lg:h-auto lg:w-auto lg:bg-none p-4 lg:p-0">
-            <div className="relative w-32 h-32 lg:w-48 lg:h-48">
+          <div className="relative mx-auto w-full max-w-6xl px-4 py-24 sm:px-6">
+            <div className="animate-rise max-w-2xl">
               <Image
                 src="/tenkei_logo.png"
-                alt="Tenkei Logo"
-                fill
-                sizes="(max-width: 1024px) 128px, 192px"
-                className="object-contain"
+                alt="Tenkei Aikidojo"
+                width={88}
+                height={88}
+                className="mb-8 h-20 w-20 object-contain"
                 priority
               />
+              <h1 className="font-display text-4xl font-bold leading-tight text-ink sm:text-5xl lg:text-6xl">
+                {t("hero_statement")}
+              </h1>
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink/70">
+                {t("hero_subline")}
+              </p>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:lg:h-[360px] z-[-1]">
-          <Image
-            className="relative"
-            src="/tenkei_text_logo.png"
-            alt="Tenkei text banner"
-            width={1624}
-            height={200}
-            style={{ maxWidth: "100%", height: "auto" }}
-            priority
-          />
-        </div>
+        {/* About teaser */}
+        <section className="border-t border-hairline">
+          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1fr_2fr] md:items-start">
+            <div>
+              <p className="section-label">{t("about_us")}</p>
+            </div>
+            <div>
+              <h2 className="font-display text-3xl font-bold text-ink">
+                {t("tenkei_aikidojo")}
+              </h2>
+              <p className="mt-5 max-w-2xl leading-relaxed text-ink/70">
+                {t("tenkei_aikidojo_description")}
+              </p>
+              <Link
+                href={`/${lang}/about`}
+                className={`mt-6 inline-block ${TEASER_LINK}`}
+              >
+                {t("learn_more")}
+              </Link>
+            </div>
+          </div>
+        </section>
 
-        <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-          <Link
-            href={`/${lang}/about`} // Update href with lang
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100"
-          >
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-              {t("about_us")}{" "}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              {t("about_tenkei_desc")}
-            </p>
-          </Link>
+        {/* Dojos teaser */}
+        <section className="border-t border-hairline">
+          <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+            <div className="mb-10 flex items-end justify-between gap-6">
+              <div>
+                <p className="section-label">{t("dojos")}</p>
+                <h2 className="font-display mt-3 text-3xl font-bold text-ink">
+                  {t("explore_dojos_desc")}
+                </h2>
+              </div>
+              <Link
+                href={`/${lang}/dojos`}
+                className={`hidden shrink-0 sm:inline-block ${TEASER_LINK}`}
+              >
+                {t("learn_more")}
+              </Link>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {schedules.map((dojo) => (
+                <Link
+                  key={dojo.title}
+                  href={`/${lang}/dojos`}
+                  className="group rounded-sharp border border-hairline bg-paper p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-ink/30"
+                >
+                  <h3 className="font-display text-xl font-bold text-ink">
+                    {dojo.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink/70">
+                    {dojo.description}
+                  </p>
+                  <p className="mt-4 text-xs tracking-wide text-ink/70">
+                    {dojo.time}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
 
-          <Link
-            href={`/${lang}/dojos`} // Update href with lang
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100"
-            rel="noopener noreferrer"
-          >
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-              {t("dojos")}{" "}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              {t("explore_dojos_desc")}
-            </p>
-          </Link>
+        {/* Shinjuku teaser */}
+        <section className="border-t border-hairline">
+          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1fr_2fr] md:items-start">
+            <div>
+              <p className="section-label">{t("shinjuku_label")}</p>
+            </div>
+            <div>
+              <h2 className="font-display text-3xl font-bold text-ink">
+                {t("shinjuku_aikikai")}
+              </h2>
+              <p className="mt-5 max-w-2xl leading-relaxed text-ink/70">
+                {t("shinjuku_aikikai_text")}
+              </p>
+              <Link
+                href={`/${lang}/shinjuku`}
+                className={`mt-6 inline-block ${TEASER_LINK}`}
+              >
+                {t("learn_more")}
+              </Link>
+            </div>
+          </div>
+        </section>
 
-          <a
-            href="https://blog.tenkeiaikidojo.org/" // External link, no lang change
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-              {t("blogs")}{" "}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              {t("read_blogs_desc")}
-            </p>
-          </a>
-
-          <Link
-            href={`/${lang}/shinjuku`} // Update href with lang
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100"
-          >
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-              {t("shinjuku_aikikai")}{" "}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              {t("shinjuku_desc")}
-            </p>
-          </Link>
-        </div>
+        <Events lang={lang} />
       </main>
-      <Events lang={lang} />
-      <br />
-      <Footer lang={lang} />
+
+      {/* Join band */}
+      <section className="bg-ai">
+        <div className="mx-auto flex max-w-6xl flex-col items-center px-4 py-16 text-center sm:px-6">
+          <h2 className="font-display text-3xl font-bold text-paper">
+            {t("join_band_title")}
+          </h2>
+          <p className="mt-4 max-w-xl leading-relaxed text-paper">
+            {t("join_band_text")}
+          </p>
+          <div className="mt-8">
+            <JoinButton lang={lang} variant="dark" />
+          </div>
+        </div>
+      </section>
     </>
   );
 }

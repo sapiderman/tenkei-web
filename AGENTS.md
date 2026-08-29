@@ -31,6 +31,8 @@ public/locales/    # Translation JSON files (en, id, ja)
 - **Naming**: Components `PascalCase`, functions `camelCase`, constants `UPPER_SNAKE_CASE`, utility files `kebab-case`
 - **Styling**: Tailwind-first, mobile-first (`md:` 768px, `lg:` 1024px, `xl:` 1280px)
 - **Images**: Always use `<Image>` from `next/image`
+- **Global chrome**: `Header` and `Footer` are rendered once in `app/[lang]/layout.tsx` — never import or re-render them inside a page
+- **Session-aware CTA**: reuse `components/joinButton.tsx` (`variant="light"` on paper, `variant="dark"` on `bg-ai`) — do not inline the `tenkei_session` cookie check
 - **Git**: Conventional commits (`feat:`, `fix:`, `docs:`, `refactor:`, `chore:`)
 
 ## i18n Patterns
@@ -98,4 +100,4 @@ Before suggesting or implementing any changes, load this skill [SKILL.md](https:
 
 ---
 
-**Last Updated**: June 2026
+**Last Updated**: August 2026

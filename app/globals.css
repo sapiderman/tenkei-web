@@ -3,23 +3,66 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  /* Tenkei design tokens — ai blue extracted from tenkei_logo.png */
+  --color-ink: #1f2328;
+  --color-ai: #3868a8;
+  --color-ai-deep: #234068;
+  --color-paper: #faf8f4;
+  --color-hairline: rgba(31, 35, 40, 0.12);
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Washi paper grain — sits behind all content, over the paper background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* Seigaiha wave pattern — generated arcs, ink at 7% */
+  .seigaiha {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='28' viewBox='0 0 56 28'%3E%3Cpath d='M-13 28A13 13 0 0 1 13 28M-9 28A9 9 0 0 1 9 28M-5 28A5 5 0 0 1 5 28M15 28A13 13 0 0 1 41 28M19 28A9 9 0 0 1 37 28M23 28A5 5 0 0 1 33 28M43 28A13 13 0 0 1 69 28M47 28A9 9 0 0 1 65 28M51 28A5 5 0 0 1 61 28M1 14A13 13 0 0 1 27 14M5 14A9 9 0 0 1 23 14M9 14A5 5 0 0 1 19 14M29 14A13 13 0 0 1 55 14M33 14A9 9 0 0 1 51 14M37 14A5 5 0 0 1 47 14M-13 0A13 13 0 0 0 13 0M-9 0A9 9 0 0 0 9 0M-5 0A5 5 0 0 0 5 0M15 0A13 13 0 0 0 41 0M19 0A9 9 0 0 0 37 0M23 0A5 5 0 0 0 33 0M43 0A13 13 0 0 0 69 0M47 0A9 9 0 0 0 65 0M51 0A5 5 0 0 0 61 0' fill='none' stroke='%231F2328' stroke-opacity='0.07' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 84px 42px;
+  }
+
+  /* Vertical decorative kanji */
+  .vertical-kanji {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+  }
+
+  /* Small-caps ink section label */
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-ai) 85%, var(--color-ink));
+  }
+}
+
+/* Hero load-in — animation only when motion is welcome */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-rise {
+    animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 }
