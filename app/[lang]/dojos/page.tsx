@@ -1,4 +1,3 @@
-import Footer from "@/components/footer";
 import JoinButton from "@/components/joinButton";
 import Image from "next/image";
 import { getT } from "@/app/i18n"; // Use alias path
@@ -121,8 +120,6 @@ export default async function Dojo(props: {
         </div>
         <JoinButton lang={lang} />
       </main>
-
-      <Footer lang={lang} />
     </>
   );
 }

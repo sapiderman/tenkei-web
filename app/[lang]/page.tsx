@@ -1,11 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { getT } from "../i18n";
 
-import Footer from "@/components/footer";
 import Events from "@/components/events";
+import JoinButton from "@/components/joinButton";
 import { schedules } from "./dojos/data";
+
+// Shared "learn more" teaser link styling (About / Dojos / Shinjuku sections)
+const TEASER_LINK =
+  "border-b border-ai pb-0.5 text-ai transition-colors hover:text-ai-deep hover:border-ai-deep";
 
 export default async function HomePage(props: {
   params: Promise<{ lang: string }>;
@@ -13,10 +16,6 @@ export default async function HomePage(props: {
   const params = await props.params;
   const { lang } = params;
   const { t } = await getT(lang, "common");
-
-  // Next.js 16: cookies() is async
-  const cookieStore = await cookies();
-  const hasSession = Boolean(cookieStore.get("tenkei_session")?.value);
 
   return (
     <>
@@ -66,7 +65,7 @@ export default async function HomePage(props: {
               </p>
               <Link
                 href={`/${lang}/about`}
-                className="mt-6 inline-block border-b border-ai pb-0.5 text-ai transition-colors hover:text-ai-deep hover:border-ai-deep"
+                className={`mt-6 inline-block ${TEASER_LINK}`}
               >
                 {t("learn_more")}
               </Link>
@@ -86,7 +85,7 @@ export default async function HomePage(props: {
               </div>
               <Link
                 href={`/${lang}/dojos`}
-                className="hidden shrink-0 border-b border-ai pb-0.5 text-ai transition-colors hover:text-ai-deep hover:border-ai-deep sm:inline-block"
+                className={`hidden shrink-0 sm:inline-block ${TEASER_LINK}`}
               >
                 {t("learn_more")}
               </Link>
@@ -117,7 +116,7 @@ export default async function HomePage(props: {
         <section className="border-t border-hairline">
           <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1fr_2fr] md:items-start">
             <div>
-              <p className="section-label">{t("shinjuku_desc")}</p>
+              <p className="section-label">{t("shinjuku_label")}</p>
             </div>
             <div>
               <h2 className="font-display text-3xl font-bold text-ink">
@@ -128,16 +127,16 @@ export default async function HomePage(props: {
               </p>
               <Link
                 href={`/${lang}/shinjuku`}
-                className="mt-6 inline-block border-b border-ai pb-0.5 text-ai transition-colors hover:text-ai-deep hover:border-ai-deep"
+                className={`mt-6 inline-block ${TEASER_LINK}`}
               >
                 {t("learn_more")}
               </Link>
             </div>
           </div>
         </section>
-      </main>
 
-      <Events lang={lang} />
+        <Events lang={lang} />
+      </main>
 
       {/* Join band */}
       <section className="bg-ai">
@@ -145,25 +144,14 @@ export default async function HomePage(props: {
           <h2 className="font-display text-3xl font-bold text-paper">
             {t("join_band_title")}
           </h2>
-          <p className="mt-4 max-w-xl leading-relaxed text-paper/80">
+          <p className="mt-4 max-w-xl leading-relaxed text-paper">
             {t("join_band_text")}
           </p>
-          <Link
-            href={`/${lang}/register`}
-            className="mt-8 rounded-sharp bg-paper px-8 py-3 font-medium text-ai-deep transition-colors hover:bg-white"
-          >
-            {t("join_now")}
-          </Link>
-          <Link
-            href={hasSession ? `/${lang}/profile` : `/${lang}/login`}
-            className="mt-4 text-sm text-paper/80 underline-offset-4 transition-colors hover:text-paper hover:underline"
-          >
-            {hasSession ? t("my_profile") : t("sign_in")}
-          </Link>
+          <div className="mt-8">
+            <JoinButton lang={lang} variant="dark" />
+          </div>
         </div>
       </section>
-
-      <Footer lang={lang} />
     </>
   );
 }

@@ -1,4 +1,3 @@
-import Footer from "@/components/footer";
 import { getT } from "@/app/i18n";
 import type { Metadata } from "next";
 
@@ -87,7 +86,6 @@ export default async function PrivacyPolicy(props: {
           </section>
         </div>
       </main>
-      <Footer lang={lang} />
     </>
   );
 }

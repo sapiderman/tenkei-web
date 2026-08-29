@@ -5,17 +5,20 @@ import { Shippori_Mincho, Zen_Kaku_Gothic_New } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import "../globals.css";
 
 const shipporiMincho = Shippori_Mincho({
   weight: ["500", "700"],
+  subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
 });
 
 const zenKakuGothic = Zen_Kaku_Gothic_New({
   weight: ["400", "500", "700"],
+  subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
 });
@@ -91,6 +94,7 @@ export default async function Layout({
         <LocalBusinessSchema lang={lang} />
         <Header lang={lang} />
         {children}
+        <Footer lang={lang} />
         <Analytics />
         <SpeedInsights />
       </body>

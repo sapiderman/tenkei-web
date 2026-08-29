@@ -23,24 +23,26 @@ export default async function Header({ lang }: { lang: string }) {
             className="h-9 w-9 object-contain"
             priority
           />
-          <span className="font-display text-lg tracking-wide text-ink">
+          <span className="font-display hidden text-lg tracking-wide text-ink sm:inline">
             Tenkei Aikidojo
           </span>
         </Link>
 
         <div className="flex items-center gap-1 sm:gap-2">
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-sharp px-2.5 py-1.5 text-sm text-ink/80 hover:text-ai transition-colors"
-            >
-              {item.label}
-            </Link>
-          ))}
+          <nav className="flex items-center gap-1 sm:gap-2">
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-sharp px-2.5 py-1.5 text-sm text-ink/80 hover:text-ai transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
           <Link
             href={`/${lang}/register`}
-            className="ml-1 hidden rounded-sharp bg-ai px-4 py-1.5 text-sm font-medium text-paper hover:bg-ai-deep transition-colors sm:inline-block"
+            className="ml-1 rounded-sharp bg-ai px-4 py-1.5 text-sm font-medium text-paper hover:bg-ai-deep transition-colors"
           >
             {t("join_now")}
           </Link>

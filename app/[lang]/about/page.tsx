@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Footer from "@/components/footer";
 import Yudansha from "@/components/yudansha";
 import Sensei from "@/components/sensei";
 import { getT } from "@/app/i18n"; // Use alias path
@@ -74,8 +73,6 @@ export default async function About(props: {
           <Yudansha lang={lang} />
         </div>
       </main>
-      <br />
-      <Footer lang={lang} />
     </>
   );
 }

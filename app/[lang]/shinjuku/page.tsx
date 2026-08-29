@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Footer from "@/components/footer";
 import { getT } from "@/app/i18n"; // Use alias path
 import type { Metadata } from "next";
 
@@ -59,7 +58,6 @@ export default async function Shinjuku(props: {
           </div>
         </div>
       </main>
-      <Footer lang={lang} />
     </>
   );
 }
