@@ -178,6 +178,26 @@ export async function hashIdentifierForLog(
 }
 
 /**
+ * Validates Cloudflare Turnstile token format.
+ * Turnstile tokens are base64url-encoded strings.
+ * Length: typical tokens are 2000-4000 chars, max 5000 for safety.
+ * Character set: A-Z, a-z, 0-9, hyphen, underscore, plus period and equals for compatibility.
+ */
+export function isValidTurnstileToken(token: string): boolean {
+  if (!token) return false;
+
+  // Check length (must be reasonable for a Turnstile token)
+  if (token.length < 20 || token.length > 5000) {
+    return false;
+  }
+
+  // Validate character set: base64/base64url variants (A-Z, a-z, 0-9, -, _, +, /)
+  // Also allow . and = for compatibility with variations
+  const validCharRegex = /^[A-Za-z0-9_=.\-+\/]+$/;
+  return validCharRegex.test(token);
+}
+
+/**
  * Extracts the client IP from the request headers.
  */
 export function getClientIp(request: Request): string {

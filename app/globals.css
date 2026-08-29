@@ -28,9 +28,11 @@ body::before {
 }
 
 @layer utilities {
-  /* Seigaiha wave pattern — generated arcs, ink at 7% */
+  /* Seigaiha wave pattern — fans drawn back-to-front with opaque paper fill
+     so lower rows occlude upper rows (no crossing arcs). Fill must match
+     --color-paper (#faf8f4). */
   .seigaiha {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='28' viewBox='0 0 56 28'%3E%3Cpath d='M-13 28A13 13 0 0 1 13 28M-9 28A9 9 0 0 1 9 28M-5 28A5 5 0 0 1 5 28M15 28A13 13 0 0 1 41 28M19 28A9 9 0 0 1 37 28M23 28A5 5 0 0 1 33 28M43 28A13 13 0 0 1 69 28M47 28A9 9 0 0 1 65 28M51 28A5 5 0 0 1 61 28M1 14A13 13 0 0 1 27 14M5 14A9 9 0 0 1 23 14M9 14A5 5 0 0 1 19 14M29 14A13 13 0 0 1 55 14M33 14A9 9 0 0 1 51 14M37 14A5 5 0 0 1 47 14M-13 0A13 13 0 0 0 13 0M-9 0A9 9 0 0 0 9 0M-5 0A5 5 0 0 0 5 0M15 0A13 13 0 0 0 41 0M19 0A9 9 0 0 0 37 0M23 0A5 5 0 0 0 33 0M43 0A13 13 0 0 0 69 0M47 0A9 9 0 0 0 65 0M51 0A5 5 0 0 0 61 0' fill='none' stroke='%231F2328' stroke-opacity='0.07' stroke-width='1'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='28' viewBox='0 0 56 28'%3E%3Cg fill='%23FAF8F4' stroke='%231F2328' stroke-opacity='0.07' stroke-width='1'%3E%3Ccircle cx='0' cy='0' r='13'/%3E%3Ccircle cx='0' cy='0' r='9'/%3E%3Ccircle cx='0' cy='0' r='5'/%3E%3Ccircle cx='28' cy='0' r='13'/%3E%3Ccircle cx='28' cy='0' r='9'/%3E%3Ccircle cx='28' cy='0' r='5'/%3E%3Ccircle cx='56' cy='0' r='13'/%3E%3Ccircle cx='56' cy='0' r='9'/%3E%3Ccircle cx='56' cy='0' r='5'/%3E%3Ccircle cx='14' cy='14' r='13'/%3E%3Ccircle cx='14' cy='14' r='9'/%3E%3Ccircle cx='14' cy='14' r='5'/%3E%3Ccircle cx='42' cy='14' r='13'/%3E%3Ccircle cx='42' cy='14' r='9'/%3E%3Ccircle cx='42' cy='14' r='5'/%3E%3Ccircle cx='0' cy='28' r='13'/%3E%3Ccircle cx='0' cy='28' r='9'/%3E%3Ccircle cx='0' cy='28' r='5'/%3E%3Ccircle cx='28' cy='28' r='13'/%3E%3Ccircle cx='28' cy='28' r='9'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3Ccircle cx='56' cy='28' r='13'/%3E%3Ccircle cx='56' cy='28' r='9'/%3E%3Ccircle cx='56' cy='28' r='5'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 84px 42px;
   }
 

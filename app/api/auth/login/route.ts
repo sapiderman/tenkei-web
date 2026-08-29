@@ -6,6 +6,7 @@ import {
   isRateLimited,
   hashIdentifierForLog,
   getClientIp,
+  isValidTurnstileToken,
 } from "../_lib";
 
 export async function POST(request: Request) {
@@ -55,6 +56,26 @@ export async function POST(request: Request) {
     );
   }
 
+  // Turnstile: format-check only — real verification is the backend's job
+  // (same discipline as the register route).
+  const rawTurnstileToken = body["cf_turnstile_response"];
+  const turnstileToken =
+    typeof rawTurnstileToken === "string" ? rawTurnstileToken.trim() : "";
+
+  if (!turnstileToken) {
+    return NextResponse.json(
+      { error: "Security verification required" },
+      { status: 400 },
+    );
+  }
+
+  if (!isValidTurnstileToken(turnstileToken)) {
+    return NextResponse.json(
+      { error: "Invalid security verification token" },
+      { status: 400 },
+    );
+  }
+
   const identifier = rawIdentifier.trim();
   const password = rawPassword; // Do NOT trim/sanitize password (special chars valid)
 
@@ -93,7 +114,11 @@ export async function POST(request: Request) {
     response = await fetch(upstreamUrl, {
       method: "POST",
       headers,
-      body: JSON.stringify({ identifier, password }),
+      body: JSON.stringify({
+        identifier,
+        password,
+        cf_turnstile_response: turnstileToken,
+      }),
       signal: controller.signal,
     });
   } catch {

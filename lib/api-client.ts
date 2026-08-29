@@ -11,12 +11,17 @@ export type LoginResult =
 export async function login(
   identifier: string,
   password: string,
+  turnstileToken: string,
 ): Promise<LoginResult> {
   try {
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ identifier, password }),
+      body: JSON.stringify({
+        identifier,
+        password,
+        cf_turnstile_response: turnstileToken,
+      }),
     });
 
     if (res.ok) {

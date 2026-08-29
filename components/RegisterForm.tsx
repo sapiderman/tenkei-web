@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslation } from "@/app/i18n/client";
 import PasswordInput from "@/components/PasswordInput";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import {
   sanitizeDateInput,
   sanitizePasswordInput,
@@ -94,6 +94,7 @@ export default function RegisterForm() {
   const [dojoOpen, setDojoOpen] = useState(false);
   const [dojoSearch, setDojoSearch] = useState("");
   const dojoRef = useRef<HTMLDivElement>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   const turnstileSiteKey =
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
@@ -356,11 +357,19 @@ export default function RegisterForm() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: "" }));
         setError(errorData.error || t("error_registration_failed"));
+        // Turnstile tokens are single-use — the request may have reached the
+        // backend and consumed it, so reset the widget or every retry would
+        // fail verification.
+        setTurnstileToken("");
+        turnstileRef.current?.reset();
       } else {
         setIsSuccess(true);
       }
     } catch (err) {
       setError(t("error_generic"));
+      // Reset here too — a network error may have consumed the token mid-flight.
+      setTurnstileToken("");
+      turnstileRef.current?.reset();
       if (process.env.NODE_ENV === "development") {
         console.error("Registration error:", err);
       }
@@ -785,6 +794,7 @@ export default function RegisterForm() {
               </div>
             ) : (
               <Turnstile
+                ref={turnstileRef}
                 siteKey={turnstileSiteKey}
                 onSuccess={handleTurnstileSuccess}
                 onError={handleTurnstileError}

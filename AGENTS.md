@@ -11,6 +11,7 @@ Next.js 16 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS · Ya
 - **Routing**: `proxy.ts` handles CSP headers + i18n routing (Next.js 16 edge proxy — replaces `middleware.ts`)
 - **Forms**: Native React state for client-side validation. Do not introduce React Hook Form or other form libraries without explicit user approval.
 - **Rate limiting**: in-memory per-IP limiter in `app/api/auth/_lib.ts`, env-tunable via `RATE_LIMIT_MAX_REQUESTS` (default 10) and `RATE_LIMIT_WINDOW_MINUTES` (default 15). See `.env.example`. Per-instance only — the Go backend's limiter is the authoritative gate.
+- **Turnstile**: all auth forms (register, login) include a Cloudflare Turnstile widget (`@marsidev/react-turnstile`, site key `NEXT_PUBLIC_TURNSTILE_SITE_KEY`). The client sends `cf_turnstile_response`; the Next proxy only format-checks it (`isValidTurnstileToken` in `app/api/auth/_lib.ts`) — the Go backend verifies via siteverify. Tokens are single-use: reset the widget after any failed submission.
 
 ## Key Directories
 
@@ -73,7 +74,7 @@ Before suggesting or implementing any changes, load this skill [SKILL.md](https:
 4. **Plan the approach** — what files need to be created/modified?
 5. **Consider localization early** — when adding new translation keys, add the key with an English value to all three locale files (`en`, `id`, `ja`). If you don't know the `id`/`ja` translation, use English as placeholder with `// TODO: translate` comment.
 
-### Phase 2: ImplemenWt
+### Phase 2: Implement
 
 1. **Follow established patterns** — don't introduce new patterns without discussion.
 2. **Accessibility**: semantic HTML, ARIA where needed, keyboard navigation, 4.5:1 contrast ratio.

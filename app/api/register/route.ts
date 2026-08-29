@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import sanitizeHtml from "sanitize-html";
-import { isRateLimited } from "../auth/_lib";
+import { isRateLimited, isValidTurnstileToken } from "../auth/_lib";
 import { VALID_RANKS } from "@/lib/constants";
 import {
   isValidDate,
@@ -31,26 +31,6 @@ function sanitizeString(input: unknown): string {
     .replace(/\r?\n/g, " ")
     .replace(/\t/g, " ")
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]+/g, "");
-}
-
-/**
- * Validates Cloudflare Turnstile token format.
- * Turnstile tokens are base64url-encoded strings.
- * Length: typical tokens are 2000-4000 chars, max 5000 for safety.
- * Character set: A-Z, a-z, 0-9, hyphen, underscore, plus period and equals for compatibility.
- */
-function isValidTurnstileToken(token: string): boolean {
-  if (!token) return false;
-
-  // Check length (must be reasonable for a Turnstile token)
-  if (token.length < 20 || token.length > 5000) {
-    return false;
-  }
-
-  // Validate character set: base64/base64url variants (A-Z, a-z, 0-9, -, _, +, /)
-  // Also allow . and = for compatibility with variations
-  const validCharRegex = /^[A-Za-z0-9_=.\-+\/]+$/;
-  return validCharRegex.test(token);
 }
 
 interface RegistrationBody {

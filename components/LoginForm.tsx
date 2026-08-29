@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useTranslation } from "@/app/i18n/client";
 import { login } from "@/lib/api-client";
 import PasswordInput from "@/components/PasswordInput";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
+import { sanitizeToken } from "@/lib/sanitize";
 
 export default function LoginForm({ lang }: { lang: string }) {
   const { t } = useTranslation(lang, "common");
@@ -16,16 +18,43 @@ export default function LoginForm({ lang }: { lang: string }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<TurnstileInstance>(null);
+
+  const turnstileSiteKey =
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+    (process.env.NODE_ENV === "development" ? "1x00000000000000000000AA" : "");
+  const isTurnstileConfigured = Boolean(turnstileSiteKey);
+
+  const handleTurnstileSuccess = (token: string) => {
+    setTurnstileToken(sanitizeToken(token));
+  };
+
+  const handleTurnstileError = () => {
+    setError(t("error_security_load_failed"));
+    setTurnstileToken("");
+  };
+
+  const handleTurnstileExpired = () => {
+    setTurnstileToken("");
+    setError(t("error_security_expired"));
+  };
 
   const expiredNotice = searchParams.get("expired") === "1";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (!sanitizeToken(turnstileToken)) {
+      setError(t("error_security_required"));
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const result = await login(identifier, password);
+      const result = await login(identifier, password, turnstileToken);
       if (result.ok) {
         router.push(`/${lang}/profile`);
         return;
@@ -45,6 +74,10 @@ export default function LoginForm({ lang }: { lang: string }) {
       setError(t("login_failed"));
     } finally {
       setLoading(false);
+      // Turnstile tokens are single-use — a failed attempt burns the token,
+      // so reset the widget or every retry would fail verification.
+      setTurnstileToken("");
+      turnstileRef.current?.reset();
     }
   }
 
@@ -127,6 +160,25 @@ export default function LoginForm({ lang }: { lang: string }) {
             >
               {error}
             </div>
+          )}
+
+          {!isTurnstileConfigured ? (
+            <div
+              className="p-3 bg-red-50 border border-red-300 text-red-700 rounded text-sm"
+              role="alert"
+            >
+              {t("error_security_unconfigured")}
+            </div>
+          ) : (
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={turnstileSiteKey}
+              onSuccess={handleTurnstileSuccess}
+              onError={handleTurnstileError}
+              onTimeout={handleTurnstileExpired}
+              onUnsupported={() => setError(t("error_security_unsupported"))}
+              scriptOptions={{ crossOrigin: "anonymous" }}
+            />
           )}
 
           <button
