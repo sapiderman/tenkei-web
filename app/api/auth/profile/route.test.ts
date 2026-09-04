@@ -31,7 +31,7 @@ const MOCK_PROFILE = {
   name: "Test User",
   email: "test@example.com",
   whatsapp: "08123456789",
-  dojo: "Tenkei University Indonesia",
+  dojo: "Tenkei Universitas Indonesia",
   rank: "1st Kyu",
   date_of_birth: "1990-01-15",
   join_date: "2024-06-01",

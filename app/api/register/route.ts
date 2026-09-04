@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import sanitizeHtml from "sanitize-html";
 import { isRateLimited, isValidTurnstileToken } from "../auth/_lib";
-import { VALID_RANKS } from "@/lib/constants";
+import { VALID_RANKS, isUIDojo } from "@/lib/constants";
 import {
   isValidDate,
   isValidEmail,
@@ -41,6 +41,8 @@ interface RegistrationBody {
   password?: unknown;
   password_confirm?: unknown;
   dojo?: unknown;
+  faculty?: unknown;
+  major?: unknown;
   rank?: unknown;
   last_grading_date?: unknown;
   emergency_contact_name?: unknown;
@@ -60,7 +62,9 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
-  const TARGET_API_URL = `${BE_API_BASE.replace(/\/+$/, "")}/v1/register`;
+  // new URL both joins base+path and validates BE_API_BASE is parseable —
+  // a misconfigured base fails fast here instead of producing a garbage fetch.
+  const TARGET_API_URL = new URL("/v1/register", BE_API_BASE).toString();
 
   try {
     if (isRateLimited(request, "register").limited) {
@@ -108,6 +112,9 @@ export async function POST(request: Request) {
 
     // Dojo: Allow custom names, just sanitize
     const dojo = sanitizeString(body.dojo);
+    // Faculty/Major: free text, sanitized the same way
+    const faculty = sanitizeString(body.faculty);
+    const major = sanitizeString(body.major);
 
     const rank = sanitizeString(body.rank);
     const lastGradingDate = sanitizeString(body.last_grading_date);
@@ -211,6 +218,35 @@ export async function POST(request: Request) {
       );
     }
 
+    if (faculty.length > MAX_LENGTHS.faculty) {
+      return NextResponse.json(
+        {
+          error: `Faculty is too long (max ${MAX_LENGTHS.faculty} characters)`,
+        },
+        { status: 400 },
+      );
+    }
+
+    if (major.length > MAX_LENGTHS.major) {
+      return NextResponse.json(
+        {
+          error: `Major is too long (max ${MAX_LENGTHS.major} characters)`,
+        },
+        { status: 400 },
+      );
+    }
+
+    // Faculty/Major: mandatory for the UI campus dojo (mirror of backend rule)
+    if (isUIDojo(dojo) && (!faculty || !major)) {
+      return NextResponse.json(
+        {
+          error:
+            "Faculty and major are required for Tenkei Universitas Indonesia registrations",
+        },
+        { status: 400 },
+      );
+    }
+
     // 5. Format validation
     if (email && !isValidEmail(email)) {
       return NextResponse.json(
@@ -281,6 +317,8 @@ export async function POST(request: Request) {
       password,
       password_confirm: passwordConfirm,
       dojo,
+      faculty,
+      major,
       rank,
       last_grading_date: lastGradingDate,
       emergency_contact_name: emergencyContactName,

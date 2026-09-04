@@ -6,6 +6,8 @@ const EDITABLE_FIELDS = new Set([
   "name",
   "date_of_birth",
   "dojo",
+  "faculty",
+  "major",
   "rank",
   "last_grading_date",
   "medical_conditions",

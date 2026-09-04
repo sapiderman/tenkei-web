@@ -12,7 +12,7 @@ import {
   adminChangeRole,
   type AdminMutationResult,
 } from "@/lib/api-client";
-import { VALID_RANKS } from "@/lib/constants";
+import { VALID_RANKS, isUIDojo } from "@/lib/constants";
 import {
   isValidDate,
   isValidEmail,
@@ -22,8 +22,9 @@ import {
 import type { ProfileResponse } from "@/lib/types";
 
 /** The editable field whitelist — matches backend UpdateProfileRequest
- * (name, email, whatsapp, date_of_birth, dojo, rank, last_grading_date,
- *  medical_conditions, emergency_contact_name, emergency_contact_number).
+ * (name, email, whatsapp, date_of_birth, dojo, faculty, major, rank,
+ *  last_grading_date, medical_conditions, emergency_contact_name,
+ *  emergency_contact_number).
  *  role/id/join_date are read-only, and consent_* is registration-mandated
  *  so it is never editable here (nor sent on update). */
 
@@ -38,6 +39,8 @@ function toForm(p: ProfileResponse): FormState {
     whatsapp: p.whatsapp,
     date_of_birth: p.date_of_birth,
     dojo: p.dojo,
+    faculty: p.faculty ?? "",
+    major: p.major ?? "",
     rank: p.rank,
     last_grading_date: p.last_grading_date,
     medical_conditions: p.medical_conditions,
@@ -131,6 +134,8 @@ export default function AdminUserDetailView({
     const whatsapp = String(form.whatsapp ?? "");
     const dob = String(form.date_of_birth ?? "");
     const dojo = String(form.dojo ?? "");
+    const faculty = String(form.faculty ?? "");
+    const major = String(form.major ?? "");
     const lgd = String(form.last_grading_date ?? "");
     const ecName = String(form.emergency_contact_name ?? "");
     const ecNum = String(form.emergency_contact_number ?? "");
@@ -151,6 +156,13 @@ export default function AdminUserDetailView({
       return "Date of birth cannot be in the future";
     if (dojo.length > MAX_LENGTHS.dojo)
       return `Dojo name is too long (max ${MAX_LENGTHS.dojo} characters)`;
+    if (faculty.length > MAX_LENGTHS.faculty)
+      return `Faculty is too long (max ${MAX_LENGTHS.faculty} characters)`;
+    if (major.length > MAX_LENGTHS.major)
+      return `Major is too long (max ${MAX_LENGTHS.major} characters)`;
+    // Mirror of the backend rule: UI campus members carry both fields.
+    if (isUIDojo(dojo) && (!faculty.trim() || !major.trim()))
+      return "Faculty and major are required for Tenkei Universitas Indonesia members";
     if (lgd && !isValidDate(lgd))
       return "Please enter a valid last grading date";
     if (ecName.length > MAX_LENGTHS.emergencyContactName)
@@ -460,6 +472,40 @@ export default function AdminUserDetailView({
               type="text"
               value={(form.dojo as string) || ""}
               onChange={(e) => update("dojo", e.target.value)}
+              className={inputCls}
+            />
+          </div>
+
+          <div>
+            <label className={labelCls} htmlFor="f-faculty">
+              {t("faculty")}
+              {isUIDojo((form.dojo as string) || "") && (
+                <span className="text-red-500"> *</span>
+              )}
+            </label>
+            <input
+              id="f-faculty"
+              type="text"
+              value={(form.faculty as string) || ""}
+              onChange={(e) => update("faculty", e.target.value)}
+              maxLength={MAX_LENGTHS.faculty}
+              className={inputCls}
+            />
+          </div>
+
+          <div>
+            <label className={labelCls} htmlFor="f-major">
+              {t("major")}
+              {isUIDojo((form.dojo as string) || "") && (
+                <span className="text-red-500"> *</span>
+              )}
+            </label>
+            <input
+              id="f-major"
+              type="text"
+              value={(form.major as string) || ""}
+              onChange={(e) => update("major", e.target.value)}
+              maxLength={MAX_LENGTHS.major}
               className={inputCls}
             />
           </div>
