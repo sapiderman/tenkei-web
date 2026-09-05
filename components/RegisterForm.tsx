@@ -14,7 +14,7 @@ import {
   sanitizeTextInputForSubmission,
   sanitizeToken,
 } from "@/lib/sanitize";
-import { VALID_RANKS as RANK_OPTIONS } from "@/lib/constants";
+import { VALID_RANKS as RANK_OPTIONS, isUIDojo } from "@/lib/constants";
 import {
   isValidDate,
   isValidEmail,
@@ -30,6 +30,8 @@ interface RegisterFormData {
   password: string;
   password_confirm: string;
   dojo: string;
+  faculty: string;
+  major: string;
   rank: string;
   last_grading_date: string;
   emergency_contact_name: string;
@@ -40,7 +42,7 @@ interface RegisterFormData {
 }
 
 const DOJO_OPTIONS = [
-  "Tenkei University Indonesia",
+  "Tenkei Universitas Indonesia",
   "Tenkei Mayapada",
   "Tenkei Taman Menteng",
   "Tenkei Natsu Aikidojo",
@@ -54,6 +56,8 @@ const buildSanitizedPayload = (data: RegisterFormData) => ({
   password: sanitizePasswordInput(data.password),
   password_confirm: sanitizePasswordInput(data.password_confirm),
   dojo: sanitizeTextInputForSubmission(data.dojo),
+  faculty: sanitizeTextInputForSubmission(data.faculty),
+  major: sanitizeTextInputForSubmission(data.major),
   rank: sanitizeTextInputForSubmission(data.rank),
   last_grading_date: sanitizeDateInput(data.last_grading_date),
   emergency_contact_name: sanitizeTextInputForSubmission(
@@ -78,6 +82,8 @@ export default function RegisterForm() {
     password: "",
     password_confirm: "",
     dojo: "",
+    faculty: "",
+    major: "",
     rank: "",
     last_grading_date: "",
     emergency_contact_name: "",
@@ -172,7 +178,13 @@ export default function RegisterForm() {
 
   const handleDojoSelect = (dojo: string) => {
     const sanitizedDojo = sanitizeTextInput(dojo);
-    setFormData((prev: RegisterFormData) => ({ ...prev, dojo: sanitizedDojo }));
+    setFormData((prev: RegisterFormData) => ({
+      ...prev,
+      dojo: sanitizedDojo,
+      // Hidden fields must not linger: leaving the UI dojo clears them.
+      faculty: isUIDojo(sanitizedDojo) ? prev.faculty : "",
+      major: isUIDojo(sanitizedDojo) ? prev.major : "",
+    }));
     setDojoSearch(sanitizedDojo);
     setDojoOpen(false);
   };
@@ -234,6 +246,8 @@ export default function RegisterForm() {
       formData.emergency_contact_name,
       formData.medical_conditions,
       formData.dojo,
+      formData.faculty,
+      formData.major,
       formData.rank,
     ];
     // Security: Basic check to ensure strings are valid
@@ -293,6 +307,23 @@ export default function RegisterForm() {
     // Validate dojo length
     if (formData.dojo.length > MAX_LENGTHS.dojo) {
       setError(t("error_dojo_too_long", { max: MAX_LENGTHS.dojo }));
+      return false;
+    }
+
+    // Faculty/Major — mandatory for the UI campus dojo (mirrors server rule)
+    if (formData.faculty.length > MAX_LENGTHS.faculty) {
+      setError(t("error_faculty_too_long", { max: MAX_LENGTHS.faculty }));
+      return false;
+    }
+    if (formData.major.length > MAX_LENGTHS.major) {
+      setError(t("error_major_too_long", { max: MAX_LENGTHS.major }));
+      return false;
+    }
+    if (
+      isUIDojo(formData.dojo) &&
+      (!formData.faculty.trim() || !formData.major.trim())
+    ) {
+      setError(t("error_faculty_major_required"));
       return false;
     }
 
@@ -454,6 +485,7 @@ export default function RegisterForm() {
               {t("personal_information")}
             </h2>
 
+            <p className="text-xs text-gray-500">{t("required_legend")}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label
@@ -608,6 +640,9 @@ export default function RegisterForm() {
                       setFormData((prev) => ({
                         ...prev,
                         dojo: sanitizedValue,
+                        // Hidden fields must not linger: leaving the UI dojo clears them.
+                        faculty: isUIDojo(sanitizedValue) ? prev.faculty : "",
+                        major: isUIDojo(sanitizedValue) ? prev.major : "",
                       }));
                       setDojoOpen(true);
                     }}
@@ -657,7 +692,52 @@ export default function RegisterForm() {
                     </option>
                   ))}
                 </select>
+                <p className="text-xs text-gray-500">{t("rank_hint")}</p>
               </div>
+
+              {/* Faculty & Major — UI campus members only */}
+              {isUIDojo(formData.dojo) && (
+                <>
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="faculty"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      {t("faculty")} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="faculty"
+                      name="faculty"
+                      value={formData.faculty}
+                      onChange={handleInputChange}
+                      maxLength={MAX_LENGTHS.faculty}
+                      className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                      placeholder={t("faculty_placeholder") as string}
+                      autoComplete="off"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="major"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      {t("major")} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="major"
+                      name="major"
+                      value={formData.major}
+                      onChange={handleInputChange}
+                      maxLength={MAX_LENGTHS.major}
+                      className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                      placeholder={t("major_placeholder") as string}
+                      autoComplete="off"
+                    />
+                  </div>
+                </>
+              )}
 
               <div className="space-y-1 md:col-span-2">
                 <label

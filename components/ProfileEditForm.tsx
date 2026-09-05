@@ -14,7 +14,7 @@ import {
   sanitizeTextInput,
   sanitizeTextInputForSubmission,
 } from "@/lib/sanitize";
-import { VALID_RANKS } from "@/lib/constants";
+import { VALID_RANKS, isUIDojo } from "@/lib/constants";
 
 interface Props {
   lang: string;
@@ -25,6 +25,8 @@ interface EditFormData {
   name: string;
   dateOfBirth: string;
   dojo: string;
+  faculty: string;
+  major: string;
   rank: string;
   lastGradingDate: string;
   medicalConditions: string;
@@ -38,6 +40,8 @@ const EMPTY_FORM: EditFormData = {
   name: "",
   dateOfBirth: "",
   dojo: "",
+  faculty: "",
+  major: "",
   rank: "",
   lastGradingDate: "",
   medicalConditions: "",
@@ -104,6 +108,8 @@ export default function ProfileEditForm({ lang }: Props) {
           name: p.name,
           dateOfBirth: p.date_of_birth,
           dojo: p.dojo,
+          faculty: p.faculty ?? "",
+          major: p.major ?? "",
           rank: p.rank,
           lastGradingDate: p.last_grading_date,
           medicalConditions: p.medical_conditions,
@@ -138,6 +144,8 @@ export default function ProfileEditForm({ lang }: Props) {
       whatsapp,
       dateOfBirth,
       dojo,
+      faculty,
+      major,
       rank,
       lastGradingDate,
       medicalConditions,
@@ -156,6 +164,10 @@ export default function ProfileEditForm({ lang }: Props) {
       errors.date_of_birth = t("edit_profile_error_cannot_clear");
     if (cannotClear(profile.dojo, dojo))
       errors.dojo = t("edit_profile_error_cannot_clear");
+    if (cannotClear(profile.faculty, faculty))
+      errors.faculty = t("edit_profile_error_cannot_clear");
+    if (cannotClear(profile.major, major))
+      errors.major = t("edit_profile_error_cannot_clear");
     if (cannotClear(profile.rank, rank))
       errors.rank = t("edit_profile_error_cannot_clear");
     if (cannotClear(profile.last_grading_date, lastGradingDate))
@@ -175,6 +187,17 @@ export default function ProfileEditForm({ lang }: Props) {
 
     if (dojo.length > EDIT_MAX_LENGTHS.dojo)
       errors.dojo = t("edit_profile_error_too_long");
+
+    if (faculty.length > EDIT_MAX_LENGTHS.faculty)
+      errors.faculty = t("edit_profile_error_too_long");
+    if (major.length > EDIT_MAX_LENGTHS.major)
+      errors.major = t("edit_profile_error_too_long");
+
+    // UI campus members must keep both filled (mirrors the backend rule).
+    if (isUIDojo(dojo) && !faculty.trim())
+      errors.faculty = t("edit_profile_error_required");
+    if (isUIDojo(dojo) && !major.trim())
+      errors.major = t("edit_profile_error_required");
 
     if (rank && !VALID_RANKS.includes(rank))
       errors.rank = t("edit_profile_error_invalid_rank");
@@ -216,6 +239,8 @@ export default function ProfileEditForm({ lang }: Props) {
       whatsapp: sanitizePhoneInput(formData.whatsapp) || undefined,
       date_of_birth: sanitizeDateInput(formData.dateOfBirth),
       dojo: sanitizeTextInputForSubmission(formData.dojo),
+      faculty: sanitizeTextInputForSubmission(formData.faculty),
+      major: sanitizeTextInputForSubmission(formData.major),
       rank: sanitizeTextInputForSubmission(formData.rank),
       last_grading_date: sanitizeDateInput(formData.lastGradingDate),
       medical_conditions: sanitizeTextInputForSubmission(
@@ -432,6 +457,68 @@ export default function ProfileEditForm({ lang }: Props) {
                 role="alert"
               >
                 {fieldErrors.dojo}
+              </p>
+            )}
+          </div>
+
+          {/* Faculty */}
+          <div>
+            <label htmlFor="faculty" className="block text-sm font-medium mb-1">
+              {t("profile_faculty")}
+              {isUIDojo(formData.dojo) && (
+                <span className="text-red-500"> *</span>
+              )}
+            </label>
+            <input
+              id="faculty"
+              type="text"
+              value={formData.faculty}
+              onChange={(e) => setField("faculty", e.target.value)}
+              maxLength={EDIT_MAX_LENGTHS.faculty}
+              disabled={saving}
+              aria-invalid={!!fieldErrors.faculty}
+              aria-describedby={
+                fieldErrors.faculty ? "faculty-error" : undefined
+              }
+              className={fieldClass(!!fieldErrors.faculty)}
+            />
+            {fieldErrors.faculty && (
+              <p
+                id="faculty-error"
+                className="mt-1 text-sm text-red-600"
+                role="alert"
+              >
+                {fieldErrors.faculty}
+              </p>
+            )}
+          </div>
+
+          {/* Major */}
+          <div>
+            <label htmlFor="major" className="block text-sm font-medium mb-1">
+              {t("profile_major")}
+              {isUIDojo(formData.dojo) && (
+                <span className="text-red-500"> *</span>
+              )}
+            </label>
+            <input
+              id="major"
+              type="text"
+              value={formData.major}
+              onChange={(e) => setField("major", e.target.value)}
+              maxLength={EDIT_MAX_LENGTHS.major}
+              disabled={saving}
+              aria-invalid={!!fieldErrors.major}
+              aria-describedby={fieldErrors.major ? "major-error" : undefined}
+              className={fieldClass(!!fieldErrors.major)}
+            />
+            {fieldErrors.major && (
+              <p
+                id="major-error"
+                className="mt-1 text-sm text-red-600"
+                role="alert"
+              >
+                {fieldErrors.major}
               </p>
             )}
           </div>

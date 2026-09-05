@@ -11,6 +11,8 @@ export interface ProfileResponse {
   email: string;
   whatsapp: string;
   dojo: string;
+  faculty?: string;
+  major?: string;
   rank: string;
   date_of_birth: string;
   join_date: string;

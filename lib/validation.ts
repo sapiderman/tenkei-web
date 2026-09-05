@@ -14,6 +14,8 @@ export const MAX_LENGTHS = {
   emergencyContactNumber: 20,
   medicalConditions: 500,
   dojo: 100,
+  faculty: 100,
+  major: 100,
 } as const;
 
 /**
@@ -25,6 +27,8 @@ export const MAX_LENGTHS = {
 export const EDIT_MAX_LENGTHS = {
   name: 255,
   dojo: 255,
+  faculty: 100,
+  major: 100,
   whatsapp: 20,
   emergencyContactName: 255,
   emergencyContactNumber: 50,
