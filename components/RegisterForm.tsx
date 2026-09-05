@@ -691,6 +691,7 @@ export default function RegisterForm() {
                     </option>
                   ))}
                 </select>
+                <p className="mt-1 text-sm text-gray-500">{t("rank_hint")}</p>
               </div>
 
               {/* Faculty & Major — UI campus members only */}

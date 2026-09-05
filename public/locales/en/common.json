@@ -76,6 +76,7 @@
   "major_placeholder": "e.g. Electronics",
   "current_rank": "Current Rank",
   "select_rank": "Select your rank",
+  "rank_hint": "Choose kyu 6 for adult beginners",
   "last_grading_date": "Last Grading Date",
   "emergency_contact": "Emergency Contact",
   "emergency_contact_name": "Emergency Contact Name",
