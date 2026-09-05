@@ -70,6 +70,7 @@
   "training_information": "Training Information",
   "dojo": "Dojo",
   "dojo_placeholder": "Click to select or type your dojo",
+  "required_legend": "Fields marked * are required",
   "faculty": "Faculty",
   "faculty_placeholder": "e.g. Faculty of Engineering",
   "major": "Major",

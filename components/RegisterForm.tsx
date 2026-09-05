@@ -485,6 +485,7 @@ export default function RegisterForm() {
               {t("personal_information")}
             </h2>
 
+            <p className="text-xs text-gray-500">{t("required_legend")}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label
@@ -691,7 +692,7 @@ export default function RegisterForm() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-1 text-sm text-gray-500">{t("rank_hint")}</p>
+                <p className="text-xs text-gray-500">{t("rank_hint")}</p>
               </div>
 
               {/* Faculty & Major — UI campus members only */}

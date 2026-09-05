@@ -3,6 +3,10 @@ import { redirect } from "next/navigation";
 import { resolveRole } from "@/lib/server-auth";
 import { AdminRoleProvider } from "./AdminRoleContext";
 
+// Portal pages serve the strict nonce CSP (see proxy.ts); a nonce requires
+// dynamic rendering — static prerendering would cache a stale nonce.
+export const dynamic = "force-dynamic";
+
 /**
  * Single server-side gate for the entire /admin subtree: resolve the viewer's
  * role once and redirect non-admins away before any admin page renders. The

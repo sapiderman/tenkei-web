@@ -4,6 +4,10 @@ import type { Metadata } from "next";
 import { getT } from "@/app/i18n";
 import ProfileView from "@/components/ProfileView";
 
+// Portal pages serve the strict nonce CSP (see proxy.ts); a nonce requires
+// dynamic rendering — static prerendering would cache a stale nonce.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {
