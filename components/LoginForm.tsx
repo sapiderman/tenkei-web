@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { useTranslation } from "@/app/i18n/client";
 import { login } from "@/lib/api-client";
@@ -41,6 +42,7 @@ export default function LoginForm({ lang }: { lang: string }) {
   };
 
   const expiredNotice = searchParams.get("expired") === "1";
+  const resetNotice = searchParams.get("reset") === "1";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -108,6 +110,16 @@ export default function LoginForm({ lang }: { lang: string }) {
             aria-live="polite"
           >
             {t("session_expired_notice")}
+          </div>
+        )}
+
+        {resetNotice && (
+          <div
+            className="mb-4 p-3 bg-green-50 border border-green-300 text-green-800 rounded text-sm"
+            role="status"
+            aria-live="polite"
+          >
+            {t("password_reset_notice")}
           </div>
         )}
 
@@ -188,6 +200,15 @@ export default function LoginForm({ lang }: { lang: string }) {
           >
             {loading ? t("login_loading") : t("login_button")}
           </button>
+
+          <div className="text-center">
+            <Link
+              href={`/${lang}/forgot-password`}
+              className="text-sm text-ai hover:underline"
+            >
+              {t("forgot_password_link")}
+            </Link>
+          </div>
         </form>
       </div>
     </div>

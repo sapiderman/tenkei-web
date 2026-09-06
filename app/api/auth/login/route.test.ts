@@ -22,6 +22,10 @@ afterEach(() => {
 // Helper to build a login request. Each request gets a unique client IP so
 // the module-level rate-limit map (keyed on IP only) doesn't bleed state
 // across tests — tests that exercise the limiter pass an explicit IP.
+// A valid-format Turnstile token is included by default: the route hard-
+// requires one (added in e7c0025) and rejects bodies without it before any
+// fetch. Tests can still override or omit it explicitly.
+const TURNSTILE = "tok".repeat(20);
 let ipCounter = 0;
 function loginRequest(
   body: Record<string, unknown>,
@@ -35,7 +39,10 @@ function loginRequest(
       "cf-connecting-ip": `10.0.0.${ipCounter}`,
       ...headers,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify({
+      cf_turnstile_response: TURNSTILE,
+      ...body,
+    }),
   });
 }
 
@@ -128,6 +135,7 @@ describe("POST /api/auth/login", () => {
     expect(sentBody).toEqual({
       identifier: "user@test.com",
       password: "pass1234",
+      cf_turnstile_response: TURNSTILE,
     });
     expect(sentBody).not.toHaveProperty("extraField");
   });
