@@ -4,7 +4,8 @@ import { i18nRouter } from "next-i18n-router";
 import { i18n } from "./i18n.config";
 
 /** Page paths (locale prefix stripped) that get the strict nonce CSP. */
-const PORTAL_PATHS = /^\/(login|register|profile|admin)(\/|$)/;
+const PORTAL_PATHS =
+  /^\/(login|register|profile|admin|forgot-password|reset-password)(\/|$)/;
 
 function securityHeaders(response: NextResponse, csp: string): NextResponse {
   response.headers.set("Content-Security-Policy", csp);

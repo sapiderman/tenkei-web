@@ -44,6 +44,95 @@ export async function login(
 }
 
 // ---------------------------------------------------------------------------
+// Forgot / reset password
+// ---------------------------------------------------------------------------
+
+export type ForgotPasswordResult =
+  | { ok: true }
+  | { ok: false; error: string; status: number; retryAfterSeconds?: number };
+
+/**
+ * Requests a password reset email. The backend answers 200 with a generic
+ * message for known and unknown emails alike, so `ok` says nothing about
+ * whether the account exists — the UI shows the same confirmation either way.
+ */
+export async function forgotPassword(
+  email: string,
+  turnstileToken: string,
+): Promise<ForgotPasswordResult> {
+  try {
+    const res = await fetch("/api/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, cf_turnstile_response: turnstileToken }),
+    });
+
+    if (res.ok) {
+      return { ok: true };
+    }
+
+    const body = await res.json().catch(() => ({}));
+    return {
+      ok: false,
+      error: typeof body.error === "string" ? body.error : "An error occurred",
+      status: res.status,
+      retryAfterSeconds:
+        typeof body.retry_after_seconds === "number"
+          ? body.retry_after_seconds
+          : undefined,
+    };
+  } catch {
+    return { ok: false, error: "Network error", status: 0 };
+  }
+}
+
+export type ResetPasswordResult =
+  | { ok: true }
+  | {
+      ok: false;
+      error: string;
+      status: number;
+      code?: string;
+      retryAfterSeconds?: number;
+    };
+
+/**
+ * Sets a new password with the emailed token. Token failures (invalid,
+ * expired, used) come back with a stable `code` so the UI can render the
+ * "request a new link" state; 429s carry `retryAfterSeconds`.
+ */
+export async function resetPassword(
+  token: string,
+  newPassword: string,
+): Promise<ResetPasswordResult> {
+  try {
+    const res = await fetch("/api/auth/reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, new_password: newPassword }),
+    });
+
+    if (res.ok) {
+      return { ok: true };
+    }
+
+    const body = await res.json().catch(() => ({}));
+    return {
+      ok: false,
+      error: typeof body.error === "string" ? body.error : "An error occurred",
+      status: res.status,
+      code: typeof body.code === "string" ? body.code : undefined,
+      retryAfterSeconds:
+        typeof body.retry_after_seconds === "number"
+          ? body.retry_after_seconds
+          : undefined,
+    };
+  } catch {
+    return { ok: false, error: "Network error", status: 0 };
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Profile
 // ---------------------------------------------------------------------------
 
