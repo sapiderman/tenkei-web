@@ -275,5 +275,6 @@
   "reset_password_loading": "Updating…",
   "reset_password_invalid_token": "This password reset link is invalid or has expired.",
   "reset_password_request_new": "Request a new link",
-  "password_reset_notice": "Password updated. Please sign in with your new password."
+  "password_reset_notice": "Password updated. Please sign in with your new password.",
+  "reset_password_error": "Something went wrong. Please try again later."
 }

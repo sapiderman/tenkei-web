@@ -275,5 +275,6 @@
   "reset_password_loading": "Memperbarui…",
   "reset_password_invalid_token": "Tautan atur ulang ini tidak valid atau telah kedaluwarsa.",
   "reset_password_request_new": "Minta tautan baru",
-  "password_reset_notice": "Kata sandi diperbarui. Silakan masuk dengan kata sandi baru Anda."
+  "password_reset_notice": "Kata sandi diperbarui. Silakan masuk dengan kata sandi baru Anda.",
+  "reset_password_error": "Terjadi kesalahan. Silakan coba lagi nanti."
 }

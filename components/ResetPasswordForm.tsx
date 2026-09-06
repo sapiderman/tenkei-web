@@ -5,13 +5,21 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "@/app/i18n/client";
 import { resetPassword } from "@/lib/api-client";
+import { sanitizeToken } from "@/lib/sanitize";
 import PasswordInput from "@/components/PasswordInput";
+
+// Stable token-state codes the BFF relays (app/api/auth/reset-password).
+const TOKEN_ERROR_CODES = new Set([
+  "invalid_token",
+  "expired_token",
+  "used_token",
+]);
 
 export default function ResetPasswordForm({ lang }: { lang: string }) {
   const { t } = useTranslation(lang, "common");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get("token") ?? "";
+  const token = sanitizeToken(searchParams.get("token") ?? "");
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -47,10 +55,25 @@ export default function ResetPasswordForm({ lang }: { lang: string }) {
         router.replace(`/${lang}/login?reset=1`);
         return;
       }
-      // Invalid, expired, used, or missing token → "request a new link" state.
-      setTokenError(true);
+      // Token-state errors → "request a new link" state. Everything else —
+      // rate limit, server hiccup, network failure — is an inline error:
+      // the link is still good, retrying is the remedy.
+      if (result.code && TOKEN_ERROR_CODES.has(result.code)) {
+        setTokenError(true);
+        return;
+      }
+      if (result.status === 429) {
+        // BFF sends Retry-After as seconds; fall back to its usual 60.
+        const minutes = Math.max(
+          1,
+          Math.ceil((result.retryAfterSeconds ?? 60) / 60),
+        );
+        setFieldError(t("login_rate_limited", { minutes }));
+        return;
+      }
+      setFieldError(t("reset_password_error"));
     } catch {
-      setTokenError(true);
+      setFieldError(t("reset_password_error"));
     } finally {
       setLoading(false);
     }

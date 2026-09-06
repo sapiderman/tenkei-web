@@ -275,5 +275,6 @@
   "reset_password_loading": "更新中…",
   "reset_password_invalid_token": "このリンクは無効か、有効期限が切れています。",
   "reset_password_request_new": "新しいリンクをリクエスト",
-  "password_reset_notice": "パスワードを更新しました。新しいパスワードでサインインしてください。"
+  "password_reset_notice": "パスワードを更新しました。新しいパスワードでサインインしてください。",
+  "reset_password_error": "問題が発生しました。しばらくしてからもう一度お試しください。"
 }

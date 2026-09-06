@@ -88,12 +88,18 @@ export async function forgotPassword(
 
 export type ResetPasswordResult =
   | { ok: true }
-  | { ok: false; error: string; status: number; code?: string };
+  | {
+      ok: false;
+      error: string;
+      status: number;
+      code?: string;
+      retryAfterSeconds?: number;
+    };
 
 /**
  * Sets a new password with the emailed token. Token failures (invalid,
  * expired, used) come back with a stable `code` so the UI can render the
- * "request a new link" state.
+ * "request a new link" state; 429s carry `retryAfterSeconds`.
  */
 export async function resetPassword(
   token: string,
@@ -116,6 +122,10 @@ export async function resetPassword(
       error: typeof body.error === "string" ? body.error : "An error occurred",
       status: res.status,
       code: typeof body.code === "string" ? body.code : undefined,
+      retryAfterSeconds:
+        typeof body.retry_after_seconds === "number"
+          ? body.retry_after_seconds
+          : undefined,
     };
   } catch {
     return { ok: false, error: "Network error", status: 0 };
