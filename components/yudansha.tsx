@@ -154,7 +154,7 @@ const Yudansha = async ({ lang }: { lang: string }) => {
             {yudansha.map((person, index) => (
               <tr
                 key={index}
-                className="border-b border-hairline hover:bg-ink/[0.03] transition-colors"
+                className="border-b border-hairline hover:bg-ink/3 transition-colors"
               >
                 <td className="px-2 py-2 sm:px-4 sm:py-4 font-medium text-ink whitespace-nowrap">
                   {index + 1}

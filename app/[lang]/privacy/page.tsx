@@ -24,7 +24,7 @@ export default async function PrivacyPolicy(props: {
     <>
       <main className="flex min-h-screen flex-col items-center px-4 py-16 sm:px-6 max-w-4xl mx-auto">
         <div className="space-y-8 w-full">
-          <div className="border-b pb-4">
+          <div className="border-b border-hairline pb-4">
             <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold">
               {t("privacy_policy")}
             </h1>

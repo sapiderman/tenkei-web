@@ -12,14 +12,14 @@ import "../globals.css";
 const shipporiMincho = Shippori_Mincho({
   weight: ["500", "700"],
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-shippori",
   display: "swap",
 });
 
 const zenKakuGothic = Zen_Kaku_Gothic_New({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-zen-kaku",
   display: "swap",
 });
 
@@ -86,11 +86,11 @@ export default async function Layout({
   const { lang } = await params;
 
   return (
-    <html lang={lang}>
-      <body
-        className={`${shipporiMincho.variable} ${zenKakuGothic.variable}`}
-        suppressHydrationWarning
-      >
+    <html
+      lang={lang}
+      className={`${shipporiMincho.variable} ${zenKakuGothic.variable}`}
+    >
+      <body suppressHydrationWarning>
         <LocalBusinessSchema lang={lang} />
         <Header lang={lang} />
         {children}

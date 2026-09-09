@@ -1,20 +1,64 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  /* Tenkei design tokens — ai blue extracted from tenkei_logo.png */
+@theme {
   --color-ink: #1f2328;
+
   --color-ai: #3868a8;
   --color-ai-deep: #234068;
+
   --color-paper: #faf8f4;
   --color-hairline: rgba(31, 35, 40, 0.12);
+
+  --radius-sharp: 3px;
+
+  --font-display: var(--font-shippori), serif;
+  --font-body: var(--font-zen-kaku), ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility seigaiha {
+  /* Seigaiha wave pattern — fans drawn back-to-front with opaque paper fill
+     so lower rows occlude upper rows (no crossing arcs). Fill must match
+     --color-paper (#faf8f4). */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='28' viewBox='0 0 56 28'%3E%3Cg fill='%23FAF8F4' stroke='%231F2328' stroke-opacity='0.07' stroke-width='1'%3E%3Ccircle cx='0' cy='0' r='13'/%3E%3Ccircle cx='0' cy='0' r='9'/%3E%3Ccircle cx='0' cy='0' r='5'/%3E%3Ccircle cx='28' cy='0' r='13'/%3E%3Ccircle cx='28' cy='0' r='9'/%3E%3Ccircle cx='28' cy='0' r='5'/%3E%3Ccircle cx='56' cy='0' r='13'/%3E%3Ccircle cx='56' cy='0' r='9'/%3E%3Ccircle cx='56' cy='0' r='5'/%3E%3Ccircle cx='14' cy='14' r='13'/%3E%3Ccircle cx='14' cy='14' r='9'/%3E%3Ccircle cx='14' cy='14' r='5'/%3E%3Ccircle cx='42' cy='14' r='13'/%3E%3Ccircle cx='42' cy='14' r='9'/%3E%3Ccircle cx='42' cy='14' r='5'/%3E%3Ccircle cx='0' cy='28' r='13'/%3E%3Ccircle cx='0' cy='28' r='9'/%3E%3Ccircle cx='0' cy='28' r='5'/%3E%3Ccircle cx='28' cy='28' r='13'/%3E%3Ccircle cx='28' cy='28' r='9'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3Ccircle cx='56' cy='28' r='13'/%3E%3Ccircle cx='56' cy='28' r='9'/%3E%3Ccircle cx='56' cy='28' r='5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 84px 42px;
+}
+
+@utility vertical-kanji {
+  /* Vertical decorative kanji */
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+@utility section-label {
+  /* Small-caps ink section label */
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-ai) 85%, var(--color-ink));
 }
 
 body {
   color: var(--color-ink);
   background-color: var(--color-paper);
-  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 /* Washi paper grain — sits behind all content, over the paper background */
@@ -25,30 +69,6 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-}
-
-@layer utilities {
-  /* Seigaiha wave pattern — fans drawn back-to-front with opaque paper fill
-     so lower rows occlude upper rows (no crossing arcs). Fill must match
-     --color-paper (#faf8f4). */
-  .seigaiha {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='28' viewBox='0 0 56 28'%3E%3Cg fill='%23FAF8F4' stroke='%231F2328' stroke-opacity='0.07' stroke-width='1'%3E%3Ccircle cx='0' cy='0' r='13'/%3E%3Ccircle cx='0' cy='0' r='9'/%3E%3Ccircle cx='0' cy='0' r='5'/%3E%3Ccircle cx='28' cy='0' r='13'/%3E%3Ccircle cx='28' cy='0' r='9'/%3E%3Ccircle cx='28' cy='0' r='5'/%3E%3Ccircle cx='56' cy='0' r='13'/%3E%3Ccircle cx='56' cy='0' r='9'/%3E%3Ccircle cx='56' cy='0' r='5'/%3E%3Ccircle cx='14' cy='14' r='13'/%3E%3Ccircle cx='14' cy='14' r='9'/%3E%3Ccircle cx='14' cy='14' r='5'/%3E%3Ccircle cx='42' cy='14' r='13'/%3E%3Ccircle cx='42' cy='14' r='9'/%3E%3Ccircle cx='42' cy='14' r='5'/%3E%3Ccircle cx='0' cy='28' r='13'/%3E%3Ccircle cx='0' cy='28' r='9'/%3E%3Ccircle cx='0' cy='28' r='5'/%3E%3Ccircle cx='28' cy='28' r='13'/%3E%3Ccircle cx='28' cy='28' r='9'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3Ccircle cx='56' cy='28' r='13'/%3E%3Ccircle cx='56' cy='28' r='9'/%3E%3Ccircle cx='56' cy='28' r='5'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 84px 42px;
-  }
-
-  /* Vertical decorative kanji */
-  .vertical-kanji {
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-  }
-
-  /* Small-caps ink section label */
-  .section-label {
-    font-size: 0.75rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-ai) 85%, var(--color-ink));
-  }
 }
 
 /* Hero load-in — animation only when motion is welcome */

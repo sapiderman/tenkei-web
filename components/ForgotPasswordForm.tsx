@@ -85,7 +85,7 @@ export default function ForgotPasswordForm({ lang }: { lang: string }) {
 
         {done ? (
           <div
-            className="p-3 bg-green-50 border border-green-300 text-green-800 rounded text-sm"
+            className="p-3 bg-green-50 border border-green-300 text-green-800 rounded-sm text-sm"
             role="status"
             aria-live="polite"
           >
@@ -106,13 +106,13 @@ export default function ForgotPasswordForm({ lang }: { lang: string }) {
                 autoComplete="email"
                 disabled={loading}
                 required
-                className="w-full px-3 py-2 border border-ink/20 rounded-sharp focus:outline-none focus:ring-2 focus:ring-ai disabled:opacity-50"
+                className="w-full px-3 py-2 border border-ink/20 rounded-sharp focus:outline-hidden focus:ring-2 focus:ring-ai disabled:opacity-50"
               />
             </div>
 
             {error && (
               <div
-                className="p-3 bg-red-50 border border-red-300 text-red-700 rounded text-sm"
+                className="p-3 bg-red-50 border border-red-300 text-red-700 rounded-sm text-sm"
                 role="alert"
                 aria-live="polite"
               >
@@ -122,7 +122,7 @@ export default function ForgotPasswordForm({ lang }: { lang: string }) {
 
             {!isTurnstileConfigured ? (
               <div
-                className="p-3 bg-red-50 border border-red-300 text-red-700 rounded text-sm"
+                className="p-3 bg-red-50 border border-red-300 text-red-700 rounded-sm text-sm"
                 role="alert"
               >
                 {t("error_security_unconfigured")}

@@ -261,7 +261,7 @@ export default function AdminUserDetailView({
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-4 gap-4">
         <div
-          className="p-4 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded max-w-md text-center"
+          className="p-4 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-sm max-w-md text-center"
           role="status"
         >
           {t("admin_user_not_found")}
@@ -280,7 +280,7 @@ export default function AdminUserDetailView({
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-4 gap-4">
         <div
-          className="p-4 bg-red-50 border border-red-300 text-red-700 rounded max-w-md text-center"
+          className="p-4 bg-red-50 border border-red-300 text-red-700 rounded-sm max-w-md text-center"
           role="alert"
         >
           {t("admin_user_load_failed")}
@@ -298,7 +298,7 @@ export default function AdminUserDetailView({
   if (!profile) return null;
 
   const inputCls =
-    "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500";
+    "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500";
   const labelCls = "block text-sm font-medium text-gray-700 mb-1";
 
   return (
@@ -337,7 +337,7 @@ export default function AdminUserDetailView({
             verifying ||
             verifySuccess ||
             verifyError) && (
-            <div className="mb-6 p-4 bg-yellow-50 border border-yellow-300 rounded">
+            <div className="mb-6 p-4 bg-yellow-50 border border-yellow-300 rounded-sm">
               {profile.role === "new" && (
                 <p className="text-sm text-yellow-800 mb-3">
                   {t("admin_verify_hint")}
@@ -370,7 +370,7 @@ export default function AdminUserDetailView({
         {isSuperuser && (
           <form
             onSubmit={handleRoleChange}
-            className="mb-6 p-4 border border-gray-200 rounded"
+            className="mb-6 p-4 border border-gray-200 rounded-sm"
           >
             <label className={labelCls} htmlFor="role-select">
               {t("admin_change_role")}

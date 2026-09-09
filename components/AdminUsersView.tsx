@@ -114,7 +114,7 @@ export default function AdminUsersView({ lang }: { lang: string }) {
           <button
             type="button"
             onClick={handleLogout}
-            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors flex-shrink-0"
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors shrink-0"
           >
             {t("sign_out")}
           </button>
@@ -127,7 +127,7 @@ export default function AdminUsersView({ lang }: { lang: string }) {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder={t("admin_search_placeholder")}
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             aria-label={t("admin_search_placeholder")}
           />
           <label className="flex items-center gap-2 text-sm text-gray-700">
@@ -162,7 +162,7 @@ export default function AdminUsersView({ lang }: { lang: string }) {
           </p>
         ) : error ? (
           <div
-            className="p-4 bg-red-50 border border-red-300 text-red-700 rounded text-center"
+            className="p-4 bg-red-50 border border-red-300 text-red-700 rounded-sm text-center"
             role="alert"
             aria-live="polite"
           >

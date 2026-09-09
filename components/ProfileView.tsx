@@ -63,7 +63,7 @@ export default function ProfileView({
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
         <div
-          className="p-4 bg-red-50 border border-red-300 text-red-700 rounded max-w-md text-center"
+          className="p-4 bg-red-50 border border-red-300 text-red-700 rounded-sm max-w-md text-center"
           role="alert"
           aria-live="polite"
         >
@@ -143,7 +143,7 @@ export default function ProfileView({
 
         {isPending && (
           <div
-            className="mb-6 p-4 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded text-center"
+            className="mb-6 p-4 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-sm text-center"
             role="status"
             aria-live="polite"
           >
@@ -168,7 +168,7 @@ export default function ProfileView({
               key={label}
               className="flex flex-col sm:flex-row sm:items-baseline gap-1 border-b border-gray-100 pb-2"
             >
-              <dt className="text-sm font-medium text-gray-500 sm:w-48 flex-shrink-0">
+              <dt className="text-sm font-medium text-gray-500 sm:w-48 shrink-0">
                 {label}
               </dt>
               <dd className="text-gray-900">
