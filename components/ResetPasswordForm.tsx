@@ -87,7 +87,7 @@ export default function ResetPasswordForm({ lang }: { lang: string }) {
             {t("reset_password_heading")}
           </h1>
           <div
-            className="p-3 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded text-sm mb-6"
+            className="p-3 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-sm text-sm mb-6"
             role="alert"
             aria-live="polite"
           >
@@ -128,7 +128,7 @@ export default function ResetPasswordForm({ lang }: { lang: string }) {
               required
               showLabel={t("show_password")}
               hideLabel={t("hide_password")}
-              className="w-full px-3 py-2 border border-ink/20 rounded-sharp focus:outline-none focus:ring-2 focus:ring-ai disabled:opacity-50"
+              className="w-full px-3 py-2 border border-ink/20 rounded-sharp focus:outline-hidden focus:ring-2 focus:ring-ai disabled:opacity-50"
             />
           </div>
 
@@ -148,13 +148,13 @@ export default function ResetPasswordForm({ lang }: { lang: string }) {
               required
               showLabel={t("show_password")}
               hideLabel={t("hide_password")}
-              className="w-full px-3 py-2 border border-ink/20 rounded-sharp focus:outline-none focus:ring-2 focus:ring-ai disabled:opacity-50"
+              className="w-full px-3 py-2 border border-ink/20 rounded-sharp focus:outline-hidden focus:ring-2 focus:ring-ai disabled:opacity-50"
             />
           </div>
 
           {fieldError && (
             <div
-              className="p-3 bg-red-50 border border-red-300 text-red-700 rounded text-sm"
+              className="p-3 bg-red-50 border border-red-300 text-red-700 rounded-sm text-sm"
               role="alert"
               aria-live="polite"
             >

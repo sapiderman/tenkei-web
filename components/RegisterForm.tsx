@@ -412,7 +412,7 @@ export default function RegisterForm() {
   if (isSuccess) {
     return (
       <div className="bg-paper min-h-screen flex items-center justify-center font-sans text-gray-900 py-12 px-4">
-        <div className="w-full max-w-2xl p-8 bg-white border border-hairline rounded-sharp shadow-sm">
+        <div className="w-full max-w-2xl p-8 bg-white border border-hairline rounded-sharp shadow-xs">
           <div className="text-center py-8 fade-in">
             <div className="w-16 h-16 bg-ai/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
@@ -451,7 +451,7 @@ export default function RegisterForm() {
 
   return (
     <div className="bg-paper min-h-screen flex items-center justify-center font-sans text-gray-900 py-12 px-4">
-      <div className="w-full max-w-2xl p-8 bg-white border border-hairline rounded-sharp shadow-sm">
+      <div className="w-full max-w-2xl p-8 bg-white border border-hairline rounded-sharp shadow-xs">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-ink">
             {t("tenkei_registration")}
@@ -463,7 +463,7 @@ export default function RegisterForm() {
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-600 px-4 py-3 rounded-lg text-sm flex items-center gap-2 fade-in animate-in">
               <svg
-                className="w-5 h-5 text-red-500 flex-shrink-0"
+                className="w-5 h-5 text-red-500 shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -501,7 +501,7 @@ export default function RegisterForm() {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
                   placeholder={t("your_full_name") as string}
                 />
               </div>
@@ -520,7 +520,7 @@ export default function RegisterForm() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
                   placeholder="you@domain.com"
                 />
               </div>
@@ -538,7 +538,7 @@ export default function RegisterForm() {
                   name="whatsapp"
                   value={formData.whatsapp}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
                   placeholder="+62 812 3456 7890"
                 />
               </div>
@@ -556,7 +556,7 @@ export default function RegisterForm() {
                   name="date_of_birth"
                   value={formData.date_of_birth}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all"
                 />
               </div>
             </div>
@@ -584,7 +584,7 @@ export default function RegisterForm() {
                   required
                   showLabel={t("show_password")}
                   hideLabel={t("hide_password")}
-                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
                   placeholder="••••••••"
                 />
                 <p className="text-xs text-gray-500">{t("password_hint")}</p>
@@ -606,7 +606,7 @@ export default function RegisterForm() {
                   required
                   showLabel={t("show_password")}
                   hideLabel={t("hide_password")}
-                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
                   placeholder="••••••••"
                 />
               </div>
@@ -647,7 +647,7 @@ export default function RegisterForm() {
                       setDojoOpen(true);
                     }}
                     onFocus={() => setDojoOpen(true)}
-                    className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                    className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
                     placeholder={t("dojo_placeholder") as string}
                     autoComplete="off"
                   />
@@ -683,7 +683,7 @@ export default function RegisterForm() {
                   name="rank"
                   value={formData.rank}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all"
                 >
                   <option value="">{t("select_rank")}</option>
                   {RANK_OPTIONS.map((rankOption) => (
@@ -712,7 +712,7 @@ export default function RegisterForm() {
                       value={formData.faculty}
                       onChange={handleInputChange}
                       maxLength={MAX_LENGTHS.faculty}
-                      className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                      className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
                       placeholder={t("faculty_placeholder") as string}
                       autoComplete="off"
                     />
@@ -731,7 +731,7 @@ export default function RegisterForm() {
                       value={formData.major}
                       onChange={handleInputChange}
                       maxLength={MAX_LENGTHS.major}
-                      className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                      className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
                       placeholder={t("major_placeholder") as string}
                       autoComplete="off"
                     />
@@ -752,7 +752,7 @@ export default function RegisterForm() {
                   name="last_grading_date"
                   value={formData.last_grading_date}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all"
                 />
               </div>
             </div>
@@ -778,7 +778,7 @@ export default function RegisterForm() {
                   name="emergency_contact_name"
                   value={formData.emergency_contact_name}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
                   placeholder={t("contact_name") as string}
                 />
               </div>
@@ -796,7 +796,7 @@ export default function RegisterForm() {
                   name="emergency_contact_number"
                   value={formData.emergency_contact_number}
                   onChange={handleInputChange}
-                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
                   placeholder="+62 xxx xxxx xxxx"
                 />
               </div>
@@ -822,7 +822,7 @@ export default function RegisterForm() {
                 value={formData.medical_conditions}
                 onChange={handleInputChange}
                 rows={3}
-                className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-none transition-all placeholder-gray-400 resize-none"
+                className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400 resize-none"
                 placeholder={t("medical_conditions_placeholder") as string}
               />
             </div>
@@ -844,7 +844,7 @@ export default function RegisterForm() {
                   name="consent_datastore"
                   checked={formData.consent_datastore}
                   onChange={handleInputChange}
-                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-ai focus:ring-2 focus:ring-ai focus:ring-offset-0 cursor-pointer"
+                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded-sm text-ai focus:ring-2 focus:ring-ai focus:ring-offset-0 cursor-pointer"
                 />
                 <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
                   {t("consent_datastore_text")}{" "}
@@ -858,7 +858,7 @@ export default function RegisterForm() {
                   name="consent_marketing"
                   checked={formData.consent_marketing}
                   onChange={handleInputChange}
-                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded text-ai focus:ring-2 focus:ring-ai focus:ring-offset-0 cursor-pointer"
+                  className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded-sm text-ai focus:ring-2 focus:ring-ai focus:ring-offset-0 cursor-pointer"
                 />
                 <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
                   {t("consent_marketing_text")}
@@ -889,7 +889,7 @@ export default function RegisterForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-ai hover:bg-ai-deep text-paper font-semibold py-3 rounded-sharp shadow-sm transition-colors transform active:scale-95 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-ai hover:bg-ai-deep text-paper font-semibold py-3 rounded-sharp shadow-xs transition-colors transform active:scale-95 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span>{t("complete_registration")}</span>
             {isLoading && (

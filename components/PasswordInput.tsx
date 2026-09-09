@@ -38,7 +38,7 @@ export default function PasswordInput({
         disabled={disabled}
         onClick={() => setVisible((v) => !v)}
         aria-label={visible ? hideLabel : showLabel}
-        className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-r-md disabled:cursor-not-allowed disabled:opacity-50"
+        className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700 focus:outline-hidden focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-r-md disabled:cursor-not-allowed disabled:opacity-50"
       >
         {visible ? (
           // eye-off (heroicons outline)

@@ -45,7 +45,7 @@ export default async function Dojo(props: {
           </h1>
           {/* Sized container for the logo */}
           {/* Adjust w-XX h-XX classes to control the logo size (e.g., w-16 h-16 is 64px) */}
-          <div className="relative w-10 h-10 sm:w-20 sm:h-20 md:w-24 md:h-24 flex-shrink-0">
+          <div className="relative w-10 h-10 sm:w-20 sm:h-20 md:w-24 md:h-24 shrink-0">
             <Image
               src="/tenkei_logo.png"
               alt="Tenkei Logo"
@@ -107,7 +107,7 @@ export default async function Dojo(props: {
                 {Object.entries(fees).map(([key, value]) => (
                   <tr
                     key={key}
-                    className="border-b border-hairline last:border-0 hover:bg-ink/[0.03] transition-colors"
+                    className="border-b border-hairline last:border-0 hover:bg-ink/3 transition-colors"
                   >
                     <td className="py-1 text-ink/80">{key}</td>
                     <td className="py-1 pl-4 text-ink/60">{value}</td>

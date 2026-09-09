@@ -19,7 +19,7 @@ export default function EventAccordion({ items }: EventAccordionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div className="flex flex-col md:flex-row h-[600px] w-full overflow-hidden rounded-sharp shadow-sm border border-ink/20 bg-ink">
+    <div className="flex flex-col md:flex-row h-[600px] w-full overflow-hidden rounded-sharp shadow-xs border border-ink/20 bg-ink">
       {items.map((item, index) => {
         const isActive = activeIndex === index;
 
@@ -27,7 +27,7 @@ export default function EventAccordion({ items }: EventAccordionProps) {
           <div
             key={item.id}
             className={`relative flex transition-all duration-500 ease-in-out overflow-hidden group ${
-              isActive ? "flex-[6]" : "flex-1 cursor-pointer"
+              isActive ? "flex-6" : "flex-1 cursor-pointer"
             } ${index !== items.length - 1 ? "border-b md:border-b-0 md:border-r border-white/10" : ""}`}
             onClick={() => setActiveIndex(index)}
           >
@@ -49,7 +49,7 @@ export default function EventAccordion({ items }: EventAccordionProps) {
                 }`}
               />
               {/* Gradient for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-80" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-transparent opacity-80" />
             </div>
 
             {/* Content */}

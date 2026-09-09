@@ -115,7 +115,7 @@ export default function LanguageSwitcher({
 
       {isOpen && (
         <div
-          className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-sharp bg-paper p-1.5 shadow-lg border border-hairline focus:outline-none"
+          className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-sharp bg-paper p-1.5 shadow-lg border border-hairline focus:outline-hidden"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="language-menu-button"

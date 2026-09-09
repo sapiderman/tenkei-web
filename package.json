@@ -1,6 +1,6 @@
 {
   "name": "tenkei-web",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -19,26 +19,26 @@
     "i18next": "26.0.10",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-resources-to-backend": "^1.2.1",
-    "next": "^16.2.11",
+    "next": "^16.3.3",
     "next-i18n-router": "^5.5.6",
     "prettier": "^3.8.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-i18next": "^16.5.4",
-    "sanitize-html": "^2.17.4"
+    "sanitize-html": "^2.17.7"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20.11.25",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/sanitize-html": "^2",
-    "autoprefixer": "^10.4.18",
     "eslint": "^9",
-    "eslint-config-next": "^16.2.11",
+    "eslint-config-next": "^16.3.3",
     "postcss": "^8.5.18",
-    "tailwindcss": "^3.4.19",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.4.2",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.11"
   },
   "packageManager": "yarn@4.13.0+sha512.5c20ba010c99815433e5c8453112165e673f1c7948d8d2b267f4b5e52097538658388ebc9f9580656d9b75c5cc996f990f611f99304a2197d4c56d21eea370e7",
   "resolutions": {

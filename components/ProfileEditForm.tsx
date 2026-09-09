@@ -286,7 +286,7 @@ export default function ProfileEditForm({ lang }: Props) {
   }
 
   function fieldClass(hasError: boolean) {
-    return `w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 disabled:opacity-50 ${
+    return `w-full px-3 py-2 border rounded-md focus:outline-hidden focus:ring-2 disabled:opacity-50 ${
       hasError
         ? "border-red-400 focus:ring-red-500"
         : "border-gray-300 focus:ring-ai"
@@ -309,7 +309,7 @@ export default function ProfileEditForm({ lang }: Props) {
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
         <div
-          className="p-4 bg-red-50 border border-red-300 text-red-700 rounded max-w-md text-center"
+          className="p-4 bg-red-50 border border-red-300 text-red-700 rounded-sm max-w-md text-center"
           role="alert"
           aria-live="polite"
         >
@@ -328,7 +328,7 @@ export default function ProfileEditForm({ lang }: Props) {
 
         {serverError && (
           <div
-            className="mb-4 p-3 bg-red-50 border border-red-300 text-red-700 rounded text-sm"
+            className="mb-4 p-3 bg-red-50 border border-red-300 text-red-700 rounded-sm text-sm"
             role="alert"
             aria-live="polite"
           >
@@ -698,7 +698,7 @@ export default function ProfileEditForm({ lang }: Props) {
                 checked={formData.consentMarketing}
                 onChange={(e) => setField("consentMarketing", e.target.checked)}
                 disabled={saving}
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-ai focus:ring-ai"
+                className="mt-1 h-4 w-4 rounded-sm border-gray-300 text-ai focus:ring-ai"
               />
               <span className="text-sm">{t("consent_marketing_text")}</span>
             </label>

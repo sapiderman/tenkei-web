@@ -12,7 +12,7 @@ export default async function Header({ lang }: { lang: string }) {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-paper/90 backdrop-blur border-b border-hairline">
+    <header className="sticky top-0 z-40 bg-paper/90 backdrop-blur-sm border-b border-hairline">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href={`/${lang}`} className="flex items-center gap-2.5">
           <Image

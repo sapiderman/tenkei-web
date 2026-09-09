@@ -42,7 +42,7 @@ export default async function About(props: {
             <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold">
               {t("about_tenkei_aikidojo")}
             </h1>
-            <div className="relative w-10 h-10 sm:w-20 sm:h-20 md:w-24 md:h-24 flex-shrink-0">
+            <div className="relative w-10 h-10 sm:w-20 sm:h-20 md:w-24 md:h-24 shrink-0">
               <Image
                 src="/tenkei_logo.png"
                 alt="Tenkei Logo"
