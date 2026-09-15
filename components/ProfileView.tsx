@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useTranslation } from "@/app/i18n/client";
 import { getProfile, logout } from "@/lib/api-client";
 import type { ProfileResponse } from "@/lib/types";
+import TwoFactorSettings from "@/components/TwoFactorSettings";
 
 export default function ProfileView({
   lang,
@@ -177,6 +178,8 @@ export default function ProfileView({
             </div>
           ))}
         </dl>
+
+        <TwoFactorSettings lang={lang} enabled={profile.totp_enabled} />
 
         <button
           type="button"

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getUpstreamUrl, getClientIp } from "../_lib";
+import { getUpstreamUrl, getClientIp, getSessionCookie } from "../_lib";
 
 /** Fields the client is allowed to send upstream. */
 const EDITABLE_FIELDS = new Set([
@@ -25,13 +25,6 @@ function filterEditable(
     if (key in body) out[key] = body[key];
   }
   return out;
-}
-
-/** Extracts the tenkei_session cookie value, or null. */
-function getSessionCookie(request: Request): string | null {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const match = /(?:^|;\s*)tenkei_session=([^;]+)/.exec(cookieHeader);
-  return match?.[1] ?? null;
 }
 
 function forwardHeaders(request: Request): Headers {

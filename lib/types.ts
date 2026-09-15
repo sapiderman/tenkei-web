@@ -23,6 +23,8 @@ export interface ProfileResponse {
   medical_conditions: string;
   emergency_contact_name: string;
   emergency_contact_number: string;
+  /** True once the member armed TOTP 2FA (backend PR: profile + totp_enabled). */
+  totp_enabled: boolean;
 }
 
 // ---------------------------------------------------------------------------
