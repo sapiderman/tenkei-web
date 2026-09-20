@@ -55,6 +55,9 @@ describe("POST /api/auth/2fa/enroll", () => {
     expect(await res.json()).toEqual(upstreamBody);
 
     const call = mockFetch.mock.calls[0] as unknown[];
+    // Regression: caller must pass an already-resolved URL — the helpers no
+    // longer re-prefix BE_API_BASE (double-prefix broke all 2FA routes).
+    expect(call[0]).toBe("http://backend:3000/v1/auth/2fa/enroll");
     const init = call[1] as RequestInit;
     const initHeaders = init.headers as Headers;
     expect(initHeaders.get("cookie")).toBe("tenkei_session=abc");

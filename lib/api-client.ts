@@ -105,6 +105,9 @@ export async function verify2FA(code: string): Promise<Verify2FAResult> {
       }
       return { ok: false, reason: "invalid" };
     }
+    // Proxy's local format-check failure — a client-side mistake, not a
+    // server error (mirrors totpMutate's 400 → code/invalid mapping).
+    if (res.status === 400) return { ok: false, reason: "invalid" };
     if (res.status === 404) return { ok: false, reason: "unavailable" };
     return { ok: false, reason: "error" };
   } catch {

@@ -147,6 +147,11 @@ export default function LoginForm({ lang }: { lang: string }) {
         );
         return;
       }
+      if (result.reason === "unavailable" || result.reason === "error") {
+        // Service problem (kill switch / 5xx / network) — not a wrong code.
+        setError(t("twofa_error"));
+        return;
+      }
       setError(t("twofa_invalid_code"));
     } catch {
       setError(t("twofa_error"));

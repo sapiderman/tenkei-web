@@ -41,7 +41,10 @@ export async function POST(request: Request) {
 
   // 3. Pending session required — same shape the backend would reject with
   if (!getSessionCookie(request)) {
-    return NextResponse.json({ error: "session expired" }, { status: 401 });
+    return NextResponse.json(
+      { error: "session expired", code: "session_expired" },
+      { status: 401 },
+    );
   }
 
   // 4. Parse + format-check the code (real check is the backend's)
@@ -99,6 +102,13 @@ export async function POST(request: Request) {
     );
   }
 
-  // 8. 404 (TOTP kill switch off) or anything else → generic error
+  // 8. 404: TOTP kill switch off — relay the status so verify2FA's
+  // `unavailable` branch works. Generic body; never relay the upstream
+  // body or cookies.
+  if (response.status === 404) {
+    return NextResponse.json({ error: "service unavailable" }, { status: 404 });
+  }
+
+  // 9. Anything else → generic error
   return NextResponse.json({ error: "service unavailable" }, { status: 500 });
 }

@@ -97,6 +97,12 @@ export default function TwoFactorSettings({
       router.replace(`/${lang}/login?expired=1`);
       return null;
     }
+    if (result.reason === "unavailable") {
+      // Kill switch turned off mid-session (404) — same as enroll's 404:
+      // the section disappears (see header comment).
+      setStage("unavailable");
+      return null;
+    }
     return t("twofa_error");
   }
 

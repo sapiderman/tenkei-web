@@ -146,10 +146,14 @@ describe("POST /api/auth/2fa/verify", () => {
     const res = await POST(req);
 
     expect(res.status).toBe(401);
+    expect(await res.json()).toEqual({
+      error: "session expired",
+      code: "session_expired",
+    });
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
-  it("upstream 404 (kill switch off) → generic 500, no internals leaked", async () => {
+  it("upstream 404 (kill switch off) → relayed as 404 with generic body", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => new Response("not found", { status: 404 })),
@@ -158,7 +162,7 @@ describe("POST /api/auth/2fa/verify", () => {
     const POST = await importRoute();
     const res = await POST(verifyRequest({ code: "123456" }));
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(404);
     expect(await res.json()).toEqual({ error: "service unavailable" });
   });
 });

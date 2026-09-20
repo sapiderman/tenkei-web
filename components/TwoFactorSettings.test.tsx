@@ -80,4 +80,25 @@ describe("TwoFactorSettings", () => {
 
     await waitFor(() => expect(container).toBeEmptyDOMElement());
   });
+
+  it("disable 404 (kill switch off) hides the section", async () => {
+    disableMock.mockResolvedValue({ ok: false, reason: "unavailable" });
+    const { container } = render(
+      <TwoFactorSettings lang="en" enabled={true} />,
+    );
+    await clickManage();
+
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText("twofa_code_label"), "123456");
+    await user.type(
+      screen.getByLabelText("twofa_current_password"),
+      "correct-horse",
+    );
+    await user.click(
+      screen.getByRole("button", { name: "twofa_disable_button" }),
+    );
+
+    await waitFor(() => expect(container).toBeEmptyDOMElement());
+    expect(disableMock).toHaveBeenCalledTimes(1);
+  });
 });

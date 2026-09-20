@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getUpstreamUrl, getSessionCookie } from "../_lib";
+import { getSessionCookie } from "../_lib";
 
 /**
  * Shared plumbing for the TOTP 2FA proxy routes (app/api/auth/2fa/*).
@@ -22,12 +22,13 @@ export function isValidPassword(password: unknown): password is string {
 }
 
 /**
- * Forwards an authenticated JSON POST to a /v1/auth/2fa/* path with the
- * session cookie and bypass header. Returns the raw upstream Response.
+ * Forwards an authenticated JSON POST to the given upstream URL (already
+ * resolved by the caller via getUpstreamUrl) with the session cookie and
+ * bypass header. Returns the raw upstream Response.
  */
 export async function forwardTotpPost(
   request: Request,
-  upstreamPath: string,
+  upstreamUrl: string,
   body: Record<string, unknown>,
 ): Promise<Response> {
   const headers = new Headers();
@@ -42,7 +43,7 @@ export async function forwardTotpPost(
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 15_000);
   try {
-    return await fetch(getUpstreamUrl(upstreamPath), {
+    return await fetch(upstreamUrl, {
       method: "POST",
       headers,
       body: JSON.stringify(body),
@@ -63,14 +64,14 @@ const RELAYED_STATUSES = new Set([200, 400, 401, 403, 404, 409]);
  */
 export async function relayTotpResponse(
   request: Request,
-  upstreamPath: string,
+  upstreamUrl: string,
   body: Record<string, unknown>,
 ): Promise<NextResponse> {
   let response: Response;
   try {
-    response = await forwardTotpPost(request, upstreamPath, body);
+    response = await forwardTotpPost(request, upstreamUrl, body);
   } catch {
-    console.error("2FA proxy upstream error:", { path: upstreamPath });
+    console.error("2FA proxy upstream error:", { path: upstreamUrl });
     return NextResponse.json({ error: "service unavailable" }, { status: 500 });
   }
 
@@ -88,7 +89,7 @@ export async function relayTotpResponse(
       ? `${responseText.slice(0, 1000)}... (truncated)`
       : responseText;
   console.error("2FA proxy unexpected upstream status:", {
-    path: upstreamPath,
+    path: upstreamUrl,
     status: response.status,
     responseText: truncated,
   });

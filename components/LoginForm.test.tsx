@@ -8,8 +8,6 @@ import "@testing-library/jest-dom/vitest";
 // provide one so the (mocked) widget mounts and mints a token.
 process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY = "1x00000000000000000000AA";
 
-import "@testing-library/jest-dom/vitest";
-
 // i18n: t() returns the key — assertions match on key names.
 vi.mock("@/app/i18n/client", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -87,6 +85,24 @@ describe("LoginForm 2FA step", () => {
     expect(await screen.findByText("twofa_invalid_code")).toBeVisible();
     expect(screen.getByLabelText("twofa_code_label")).toBeVisible();
     expect(verifyMock).toHaveBeenCalledWith("000000");
+  });
+
+  it("service failure (error/unavailable) shows the generic error on the code step", async () => {
+    loginMock.mockResolvedValue({ ok: true, twoFactorRequired: true });
+    verifyMock.mockResolvedValue({ ok: false, reason: "error" });
+    render(<LoginForm lang="en" />);
+
+    await submitPasswordForm();
+    await screen.findByLabelText("twofa_code_label");
+
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText("twofa_code_label"), "000000");
+    await user.click(
+      screen.getByRole("button", { name: "twofa_verify_button" }),
+    );
+
+    expect(await screen.findByText("twofa_error")).toBeVisible();
+    expect(screen.getByLabelText("twofa_code_label")).toBeVisible();
   });
 
   it("lockout (totp_locked) returns the user to the password step", async () => {
