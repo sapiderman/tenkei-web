@@ -98,6 +98,26 @@ describe("POST /api/auth/2fa/enroll", () => {
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
+  it("rate-limits repeated attempts per IP with 429 (no upstream call)", async () => {
+    process.env.RATE_LIMIT_MAX_REQUESTS = "1";
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("{}", { status: 200 })),
+    );
+
+    const POST = await importRoute();
+    const first = await POST(enrollRequest({ "cf-connecting-ip": "10.9.9.9" }));
+    expect(first.status).toBe(200);
+
+    const second = await POST(enrollRequest({ "cf-connecting-ip": "10.9.9.9" }));
+    expect(second.status).toBe(429);
+    expect(second.headers.get("Retry-After")).toBeTruthy();
+    expect(await second.json()).toEqual({
+      error: "Too many attempts. Please try again later.",
+      retry_after_seconds: expect.any(Number),
+    });
+  });
+
   it("upstream 500 → generic 500", async () => {
     vi.stubGlobal(
       "fetch",

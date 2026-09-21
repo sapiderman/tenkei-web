@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { getUpstreamUrl, getSessionCookie } from "../../_lib";
+import {
+  getUpstreamUrl,
+  getSessionCookie,
+  isRateLimited,
+} from "../../_lib";
 
 import {
   isValidPassword,
@@ -21,6 +25,18 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Internal server configuration error" },
       { status: 500 },
+    );
+  }
+
+  // Rate limit (defense in depth; the backend's limiter is authoritative)
+  const rl = isRateLimited(request, "2fa-disable");
+  if (rl.limited) {
+    return NextResponse.json(
+      {
+        error: "Too many attempts. Please try again later.",
+        retry_after_seconds: rl.retryAfterSeconds,
+      },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
     );
   }
 
