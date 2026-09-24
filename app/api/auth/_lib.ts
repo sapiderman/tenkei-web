@@ -73,6 +73,16 @@ export function parseTenkeiSessionCookie(
   return null;
 }
 
+/**
+ * Extracts the tenkei_session cookie value from the request, or null.
+ * (Set-Cookie parsing lives in parseTenkeiSessionCookie above.)
+ */
+export function getSessionCookie(request: Request): string | null {
+  const cookieHeader = request.headers.get("cookie") || "";
+  const match = /(?:^|;\s*)tenkei_session=([^;]+)/.exec(cookieHeader);
+  return match?.[1] ?? null;
+}
+
 // ---------------------------------------------------------------------------
 // Rate limiting (in-memory, per-instance)
 // ---------------------------------------------------------------------------

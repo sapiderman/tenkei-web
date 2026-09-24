@@ -23,6 +23,9 @@ export interface ProfileResponse {
   medical_conditions: string;
   emergency_contact_name: string;
   emergency_contact_number: string;
+  /** True once the member armed TOTP 2FA. Optional until the backend PR
+   * ships the field; absent is treated as not-enabled (see TwoFactorSettings). */
+  totp_enabled?: boolean;
 }
 
 // ---------------------------------------------------------------------------

@@ -327,7 +327,7 @@ describe("POST /api/auth/login", () => {
   it("on backend non-ok status body: returns 401 generic error, no cookie", async () => {
     const mockFetch = vi.fn(
       async () =>
-        new Response(JSON.stringify({ status: "2fa_required" }), {
+        new Response(JSON.stringify({ status: "error" }), {
           status: 200,
           headers: {
             "set-cookie": "tenkei_session=abc; Path=/v1/auth; HttpOnly",
@@ -493,5 +493,53 @@ describe("POST /api/auth/login", () => {
     );
     expect(res11.status).toBe(429);
     expect(mockFetch).toHaveBeenCalledTimes(10);
+  });
+
+  it('on 2fa_required: returns 200 {status:"2fa_required"} and forwards the pending session cookie', async () => {
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "2fa_required" }), {
+          status: 200,
+          headers: {
+            "set-cookie":
+              "tenkei_session=pending456; Path=/v1/auth; HttpOnly; SameSite=Lax",
+          },
+        }),
+    );
+    vi.stubGlobal("fetch", mockFetch);
+
+    const POST = await importRoute();
+    const req = loginRequest({
+      identifier: "user@test.com",
+      password: "password123",
+    });
+    const res = await POST(req);
+
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body).toEqual({ status: "2fa_required" });
+
+    const cookie = getSetCookie(res);
+    expect(cookie).toContain("tenkei_session=pending456");
+    expect(cookie).toContain("HttpOnly");
+    expect(cookie).toContain("Path=/");
+  });
+
+  it("on 2fa_required without Set-Cookie: falls through to 401 (no half-promises)", async () => {
+    const mockFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: "2fa_required" }), {
+          status: 200,
+        }),
+    );
+    vi.stubGlobal("fetch", mockFetch);
+
+    const POST = await importRoute();
+    const res = await POST(
+      loginRequest({ identifier: "user@test.com", password: "password123" }),
+    );
+
+    expect(res.status).toBe(401);
+    expect(getSetCookie(res)).toBeNull();
   });
 });

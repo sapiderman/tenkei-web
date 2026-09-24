@@ -5,7 +5,7 @@ import type { ProfileResponse, UserListResponse } from "@/lib/types";
 // ---------------------------------------------------------------------------
 
 export type LoginResult =
-  | { ok: true }
+  | { ok: true; twoFactorRequired: boolean }
   | { ok: false; error: string; status: number; retryAfterSeconds?: number };
 
 export async function login(
@@ -25,7 +25,15 @@ export async function login(
     });
 
     if (res.ok) {
-      return { ok: true };
+      // `2fa_required`: password OK, member enrolled — the proxy has set a
+      // pending session cookie; the client must collect the TOTP code next.
+      const body = (await res.json().catch(() => ({}))) as {
+        status?: string;
+      };
+      return {
+        ok: true,
+        twoFactorRequired: body.status === "2fa_required",
+      };
     }
 
     const body = await res.json().catch(() => ({}));
@@ -41,6 +49,141 @@ export async function login(
   } catch {
     return { ok: false, error: "Network error", status: 0 };
   }
+}
+
+// ---------------------------------------------------------------------------
+// Two-factor auth (TOTP)
+// ---------------------------------------------------------------------------
+
+/** Error reasons mapped from the proxy's relayed status codes. */
+export type TotpMutationResult =
+  | { ok: true }
+  | {
+      ok: false;
+      reason:
+        | "password" // 403 — current password wrong
+        | "code" // 400 — invalid code
+        | "unauthorized" // 401 — session gone, log in again
+        | "unavailable" // 404 — TOTP kill switch off server-side
+        | "error"; // network / 5xx
+    };
+
+/**
+ * Login step 2: exchanges the 6-digit code for the promoted session cookie.
+ * `locked` means the pending session was deleted (5 wrong codes) and the
+ * member must start over with a fresh password login.
+ */
+export type Verify2FAResult =
+  | { ok: true }
+  | {
+      ok: false;
+      reason: "invalid" | "locked" | "expired" | "unavailable" | "error";
+    };
+
+export async function verify2FA(code: string): Promise<Verify2FAResult> {
+  try {
+    const res = await fetch("/api/auth/2fa/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+    });
+
+    if (res.ok) return { ok: true };
+
+    const body = (await res.json().catch(() => ({}))) as {
+      error?: unknown;
+      code?: unknown;
+    };
+    if (res.status === 401) {
+      // `code` is the stable machine identifier from the backend
+      // ("invalid_code" | "totp_locked" | "session_expired").
+      if (body.code === "totp_locked") {
+        return { ok: false, reason: "locked" };
+      }
+      if (body.code === "session_expired") {
+        return { ok: false, reason: "expired" };
+      }
+      return { ok: false, reason: "invalid" };
+    }
+    // Proxy's local format-check failure — a client-side mistake, not a
+    // server error (mirrors totpMutate's 400 → code/invalid mapping).
+    if (res.status === 400) return { ok: false, reason: "invalid" };
+    if (res.status === 404) return { ok: false, reason: "unavailable" };
+    return { ok: false, reason: "error" };
+  } catch {
+    return { ok: false, reason: "error" };
+  }
+}
+
+export type Enroll2FAResult =
+  | { ok: true; secret: string; otpauthUrl: string }
+  | { ok: false; status: number }; // 409 already enabled, 404 kill switch off, 401 session gone, 0 network
+
+/** Starts enrollment. The secret is shown once — render the QR immediately. */
+export async function enroll2FA(): Promise<Enroll2FAResult> {
+  try {
+    const res = await fetch("/api/auth/2fa/enroll", { method: "POST" });
+    if (res.ok) {
+      const body = (await res.json().catch(() => ({}))) as {
+        secret?: unknown;
+        otpauth_url?: unknown;
+      };
+      if (
+        typeof body.secret === "string" &&
+        typeof body.otpauth_url === "string"
+      ) {
+        return {
+          ok: true,
+          secret: body.secret,
+          otpauthUrl: body.otpauth_url,
+        };
+      }
+    }
+    return { ok: false, status: res.status };
+  } catch {
+    return { ok: false, status: 0 };
+  }
+}
+
+/** Shared shape of confirm and disable (both take code + current password). */
+async function totpMutate(
+  path: string,
+  code: string,
+  currentPassword: string,
+): Promise<TotpMutationResult> {
+  try {
+    const res = await fetch(`/api/auth/2fa/${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, current_password: currentPassword }),
+    });
+
+    if (res.ok) return { ok: true };
+
+    if (res.status === 403) return { ok: false, reason: "password" };
+    if (res.status === 400) return { ok: false, reason: "code" };
+    if (res.status === 401) return { ok: false, reason: "unauthorized" };
+    if (res.status === 404) return { ok: false, reason: "unavailable" };
+    return { ok: false, reason: "error" };
+  } catch {
+    return { ok: false, reason: "error" };
+  }
+}
+
+/** Arms 2FA with the first code from the authenticator + account password. */
+export function confirm2FA(
+  code: string,
+  currentPassword: string,
+): Promise<TotpMutationResult> {
+  return totpMutate("confirm", code, currentPassword);
+}
+
+/** Disarms 2FA — current code + password required together. */
+export function disable2FA(
+  code: string,
+  currentPassword: string,
+): Promise<TotpMutationResult> {
+  return totpMutate("disable", code, currentPassword);
 }
 
 // ---------------------------------------------------------------------------

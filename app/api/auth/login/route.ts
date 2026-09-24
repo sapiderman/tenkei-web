@@ -157,6 +157,21 @@ export async function POST(request: Request) {
     return nextResponse;
   }
 
+  // 2FA pending: password OK but the member is enrolled. Forward the pending
+  // session cookie (5-min TTL, only /api/auth/2fa/verify accepts it); the
+  // client shows the code step and completes the login there.
+  if (response.ok && data.status === "2fa_required" && sessionValue) {
+    const nextResponse = NextResponse.json(
+      { status: "2fa_required" },
+      { status: 200 },
+    );
+    nextResponse.headers.set(
+      "Set-Cookie",
+      `tenkei_session=${sessionValue}; ${buildSessionCookieAttributes()}`,
+    );
+    return nextResponse;
+  }
+
   // 8. Error normalization — never relay backend internals to the browser
   //    Never relay a Set-Cookie on non-ok paths (2FA defense).
   const clientIp = getClientIp(request);
