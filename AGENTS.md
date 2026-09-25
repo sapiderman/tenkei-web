@@ -35,6 +35,12 @@ public/locales/    # Translation JSON files (en, id, ja)
 - **Global chrome**: `Header` and `Footer` are rendered once in `app/[lang]/layout.tsx` — never import or re-render them inside a page
 - **Session-aware CTA**: reuse `components/joinButton.tsx` (`variant="light"` on paper, `variant="dark"` on `bg-ai`) — do not inline the `tenkei_session` cookie check
 - **Git**: Conventional commits (`feat:`, `fix:`, `docs:`, `refactor:`, `chore:`)
+- **Versioning**: bump `package.json` `version` in the same commit as the change (semi-automatic, done by the agent, not by hooks):
+  - `fix:` → patch (`0.3.0` → `0.3.1`)
+  - `feat:` → minor (`0.3.0` → `0.4.0`)
+  - Breaking change (or user says so) → major (`0.3.0` → `1.0.0`)
+  - `docs:`, `chore:` (lint, deps, config) → no bump required, bump patch if user asks
+  - Never skip a bump for `fix:`/`feat:` commits — if the agent forgets, the next commit must catch up
 
 ## i18n Patterns
 

@@ -76,6 +76,25 @@ describe("POST /api/auth/2fa/verify", () => {
     expect(init.body).toBe(JSON.stringify({ code: "123456" }));
   });
 
+  // Regression: the real backend promotes the session in place and sends
+  // no Set-Cookie — must be a clean 200, not a 500.
+  it("promotes without Set-Cookie: 200, no cookie re-issue", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
+      ),
+    );
+
+    const POST = await importRoute();
+    const res = await POST(verifyRequest({ code: "123456" }));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ status: "ok" });
+    expect(res.headers.get("set-cookie")).toBeNull();
+  });
+
   it("forwards invalid code 401 with the backend's error string", async () => {
     vi.stubGlobal(
       "fetch",

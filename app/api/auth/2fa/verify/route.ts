@@ -70,22 +70,23 @@ export async function POST(request: Request) {
     data = {};
   }
 
-  // 6. Success: re-issue the promoted session cookie
+  // 6. Success: the backend promotes the pending session in place (same
+  // cookie value — MarkVerified upgrades the existing session), so it sends
+  // no Set-Cookie. The browser's pending cookie is already the verified
+  // session. Re-issue only if the backend ever starts rotating the value.
   if (response.ok && data.status === "ok") {
+    const nextResponse = NextResponse.json({ status: "ok" }, { status: 200 });
     const sessionValue = response.headers
       .getSetCookie()
       .map(parseTenkeiSessionCookie)
       .find((v): v is string => v !== null);
     if (sessionValue) {
-      const nextResponse = NextResponse.json({ status: "ok" }, { status: 200 });
       nextResponse.headers.set(
         "Set-Cookie",
         `tenkei_session=${sessionValue}; ${buildSessionCookieAttributes()}`,
       );
-      return nextResponse;
     }
-    console.error("2FA verify: upstream promoted session without Set-Cookie");
-    return NextResponse.json({ error: "service unavailable" }, { status: 500 });
+    return nextResponse;
   }
 
   // 7. 401: pass the documented error strings through so the UI can
