@@ -9,7 +9,8 @@ The official website for Tenkei Aikidojo, built with Next.js 16+, React 19, and 
 - **Performance Optimized:** High Lighthouse scores, optimized images, and Vercel Speed Insights.
 - **SEO Ready:** Localized metadata, Open Graph tags, and structured data (JSON-LD).
 - **Responsive Design:** Mobile-first approach using Tailwind CSS.
-- **Security Focused:** Custom security headers and Turnstile spam protection.
+- **Security Focused:** Custom security headers and Turnstile-protected auth flows.
+- **Authentication:** Register / login / forgot-password with optional TOTP two-factor auth (rate-limited API routes under `app/api/`).
 
 ## Technologies Used
 
@@ -76,6 +77,8 @@ This project uses a localized routing strategy (`/[lang]/...`).
 
 ```bash
 yarn lint           # Run ESLint
+yarn test           # Run Vitest (watch mode)
+yarn test:run       # Run Vitest once (CI)
 yarn format         # Auto-format with Prettier
 yarn check-format   # Verify formatting
 ```
