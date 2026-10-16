@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server";
-import {
-  getUpstreamUrl,
-  getSessionCookie,
-  isRateLimited,
-} from "../../_lib";
+import { getUpstreamUrl, getSessionCookie, isRateLimited } from "../../_lib";
 
 import { relayTotpResponse } from "../_lib";
 
