@@ -1,10 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getT } from "../i18n";
+import { pageMetadata } from "@/lib/seo";
 
 import Events from "@/components/events";
 import JoinButton from "@/components/joinButton";
 import { schedules } from "./dojos/data";
+
+export async function generateMetadata(props: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await props.params;
+  const { t } = await getT(lang, "common");
+  return pageMetadata(
+    lang,
+    "",
+    t("site_title"),
+    t("tenkei_aikidojo_description"),
+  );
+}
 
 // Shared "learn more" teaser link styling (About / Dojos / Shinjuku sections)
 const TEASER_LINK =
@@ -32,6 +47,20 @@ export default async function HomePage(props: {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((item) => ({
+              "@type": "Question",
+              name: item.q,
+              acceptedAnswer: { "@type": "Answer", text: item.a },
+            })),
+          }),
+        }}
+      />
       <main>
         {/* Hero */}
         <section className="relative flex min-h-[calc(100vh-4rem)] items-center overflow-hidden">

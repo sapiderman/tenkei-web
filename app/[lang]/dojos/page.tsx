@@ -2,6 +2,7 @@ import JoinButton from "@/components/joinButton";
 import Image from "next/image";
 import { getT } from "@/app/i18n"; // Use alias path
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { fees, schedules } from "./data"; // Keep this import
 
 export async function generateMetadata(props: {
@@ -10,22 +11,12 @@ export async function generateMetadata(props: {
   const params = await props.params;
   const { lang } = params;
   const { t } = await getT(lang, "common");
-  const title = t("dojos_page_title");
-  const description = t("dojos_page_description");
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical: `https://www.tenkeiaikidojo.org/${lang}/dojos`,
-    },
-    openGraph: {
-      title,
-      description,
-      url: `https://www.tenkeiaikidojo.org/${lang}/dojos`,
-      type: "website",
-    },
-  };
+  return pageMetadata(
+    lang,
+    "/dojos",
+    t("dojos_page_title"),
+    t("dojos_page_description"),
+  );
 }
 
 export default async function Dojo(props: {

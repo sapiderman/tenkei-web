@@ -7,13 +7,18 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import { SITE_URL } from "@/lib/seo";
 import "../globals.css";
 
+// CJK fonts are sliced into hundreds of unicode-range files; preloading them
+// pushes ~5 MB of font bytes on first paint. Let the browser fetch only the
+// slices the page actually renders.
 const shipporiMincho = Shippori_Mincho({
   weight: ["500", "700"],
   subsets: ["latin"],
   variable: "--font-shippori",
   display: "swap",
+  preload: false,
 });
 
 const zenKakuGothic = Zen_Kaku_Gothic_New({
@@ -21,6 +26,7 @@ const zenKakuGothic = Zen_Kaku_Gothic_New({
   subsets: ["latin"],
   variable: "--font-zen-kaku",
   display: "swap",
+  preload: false,
 });
 
 export async function generateStaticParams() {
@@ -34,33 +40,27 @@ export async function generateMetadata(props: {
   const { lang } = params;
   const { t } = await getT(lang, "common"); // Use 'common' namespace
 
-  const title = t("tenkei_aikidojo"); // Assuming a translation key for the title
-  const description = t("tenkei_aikidojo_description"); // Assuming a translation key for the description
+  // Fallback metadata for pages without their own generateMetadata (portal
+  // pages). Indexable pages build theirs with pageMetadata() so canonical and
+  // hreflang point at the page itself — partial alternates drop hreflang.
+  const title = t("site_title");
+  const description = t("tenkei_aikidojo_description");
 
   return {
+    metadataBase: new URL(SITE_URL),
     title,
     description,
-    keywords:
-      "Aikido, Tenkei Aikidojo, Jakarta, martial arts, self-defense, dojo, training, martial arts classes",
-    alternates: {
-      canonical: `https://www.tenkeiaikidojo.org/${lang}`,
-      languages: {
-        en: "https://www.tenkeiaikidojo.org/en",
-        id: "https://www.tenkeiaikidojo.org/id",
-        ja: "https://www.tenkeiaikidojo.org/ja",
-      },
-    },
     openGraph: {
       title,
       description,
-      url: `https://www.tenkeiaikidojo.org/${lang}`,
+      url: `${SITE_URL}/${lang}`,
       siteName: "Tenkei Aikidojo",
       images: [
         {
-          url: "https://www.tenkeiaikidojo.org/tenkei_logo_text.png",
+          url: `${SITE_URL}/og-image.png`,
           width: 1200,
           height: 630,
-          alt: "Tenkei Aikidojo Logo",
+          alt: "Tenkei Aikidojo",
         },
       ],
       locale: lang === "en" ? "en_US" : lang === "id" ? "id_ID" : "ja_JP",
@@ -71,7 +71,7 @@ export async function generateMetadata(props: {
       title,
       description,
       creator: "@tenkeiaikidojo",
-      images: ["https://www.tenkeiaikidojo.org/tenkei_logo_text.png"],
+      images: [`${SITE_URL}/og-image.png`],
     },
   };
 }

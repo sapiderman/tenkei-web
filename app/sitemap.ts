@@ -11,7 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     languages.forEach((lang) => {
       sitemapEntries.push({
         url: `${BASE_URL}/${lang}${route}`,
-        lastModified: new Date(),
         changeFrequency: "monthly",
         priority: route === "" ? 1 : 0.8,
       });

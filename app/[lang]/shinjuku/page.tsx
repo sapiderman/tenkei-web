@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getT } from "@/app/i18n"; // Use alias path
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(props: {
   params: Promise<{ lang: string }>;
@@ -8,22 +9,12 @@ export async function generateMetadata(props: {
   const params = await props.params;
   const { lang } = params;
   const { t } = await getT(lang, "common");
-  const title = t("shinjuku_page_title");
-  const description = t("shinjuku_page_description");
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical: `https://www.tenkeiaikidojo.org/${lang}/shinjuku`,
-    },
-    openGraph: {
-      title,
-      description,
-      url: `https://www.tenkeiaikidojo.org/${lang}/shinjuku`,
-      type: "website",
-    },
-  };
+  return pageMetadata(
+    lang,
+    "/shinjuku",
+    t("shinjuku_page_title"),
+    t("shinjuku_page_description"),
+  );
 }
 
 export default async function Shinjuku(props: {

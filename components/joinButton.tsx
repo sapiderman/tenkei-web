@@ -1,21 +1,33 @@
+"use client";
+
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { getT } from "../app/i18n";
+import { useSyncExternalStore } from "react";
+import { useTranslation } from "@/app/i18n/client";
+
+const NOOP_SUBSCRIBE = () => () => {};
+const readSessionCookie = () =>
+  typeof document !== "undefined" &&
+  document.cookie.split(/;\s*/).some((c) => c.startsWith("tenkei_session="));
 
 // variant="light" for paper backgrounds (Dojos page),
 // variant="dark" for the blue (bg-ai) join band on the home page.
-export default async function JoinButton({
+export default function JoinButton({
   lang,
   variant = "light",
 }: {
   lang: string;
   variant?: "light" | "dark";
 }) {
-  const { t } = await getT(lang, "common");
+  const { t } = useTranslation(lang, "common");
 
-  // Next.js 16: cookies() is async
-  const cookieStore = await cookies();
-  const hasSession = Boolean(cookieStore.get("tenkei_session")?.value);
+  // Session check stays client-side so marketing pages remain statically
+  // prerendered — a server cookies() read here forced SSR on every request for
+  // the pages using this CTA. Server snapshot is false, so hydration matches.
+  const hasSession = useSyncExternalStore(
+    NOOP_SUBSCRIBE,
+    readSessionCookie,
+    () => false,
+  );
 
   const primary =
     variant === "dark"
