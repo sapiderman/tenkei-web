@@ -47,6 +47,9 @@ export function pageMetadata(
       card: "summary_large_image",
       title,
       description,
+      // Kept in sync with the layout fallback — Next replaces the twitter
+      // object wholesale per segment, so omitting it here drops the tag.
+      creator: "@tenkeiaikidojo",
       images: [`${SITE_URL}/og-image.png`],
     },
   };

@@ -22,4 +22,9 @@ describe("pageMetadata", () => {
     const first = Array.isArray(og.images) ? og.images[0] : og.images;
     expect(first).toMatchObject({ width: 1200, height: 630 });
   });
+
+  it("keeps twitter:creator despite per-page twitter metadata", () => {
+    const meta = pageMetadata("en", "/about", "Title", "Desc");
+    expect(meta.twitter).toMatchObject({ creator: "@tenkeiaikidojo" });
+  });
 });
