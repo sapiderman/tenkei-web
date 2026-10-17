@@ -17,6 +17,19 @@ export default async function HomePage(props: {
   const { lang } = params;
   const { t } = await getT(lang, "common");
 
+  const classes = [
+    { title: t("class_adult_title"), desc: t("class_adult_desc") },
+    { title: t("class_kids_title"), desc: t("class_kids_desc") },
+    { title: t("class_weapons_title"), desc: t("class_weapons_desc") },
+  ];
+  // shortcut: faq_a4 fee figures mirror dojos/data.ts fees, update both when fees change
+  const faqs = [
+    { q: t("faq_q1"), a: t("faq_a1") },
+    { q: t("faq_q2"), a: t("faq_a2") },
+    { q: t("faq_q3"), a: t("faq_a3") },
+    { q: t("faq_q4"), a: t("faq_a4") },
+  ];
+
   return (
     <>
       <main>
@@ -73,6 +86,35 @@ export default async function HomePage(props: {
           </div>
         </section>
 
+        {/* Classes */}
+        <section className="border-t border-hairline">
+          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1fr_2fr] md:items-start">
+            <div>
+              <p className="section-label">{t("classes_label")}</p>
+            </div>
+            <div>
+              <h2 className="font-display text-3xl font-bold text-ink">
+                {t("classes_heading")}
+              </h2>
+              <div className="mt-6 border-t border-hairline">
+                {classes.map((item) => (
+                  <div
+                    key={item.title}
+                    className="border-b border-hairline py-6"
+                  >
+                    <h3 className="font-display text-xl font-bold text-ink">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 max-w-2xl leading-relaxed text-ink/70">
+                      {item.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Dojos teaser */}
         <section className="border-t border-hairline">
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
@@ -80,7 +122,7 @@ export default async function HomePage(props: {
               <div>
                 <p className="section-label">{t("dojos")}</p>
                 <h2 className="font-display mt-3 text-3xl font-bold text-ink">
-                  {t("explore_dojos_desc")}
+                  {t("home_dojos_heading")}
                 </h2>
               </div>
               <Link
@@ -131,6 +173,43 @@ export default async function HomePage(props: {
               >
                 {t("learn_more")}
               </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Questions */}
+        <section className="border-t border-hairline">
+          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1fr_2fr] md:items-start">
+            <div>
+              <p className="section-label">{t("faq_label")}</p>
+            </div>
+            <div>
+              <h2 className="font-display text-3xl font-bold text-ink">
+                {t("faq_heading")}
+              </h2>
+              <div className="mt-6 border-t border-hairline">
+                {faqs.map((item) => (
+                  <details
+                    key={item.q}
+                    className="group border-b border-hairline"
+                  >
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 [&::-webkit-details-marker]:hidden">
+                      <h3 className="font-display text-lg font-bold text-ink">
+                        {item.q}
+                      </h3>
+                      <span
+                        className="shrink-0 text-xl text-ai transition-transform duration-200 group-open:rotate-45"
+                        aria-hidden="true"
+                      >
+                        +
+                      </span>
+                    </summary>
+                    <p className="max-w-2xl pb-5 leading-relaxed text-ink/70">
+                      {item.a}
+                    </p>
+                  </details>
+                ))}
+              </div>
             </div>
           </div>
         </section>

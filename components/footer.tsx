@@ -39,8 +39,8 @@ export default async function Footer({ lang }: { lang: string }) {
           )}
         </div>
         <p className="pt-5 text-center text-xs leading-5 text-paper/60">
-          {t("made_with_love")} &copy;{new Date().getFullYear()}{" "}
-          {t("tenkei_aikidojo")}. {t("footer_rights_reserved")} Version:
+          &copy; {new Date().getFullYear()} {t("tenkei_aikidojo")}.{" "}
+          {t("footer_rights_reserved")} Version:
           {pkg.version}.
           <a
             href="mailto:info@tenkeiaikidojo.org"

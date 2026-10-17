@@ -109,7 +109,9 @@ describe("POST /api/auth/2fa/enroll", () => {
     const first = await POST(enrollRequest({ "cf-connecting-ip": "10.9.9.9" }));
     expect(first.status).toBe(200);
 
-    const second = await POST(enrollRequest({ "cf-connecting-ip": "10.9.9.9" }));
+    const second = await POST(
+      enrollRequest({ "cf-connecting-ip": "10.9.9.9" }),
+    );
     expect(second.status).toBe(429);
     expect(second.headers.get("Retry-After")).toBeTruthy();
     expect(await second.json()).toEqual({
