@@ -1,4 +1,5 @@
 import React from "react";
+import { SITE_URL } from "@/lib/seo";
 
 interface LocalBusinessSchemaProps {
   lang: string;
@@ -8,9 +9,10 @@ const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = ({ lang }) => {
   const schema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
+    "@id": `${SITE_URL}/#localbusiness`,
     name: "Tenkei Aikidojo",
-    image: "https://www.tenkeiaikidojo.org/tenkei_logo.png",
-    url: `https://www.tenkeiaikidojo.org/${lang}`,
+    image: `${SITE_URL}/tenkei_logo.png`,
+    url: `${SITE_URL}/${lang}`,
     telephone: "+62-856-9329-5545",
     email: "info@tenkeiaikidojo.org",
     address: {
@@ -47,12 +49,12 @@ const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = ({ lang }) => {
       },
     ],
     hasMap: "https://maps.app.goo.gl/fqy3Cek7FYJbf8Bj6",
-    priceRange: "IDR",
+    // Rough public pricing from the FAQ (registration + monthly training).
+    priceRange: "IDR 200,000-250,000",
     areaServed: {
       "@type": "AdministrativeArea",
       name: "Jakarta",
     },
-    sameAs: ["https://www.tenkeiaikidojo.org"],
   };
 
   return (

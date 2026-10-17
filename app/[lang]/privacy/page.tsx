@@ -1,5 +1,6 @@
 import { getT } from "@/app/i18n";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(props: {
   params: Promise<{ lang: string }>;
@@ -7,10 +8,12 @@ export async function generateMetadata(props: {
   const params = await props.params;
   const { lang } = params;
   const { t } = await getT(lang, "common");
-  return {
-    title: t("privacy_page_title"),
-    description: t("privacy_page_description"),
-  };
+  return pageMetadata(
+    lang,
+    "/privacy",
+    t("privacy_page_title"),
+    t("privacy_page_description"),
+  );
 }
 
 export default async function PrivacyPolicy(props: {
