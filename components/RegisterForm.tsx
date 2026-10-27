@@ -14,8 +14,13 @@ import {
   sanitizeTextInputForSubmission,
   sanitizeToken,
 } from "@/lib/sanitize";
-import { VALID_RANKS as RANK_OPTIONS, isUIDojo } from "@/lib/constants";
 import {
+  VALID_RANKS as RANK_OPTIONS,
+  USER_CATEGORIES,
+  type UserCategory,
+} from "@/lib/constants";
+import {
+  categoryFieldsMissing,
   isValidDate,
   isValidEmail,
   isValidPhone,
@@ -32,6 +37,10 @@ interface RegisterFormData {
   dojo: string;
   faculty: string;
   major: string;
+  category: UserCategory;
+  university: string;
+  school_name: string;
+  guardian_name: string;
   rank: string;
   last_grading_date: string;
   emergency_contact_name: string;
@@ -58,6 +67,10 @@ const buildSanitizedPayload = (data: RegisterFormData) => ({
   dojo: sanitizeTextInputForSubmission(data.dojo),
   faculty: sanitizeTextInputForSubmission(data.faculty),
   major: sanitizeTextInputForSubmission(data.major),
+  category: data.category,
+  university: sanitizeTextInputForSubmission(data.university),
+  school_name: sanitizeTextInputForSubmission(data.school_name),
+  guardian_name: sanitizeTextInputForSubmission(data.guardian_name),
   rank: sanitizeTextInputForSubmission(data.rank),
   last_grading_date: sanitizeDateInput(data.last_grading_date),
   emergency_contact_name: sanitizeTextInputForSubmission(
@@ -84,6 +97,10 @@ export default function RegisterForm() {
     dojo: "",
     faculty: "",
     major: "",
+    category: "regular",
+    university: "",
+    school_name: "",
+    guardian_name: "",
     rank: "",
     last_grading_date: "",
     emergency_contact_name: "",
@@ -97,6 +114,8 @@ export default function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
+  // UI-only: which student path is shown (wire category stays "student").
+  const [stillInSchool, setStillInSchool] = useState(false);
   const [dojoOpen, setDojoOpen] = useState(false);
   const [dojoSearch, setDojoSearch] = useState("");
   const dojoRef = useRef<HTMLDivElement>(null);
@@ -178,15 +197,35 @@ export default function RegisterForm() {
 
   const handleDojoSelect = (dojo: string) => {
     const sanitizedDojo = sanitizeTextInput(dojo);
-    setFormData((prev: RegisterFormData) => ({
-      ...prev,
-      dojo: sanitizedDojo,
-      // Hidden fields must not linger: leaving the UI dojo clears them.
-      faculty: isUIDojo(sanitizedDojo) ? prev.faculty : "",
-      major: isUIDojo(sanitizedDojo) ? prev.major : "",
-    }));
+    setFormData((prev: RegisterFormData) => ({ ...prev, dojo: sanitizedDojo }));
     setDojoSearch(sanitizedDojo);
     setDojoOpen(false);
+  };
+
+  const handleCategoryChange = (category: UserCategory) => {
+    setFormData((prev: RegisterFormData) => ({
+      ...prev,
+      category,
+      // Hidden category fields must not linger — clear them on switch.
+      university: "",
+      faculty: "",
+      major: "",
+      school_name: "",
+      guardian_name: "",
+    }));
+    setStillInSchool(false);
+  };
+
+  const handleStillInSchoolChange = (checked: boolean) => {
+    setStillInSchool(checked);
+    setFormData((prev: RegisterFormData) => ({
+      ...prev,
+      // One path is submitted: clear the group being hidden.
+      university: checked ? "" : prev.university,
+      faculty: checked ? "" : prev.faculty,
+      major: checked ? "" : prev.major,
+      school_name: checked ? prev.school_name : "",
+    }));
   };
 
   const handleTurnstileSuccess = (token: string) => {
@@ -319,11 +358,18 @@ export default function RegisterForm() {
       setError(t("error_major_too_long", { max: MAX_LENGTHS.major }));
       return false;
     }
+
+    // Category-conditional fields (mirrors server rule)
     if (
-      isUIDojo(formData.dojo) &&
-      (!formData.faculty.trim() || !formData.major.trim())
+      categoryFieldsMissing(formData.category, {
+        university: formData.university,
+        faculty: formData.faculty,
+        major: formData.major,
+        schoolName: formData.school_name,
+        guardianName: formData.guardian_name,
+      })
     ) {
-      setError(t("error_faculty_major_required"));
+      setError(t(`error_category_fields_${formData.category}`));
       return false;
     }
 
@@ -619,6 +665,161 @@ export default function RegisterForm() {
               {t("training_information")}
             </h2>
 
+            {/* Category — one per member, independent of dojo */}
+            <fieldset className="space-y-2">
+              <legend className="block text-sm font-medium text-gray-700">
+                {t("category")} <span className="text-red-500">*</span>
+              </legend>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {USER_CATEGORIES.map((c) => (
+                  <label
+                    key={c}
+                    className={`flex items-center gap-2 border rounded-sharp px-4 py-2.5 cursor-pointer transition-colors ${
+                      formData.category === c
+                        ? "border-ai ring-2 ring-ai/30 bg-ai/5"
+                        : "border-ink/20 hover:border-ai/40"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="category"
+                      value={c}
+                      checked={formData.category === c}
+                      onChange={() => handleCategoryChange(c)}
+                      className="text-ai focus:ring-ai"
+                    />
+                    <span className="text-sm text-gray-900">
+                      {t(`category_${c}`)}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            {/* Student: university group, or school name if still in school */}
+            {formData.category === "student" && (
+              <div className="space-y-4">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={stillInSchool}
+                    onChange={(e) =>
+                      handleStillInSchoolChange(e.target.checked)
+                    }
+                    className="mt-1 w-5 h-5 bg-white border-2 border-gray-300 rounded-sm text-ai focus:ring-2 focus:ring-ai focus:ring-offset-0 cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                    {t("student_still_in_school")}
+                  </span>
+                </label>
+
+                {stillInSchool ? (
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="school_name"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      {t("school_name")} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="school_name"
+                      name="school_name"
+                      value={formData.school_name}
+                      onChange={handleInputChange}
+                      maxLength={MAX_LENGTHS.schoolName}
+                      className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
+                      placeholder={t("school_name_placeholder") as string}
+                      autoComplete="off"
+                    />
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label
+                        htmlFor="university"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {t("university")} <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="university"
+                        name="university"
+                        value={formData.university}
+                        onChange={handleInputChange}
+                        maxLength={MAX_LENGTHS.university}
+                        className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
+                        placeholder={t("university_placeholder") as string}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label
+                        htmlFor="faculty"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {t("faculty")} <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="faculty"
+                        name="faculty"
+                        value={formData.faculty}
+                        onChange={handleInputChange}
+                        maxLength={MAX_LENGTHS.faculty}
+                        className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
+                        placeholder={t("faculty_placeholder") as string}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label
+                        htmlFor="major"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {t("major")} <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="major"
+                        name="major"
+                        value={formData.major}
+                        onChange={handleInputChange}
+                        maxLength={MAX_LENGTHS.major}
+                        className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
+                        placeholder={t("major_placeholder") as string}
+                        autoComplete="off"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Kids: parent/guardian name */}
+            {formData.category === "kids" && (
+              <div className="space-y-1">
+                <label
+                  htmlFor="guardian_name"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  {t("guardian_name")} <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="guardian_name"
+                  name="guardian_name"
+                  value={formData.guardian_name}
+                  onChange={handleInputChange}
+                  maxLength={MAX_LENGTHS.guardianName}
+                  className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
+                  placeholder={t("guardian_name_placeholder") as string}
+                  autoComplete="off"
+                />
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Dojo Dropdown */}
               <div className="space-y-1" ref={dojoRef}>
@@ -640,9 +841,6 @@ export default function RegisterForm() {
                       setFormData((prev) => ({
                         ...prev,
                         dojo: sanitizedValue,
-                        // Hidden fields must not linger: leaving the UI dojo clears them.
-                        faculty: isUIDojo(sanitizedValue) ? prev.faculty : "",
-                        major: isUIDojo(sanitizedValue) ? prev.major : "",
                       }));
                       setDojoOpen(true);
                     }}
@@ -694,50 +892,6 @@ export default function RegisterForm() {
                 </select>
                 <p className="text-xs text-gray-500">{t("rank_hint")}</p>
               </div>
-
-              {/* Faculty & Major — UI campus members only */}
-              {isUIDojo(formData.dojo) && (
-                <>
-                  <div className="space-y-1">
-                    <label
-                      htmlFor="faculty"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      {t("faculty")} <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="faculty"
-                      name="faculty"
-                      value={formData.faculty}
-                      onChange={handleInputChange}
-                      maxLength={MAX_LENGTHS.faculty}
-                      className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
-                      placeholder={t("faculty_placeholder") as string}
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label
-                      htmlFor="major"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      {t("major")} <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="major"
-                      name="major"
-                      value={formData.major}
-                      onChange={handleInputChange}
-                      maxLength={MAX_LENGTHS.major}
-                      className="w-full bg-white border border-ink/20 rounded-sharp px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-ai focus:border-transparent outline-hidden transition-all placeholder-gray-400"
-                      placeholder={t("major_placeholder") as string}
-                      autoComplete="off"
-                    />
-                  </div>
-                </>
-              )}
 
               <div className="space-y-1 md:col-span-2">
                 <label
