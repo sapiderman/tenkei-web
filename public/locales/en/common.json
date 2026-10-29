@@ -85,7 +85,7 @@
   "error_category_fields_regular": "Regular registrations must not include student or guardian fields.",
   "error_category_invalid": "Invalid registration category.",
   "faculty": "Department",
-  "faculty_placeholder": "e.g. Faculty of Engineering",
+  "faculty_placeholder": "e.g. Department of Engineering",
   "major": "Major",
   "major_placeholder": "e.g. Electronics",
   "current_rank": "Current Rank",
