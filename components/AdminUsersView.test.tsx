@@ -71,4 +71,22 @@ describe("AdminUsersView category badge", () => {
     expect(badge).toBeVisible();
     expect(badge).toHaveClass("bg-blue-100");
   });
+
+  it("falls back to the neutral chip for an unknown category", async () => {
+    adminListUsersMock.mockResolvedValue({
+      ok: true,
+      data: {
+        members: [{ ...MEMBER, category: "alumni" }],
+        total: 1,
+        page: 1,
+        size: 25,
+      },
+    });
+    render(<AdminUsersView lang="en" />);
+
+    const badge = await screen.findByText("category_alumni");
+    expect(badge).toHaveClass("bg-gray-100");
+    expect(badge).not.toHaveClass("bg-blue-100");
+    expect(badge).not.toHaveClass("bg-purple-100");
+  });
 });

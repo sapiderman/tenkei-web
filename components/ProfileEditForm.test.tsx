@@ -1,6 +1,12 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  cleanup,
+  waitFor,
+  fireEvent,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import type { ProfileResponse } from "@/lib/types";
@@ -55,6 +61,24 @@ const REGULAR_PROFILE: ProfileResponse = {
   major: "",
   category: "regular",
   university: "",
+};
+
+const KIDS_PROFILE: ProfileResponse = {
+  ...STUDENT_PROFILE,
+  category: "kids",
+  faculty: "",
+  major: "",
+  university: "",
+  guardian_name: "Ibu Sri",
+};
+
+const SCHOOL_PROFILE: ProfileResponse = {
+  ...STUDENT_PROFILE,
+  category: "student",
+  faculty: "",
+  major: "",
+  university: "",
+  school_name: "SMA Negeri 3 Jakarta",
 };
 
 beforeEach(() => {
@@ -113,6 +137,46 @@ describe("ProfileEditForm category block", () => {
       school_name: "",
       guardian_name: "",
     });
+  });
+
+  it("hydrates as kids and shows the guardian field", async () => {
+    getProfileMock.mockResolvedValue({ ok: true, profile: KIDS_PROFILE });
+    render(<ProfileEditForm lang="en" />);
+
+    const guardian = await screen.findByLabelText(/guardian_name/);
+    expect(guardian).toBeVisible();
+    expect(guardian).toHaveValue("Ibu Sri");
+    expect(screen.queryByLabelText(/university/)).toBeNull();
+    expect(screen.queryByLabelText(/school_name/)).toBeNull();
+  });
+
+  it("hydrates a still-in-school student from school_name", async () => {
+    getProfileMock.mockResolvedValue({ ok: true, profile: SCHOOL_PROFILE });
+    render(<ProfileEditForm lang="en" />);
+
+    expect(
+      await screen.findByRole("checkbox", { name: /student_still_in_school/ }),
+    ).toBeChecked();
+    expect(screen.getByLabelText(/school_name/)).toHaveValue(
+      "SMA Negeri 3 Jakarta",
+    );
+    expect(screen.queryByLabelText(/university/)).toBeNull();
+  });
+
+  it("university over the edit cap → inline error, nothing sent", async () => {
+    getProfileMock.mockResolvedValue({ ok: true, profile: STUDENT_PROFILE });
+    const user = userEvent.setup();
+    render(<ProfileEditForm lang="en" />);
+
+    const university = await screen.findByLabelText(/university/);
+    // fireEvent bypasses the DOM maxLength guard — validate() is the backstop.
+    fireEvent.change(university, { target: { value: "x".repeat(256) } });
+    await user.click(screen.getByRole("button", { name: "edit_profile_save" }));
+
+    expect(
+      await screen.findByText("edit_profile_error_too_long"),
+    ).toBeVisible();
+    expect(updateProfileMock).not.toHaveBeenCalled();
   });
 
   it("a server 400 surfaces as a form error", async () => {

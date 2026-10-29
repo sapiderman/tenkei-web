@@ -79,6 +79,15 @@ const REGULAR_PROFILE: ProfileResponse = {
   university: "",
 };
 
+const KIDS_PROFILE: ProfileResponse = {
+  ...STUDENT_PROFILE,
+  category: "kids",
+  faculty: "",
+  major: "",
+  university: "",
+  guardian_name: "Ibu Sri",
+};
+
 beforeEach(() => {
   adminGetUserMock.mockReset();
   adminUpdateUserMock.mockReset();
@@ -86,6 +95,16 @@ beforeEach(() => {
 });
 
 describe("AdminUserDetailView category block", () => {
+  it("hydrates as kids and shows the guardian field", async () => {
+    adminGetUserMock.mockResolvedValue({ ok: true, profile: KIDS_PROFILE });
+    render(<AdminUserDetailView lang="en" id="1" />);
+
+    const guardian = await screen.findByLabelText(/guardian_name/);
+    expect(guardian).toBeVisible();
+    expect(guardian).toHaveValue("Ibu Sri");
+    expect(screen.queryByLabelText(/university/)).toBeNull();
+    expect(screen.queryByLabelText(/school_name/)).toBeNull();
+  });
   it("switching to regular clears the block and submits empty strings", async () => {
     adminGetUserMock.mockResolvedValue({ ok: true, profile: STUDENT_PROFILE });
     adminUpdateUserMock.mockResolvedValue({ ok: true });

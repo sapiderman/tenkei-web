@@ -101,6 +101,25 @@ describe("RegisterForm category selector", () => {
     expect(screen.queryByLabelText(/student_still_in_school/)).toBeNull();
   });
 
+  it("switching categories clears the hidden fields", async () => {
+    const user = userEvent.setup();
+    render(<RegisterForm />);
+
+    await user.click(screen.getByRole("radio", { name: "category_student" }));
+    await user.type(screen.getByLabelText(/^university/), "UI");
+
+    await user.click(screen.getByRole("radio", { name: "category_kids" }));
+    await user.click(screen.getByRole("radio", { name: "category_student" }));
+
+    // Cleared on switch — the hidden value must not resurface.
+    expect(screen.getByLabelText(/^university/)).toHaveValue("");
+    expect(screen.getByLabelText(/^faculty/)).toHaveValue("");
+    expect(screen.getByLabelText(/^major/)).toHaveValue("");
+    expect(
+      screen.getByRole("checkbox", { name: /student_still_in_school/ }),
+    ).not.toBeChecked();
+  });
+
   it("the still-in-school checkbox swaps the university group for school name", async () => {
     const user = userEvent.setup();
     render(<RegisterForm />);
@@ -154,6 +173,25 @@ describe("RegisterForm category validation", () => {
     await user.click(submitButton());
 
     expect(await screen.findByText("error_category_fields_kids")).toBeVisible();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("student still-in-school with an empty school name → inline error, nothing sent", async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    render(<RegisterForm />);
+
+    await user.click(screen.getByRole("radio", { name: "category_student" }));
+    await user.click(
+      screen.getByRole("checkbox", { name: /student_still_in_school/ }),
+    );
+    await fillRequired(user);
+    await user.click(submitButton());
+
+    expect(
+      await screen.findByText("error_category_fields_student"),
+    ).toBeVisible();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
