@@ -16,6 +16,9 @@ export const MAX_LENGTHS = {
   dojo: 100,
   faculty: 100,
   major: 100,
+  university: 255,
+  schoolName: 255,
+  guardianName: 100,
 } as const;
 
 /**
@@ -29,6 +32,9 @@ export const EDIT_MAX_LENGTHS = {
   dojo: 255,
   faculty: 100,
   major: 100,
+  university: 255,
+  schoolName: 255,
+  guardianName: 100,
   whatsapp: 20,
   emergencyContactName: 255,
   emergencyContactNumber: 50,
@@ -82,4 +88,59 @@ export function isValidDate(dateStr: string): boolean {
   today.setHours(0, 0, 0, 0);
 
   return candidate <= today;
+}
+
+/**
+ * Reports whether the category's required fields are absent or disallowed
+ * fields are filled (fail-closed on any mismatch). Hand-mirrored from the Go
+ * predicate types.CategoryFieldsMissing (tenkei-backend internal/types/user.go)
+ * — keep the two in sync branch-for-branch.
+ */
+export function categoryFieldsMissing(
+  category: string,
+  f: {
+    university: string;
+    faculty: string;
+    major: string;
+    schoolName: string;
+    guardianName: string;
+  },
+): boolean {
+  const filled = (s: string) => s !== "";
+  switch (category) {
+    case "regular":
+      return (
+        filled(f.university) ||
+        filled(f.faculty) ||
+        filled(f.major) ||
+        filled(f.schoolName) ||
+        filled(f.guardianName)
+      );
+    case "student": {
+      // Exactly one path: university+faculty+major, or schoolName alone.
+      const universityPath =
+        filled(f.university) &&
+        filled(f.faculty) &&
+        filled(f.major) &&
+        !filled(f.schoolName) &&
+        !filled(f.guardianName);
+      const schoolPath =
+        filled(f.schoolName) &&
+        !filled(f.university) &&
+        !filled(f.faculty) &&
+        !filled(f.major) &&
+        !filled(f.guardianName);
+      return !(universityPath || schoolPath);
+    }
+    case "kids":
+      return (
+        !filled(f.guardianName) ||
+        filled(f.university) ||
+        filled(f.faculty) ||
+        filled(f.major) ||
+        filled(f.schoolName)
+      );
+    default:
+      return true;
+  }
 }

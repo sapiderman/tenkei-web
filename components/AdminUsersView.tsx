@@ -12,6 +12,13 @@ import type { UserSummary } from "@/lib/types";
 const PAGE_SIZES = [10, 25, 50, 100];
 const SEARCH_DEBOUNCE_MS = 300;
 
+// Badge tint per user category (new-category.prd).
+const CATEGORY_CHIP: Record<string, string> = {
+  regular: "bg-gray-100 text-gray-800",
+  student: "bg-blue-100 text-blue-800",
+  kids: "bg-purple-100 text-purple-800",
+};
+
 export default function AdminUsersView({ lang }: { lang: string }) {
   const { t } = useTranslation(lang, "common");
   const router = useRouter();
@@ -191,6 +198,7 @@ export default function AdminUsersView({ lang }: { lang: string }) {
                     <th className="py-2 pr-3 font-medium">
                       {t("admin_col_dojo")}
                     </th>
+                    <th className="py-2 pr-3 font-medium">{t("category")}</th>
                     <th className="py-2 pr-3 font-medium">
                       {t("admin_col_role")}
                     </th>
@@ -222,6 +230,13 @@ export default function AdminUsersView({ lang }: { lang: string }) {
                           {u.whatsapp}
                         </td>
                         <td className="py-2 pr-3 text-gray-700">{u.dojo}</td>
+                        <td className="py-2 pr-3">
+                          <span
+                            className={`inline-block px-2 py-0.5 text-xs rounded-full ${CATEGORY_CHIP[u.category] ?? "bg-gray-100 text-gray-800"}`}
+                          >
+                            {t(`category_${u.category}`)}
+                          </span>
+                        </td>
                         <td className="py-2 pr-3 text-gray-700">
                           {t(`admin_role_${u.role}`)}
                         </td>
