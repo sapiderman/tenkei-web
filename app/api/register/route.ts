@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import sanitizeHtml from "sanitize-html";
 import { isRateLimited, isValidTurnstileToken } from "../auth/_lib";
-import { VALID_RANKS, isUIDojo } from "@/lib/constants";
+import { VALID_RANKS, USER_CATEGORIES } from "@/lib/constants";
 import {
+  categoryFieldsMissing,
   isValidDate,
   isValidEmail,
   isValidPhone,
@@ -43,6 +44,10 @@ interface RegistrationBody {
   dojo?: unknown;
   faculty?: unknown;
   major?: unknown;
+  category?: unknown;
+  university?: unknown;
+  school_name?: unknown;
+  guardian_name?: unknown;
   rank?: unknown;
   last_grading_date?: unknown;
   emergency_contact_name?: unknown;
@@ -115,6 +120,11 @@ export async function POST(request: Request) {
     // Faculty/Major: free text, sanitized the same way
     const faculty = sanitizeString(body.faculty);
     const major = sanitizeString(body.major);
+    // Category block: category + conditional fields (new-category.prd)
+    const category = sanitizeString(body.category);
+    const university = sanitizeString(body.university);
+    const schoolName = sanitizeString(body.school_name);
+    const guardianName = sanitizeString(body.guardian_name);
 
     const rank = sanitizeString(body.rank);
     const lastGradingDate = sanitizeString(body.last_grading_date);
@@ -236,15 +246,81 @@ export async function POST(request: Request) {
       );
     }
 
-    // Faculty/Major: mandatory for the UI campus dojo (mirror of backend rule)
-    if (isUIDojo(dojo) && (!faculty || !major)) {
+    // Category-conditional fields (dojo-independent). Empty category defaults
+    // to "regular" so forms that predate categories keep working (backend
+    // rollout option a); any other invalid value is rejected.
+    const effectiveCategory = category || "regular";
+    if (!(USER_CATEGORIES as readonly string[]).includes(effectiveCategory)) {
+      return NextResponse.json(
+        { error: "Invalid registration category." },
+        { status: 400 },
+      );
+    }
+
+    if (university.length > MAX_LENGTHS.university) {
       return NextResponse.json(
         {
-          error:
-            "Faculty and major are required for Tenkei Universitas Indonesia registrations",
+          error: `University is too long (max ${MAX_LENGTHS.university} characters)`,
         },
         { status: 400 },
       );
+    }
+
+    if (schoolName.length > MAX_LENGTHS.schoolName) {
+      return NextResponse.json(
+        {
+          error: `School name is too long (max ${MAX_LENGTHS.schoolName} characters)`,
+        },
+        { status: 400 },
+      );
+    }
+
+    if (guardianName.length > MAX_LENGTHS.guardianName) {
+      return NextResponse.json(
+        {
+          error: `Guardian name is too long (max ${MAX_LENGTHS.guardianName} characters)`,
+        },
+        { status: 400 },
+      );
+    }
+
+    // Mirror of backend types.CategoryFieldsMissing — same per-category
+    // messages the Go backend returns.
+    if (
+      categoryFieldsMissing(effectiveCategory, {
+        university,
+        faculty,
+        major,
+        schoolName,
+        guardianName,
+      })
+    ) {
+      switch (effectiveCategory) {
+        case "student":
+          return NextResponse.json(
+            {
+              error:
+                "University, department, and major are required for student registrations (or school name if still in school).",
+            },
+            { status: 400 },
+          );
+        case "kids":
+          return NextResponse.json(
+            {
+              error:
+                "Parent or guardian name is required for kids registrations.",
+            },
+            { status: 400 },
+          );
+        default:
+          return NextResponse.json(
+            {
+              error:
+                "Regular registrations must not include student or guardian fields.",
+            },
+            { status: 400 },
+          );
+      }
     }
 
     // 5. Format validation
@@ -319,6 +395,10 @@ export async function POST(request: Request) {
       dojo,
       faculty,
       major,
+      category: effectiveCategory,
+      university,
+      school_name: schoolName,
+      guardian_name: guardianName,
       rank,
       last_grading_date: lastGradingDate,
       emergency_contact_name: emergencyContactName,

@@ -12,8 +12,9 @@ import {
   adminChangeRole,
   type AdminMutationResult,
 } from "@/lib/api-client";
-import { VALID_RANKS, isUIDojo } from "@/lib/constants";
+import { VALID_RANKS, USER_CATEGORIES } from "@/lib/constants";
 import {
+  categoryFieldsMissing,
   isValidDate,
   isValidEmail,
   isValidPhone,
@@ -22,9 +23,9 @@ import {
 import type { ProfileResponse } from "@/lib/types";
 
 /** The editable field whitelist — matches backend UpdateProfileRequest
- * (name, email, whatsapp, date_of_birth, dojo, faculty, major, rank,
- *  last_grading_date, medical_conditions, emergency_contact_name,
- *  emergency_contact_number).
+ * (name, email, whatsapp, date_of_birth, dojo, category, university, faculty,
+ *  major, school_name, guardian_name, rank, last_grading_date,
+ *  medical_conditions, emergency_contact_name, emergency_contact_number).
  *  role/id/join_date are read-only, and consent_* is registration-mandated
  *  so it is never editable here (nor sent on update). */
 
@@ -41,6 +42,10 @@ function toForm(p: ProfileResponse): FormState {
     dojo: p.dojo,
     faculty: p.faculty ?? "",
     major: p.major ?? "",
+    category: p.category,
+    university: p.university ?? "",
+    school_name: p.school_name ?? "",
+    guardian_name: p.guardian_name ?? "",
     rank: p.rank,
     last_grading_date: p.last_grading_date,
     medical_conditions: p.medical_conditions,
@@ -62,6 +67,8 @@ export default function AdminUserDetailView({
 
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [form, setForm] = useState<FormState>({});
+  // UI-only: which student path is shown (wire category stays "student").
+  const [stillInSchool, setStillInSchool] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [loadError, setLoadError] = useState(false);
@@ -88,6 +95,7 @@ export default function AdminUserDetailView({
       setProfile(result.profile);
       setForm(toForm(result.profile));
       setNewRole(result.profile.role);
+      setStillInSchool(Boolean(result.profile.school_name));
       return true;
     }
     if (result.status === 401) {
@@ -106,6 +114,7 @@ export default function AdminUserDetailView({
         setProfile(result.profile);
         setForm(toForm(result.profile));
         setNewRole(result.profile.role);
+        setStillInSchool(Boolean(result.profile.school_name));
       } else if (result.status === 401) {
         router.replace(`/${lang}/login?expired=1`);
         return;
@@ -125,6 +134,33 @@ export default function AdminUserDetailView({
     setForm((f) => ({ ...f, [field]: value }));
   }
 
+  /** Category block is atomic: switching clears every conditional field
+   * (empty string clears server-side) — same semantics as ProfileEditForm. */
+  function handleCategoryChange(category: string) {
+    setForm((f) => ({
+      ...f,
+      category,
+      university: "",
+      faculty: "",
+      major: "",
+      school_name: "",
+      guardian_name: "",
+    }));
+    setStillInSchool(false);
+  }
+
+  /** One student path is submitted: clear the group being hidden. */
+  function handleStillInSchoolChange(checked: boolean) {
+    setStillInSchool(checked);
+    setForm((f) => ({
+      ...f,
+      university: checked ? "" : f.university,
+      faculty: checked ? "" : f.faculty,
+      major: checked ? "" : f.major,
+      school_name: checked ? f.school_name : "",
+    }));
+  }
+
   /** Client-side UX validation — reuses the shared lib/validation.ts (the same
    * single source of truth as RegisterForm). The backend remains the authority
    * and re-validates; this just fails fast before the round-trip. */
@@ -136,6 +172,10 @@ export default function AdminUserDetailView({
     const dojo = String(form.dojo ?? "");
     const faculty = String(form.faculty ?? "");
     const major = String(form.major ?? "");
+    const category = String(form.category ?? "");
+    const university = String(form.university ?? "");
+    const schoolName = String(form.school_name ?? "");
+    const guardianName = String(form.guardian_name ?? "");
     const lgd = String(form.last_grading_date ?? "");
     const ecName = String(form.emergency_contact_name ?? "");
     const ecNum = String(form.emergency_contact_number ?? "");
@@ -160,9 +200,26 @@ export default function AdminUserDetailView({
       return `Faculty is too long (max ${MAX_LENGTHS.faculty} characters)`;
     if (major.length > MAX_LENGTHS.major)
       return `Major is too long (max ${MAX_LENGTHS.major} characters)`;
-    // Mirror of the backend rule: UI campus members carry both fields.
-    if (isUIDojo(dojo) && (!faculty.trim() || !major.trim()))
-      return "Faculty and major are required for Tenkei Universitas Indonesia members";
+    if (university.length > MAX_LENGTHS.university)
+      return `University is too long (max ${MAX_LENGTHS.university} characters)`;
+    if (schoolName.length > MAX_LENGTHS.schoolName)
+      return `School name is too long (max ${MAX_LENGTHS.schoolName} characters)`;
+    if (guardianName.length > MAX_LENGTHS.guardianName)
+      return `Guardian name is too long (max ${MAX_LENGTHS.guardianName} characters)`;
+    // Category-conditional fields — same shared rule as RegisterForm,
+    // ProfileEditForm and the backend (atomic block, empty string clears).
+    if (!(USER_CATEGORIES as readonly string[]).includes(category))
+      return t("error_category_invalid");
+    if (
+      categoryFieldsMissing(category, {
+        university,
+        faculty,
+        major,
+        schoolName,
+        guardianName,
+      })
+    )
+      return t(`error_category_fields_${category}`);
     if (lgd && !isValidDate(lgd))
       return "Please enter a valid last grading date";
     if (ecName.length > MAX_LENGTHS.emergencyContactName)
@@ -476,39 +533,117 @@ export default function AdminUserDetailView({
             />
           </div>
 
-          <div>
-            <label className={labelCls} htmlFor="f-faculty">
-              {t("faculty")}
-              {isUIDojo((form.dojo as string) || "") && (
-                <span className="text-red-500"> *</span>
-              )}
-            </label>
-            <input
-              id="f-faculty"
-              type="text"
-              value={(form.faculty as string) || ""}
-              onChange={(e) => update("faculty", e.target.value)}
-              maxLength={MAX_LENGTHS.faculty}
-              className={inputCls}
-            />
-          </div>
+          {/* Category — atomic block, independent of dojo (new-category.prd) */}
+          <fieldset>
+            <legend className={labelCls}>{t("category")}</legend>
+            <div className="flex flex-wrap gap-3">
+              {USER_CATEGORIES.map((c) => (
+                <label key={c} className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="category"
+                    value={c}
+                    checked={(form.category as string) === c}
+                    onChange={() => handleCategoryChange(c)}
+                    className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm">{t(`category_${c}`)}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
-          <div>
-            <label className={labelCls} htmlFor="f-major">
-              {t("major")}
-              {isUIDojo((form.dojo as string) || "") && (
-                <span className="text-red-500"> *</span>
+          {/* Student: university group, or school name if still in school */}
+          {(form.category as string) === "student" && (
+            <>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={stillInSchool}
+                  onChange={(e) => handleStillInSchoolChange(e.target.checked)}
+                  className="h-4 w-4 rounded-sm border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="text-sm">{t("student_still_in_school")}</span>
+              </label>
+
+              {stillInSchool ? (
+                <div>
+                  <label className={labelCls} htmlFor="f-school-name">
+                    {t("school_name")}
+                  </label>
+                  <input
+                    id="f-school-name"
+                    type="text"
+                    value={(form.school_name as string) || ""}
+                    onChange={(e) => update("school_name", e.target.value)}
+                    maxLength={MAX_LENGTHS.schoolName}
+                    className={inputCls}
+                  />
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <label className={labelCls} htmlFor="f-university">
+                      {t("university")}
+                    </label>
+                    <input
+                      id="f-university"
+                      type="text"
+                      value={(form.university as string) || ""}
+                      onChange={(e) => update("university", e.target.value)}
+                      maxLength={MAX_LENGTHS.university}
+                      className={inputCls}
+                    />
+                  </div>
+
+                  <div>
+                    <label className={labelCls} htmlFor="f-faculty">
+                      {t("faculty")}
+                    </label>
+                    <input
+                      id="f-faculty"
+                      type="text"
+                      value={(form.faculty as string) || ""}
+                      onChange={(e) => update("faculty", e.target.value)}
+                      maxLength={MAX_LENGTHS.faculty}
+                      className={inputCls}
+                    />
+                  </div>
+
+                  <div>
+                    <label className={labelCls} htmlFor="f-major">
+                      {t("major")}
+                    </label>
+                    <input
+                      id="f-major"
+                      type="text"
+                      value={(form.major as string) || ""}
+                      onChange={(e) => update("major", e.target.value)}
+                      maxLength={MAX_LENGTHS.major}
+                      className={inputCls}
+                    />
+                  </div>
+                </>
               )}
-            </label>
-            <input
-              id="f-major"
-              type="text"
-              value={(form.major as string) || ""}
-              onChange={(e) => update("major", e.target.value)}
-              maxLength={MAX_LENGTHS.major}
-              className={inputCls}
-            />
-          </div>
+            </>
+          )}
+
+          {/* Kids: parent/guardian name */}
+          {(form.category as string) === "kids" && (
+            <div>
+              <label className={labelCls} htmlFor="f-guardian-name">
+                {t("guardian_name")}
+              </label>
+              <input
+                id="f-guardian-name"
+                type="text"
+                value={(form.guardian_name as string) || ""}
+                onChange={(e) => update("guardian_name", e.target.value)}
+                maxLength={MAX_LENGTHS.guardianName}
+                className={inputCls}
+              />
+            </div>
+          )}
 
           <div>
             <label className={labelCls} htmlFor="f-rank">

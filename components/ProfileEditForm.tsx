@@ -7,14 +7,19 @@ import { getProfile, updateProfile } from "@/lib/api-client";
 import type { ProfileResponse } from "@/lib/types";
 // EDIT_MAX_LENGTHS mirrors the backend PUT profile caps, which are looser
 // than registration. See lib/validation.ts.
-import { EDIT_MAX_LENGTHS, isValidDate, isValidPhone } from "@/lib/validation";
+import {
+  categoryFieldsMissing,
+  EDIT_MAX_LENGTHS,
+  isValidDate,
+  isValidPhone,
+} from "@/lib/validation";
 import {
   sanitizeDateInput,
   sanitizePhoneInput,
   sanitizeTextInput,
   sanitizeTextInputForSubmission,
 } from "@/lib/sanitize";
-import { VALID_RANKS, isUIDojo } from "@/lib/constants";
+import { VALID_RANKS, USER_CATEGORIES, type UserCategory } from "@/lib/constants";
 
 interface Props {
   lang: string;
@@ -27,6 +32,10 @@ interface EditFormData {
   dojo: string;
   faculty: string;
   major: string;
+  category: string;
+  university: string;
+  schoolName: string;
+  guardianName: string;
   rank: string;
   lastGradingDate: string;
   medicalConditions: string;
@@ -42,6 +51,10 @@ const EMPTY_FORM: EditFormData = {
   dojo: "",
   faculty: "",
   major: "",
+  category: "regular",
+  university: "",
+  schoolName: "",
+  guardianName: "",
   rank: "",
   lastGradingDate: "",
   medicalConditions: "",
@@ -61,6 +74,8 @@ export default function ProfileEditForm({ lang }: Props) {
 
   // Editable fields
   const [formData, setFormData] = useState<EditFormData>(EMPTY_FORM);
+  // UI-only: which student path is shown (wire category stays "student").
+  const [stillInSchool, setStillInSchool] = useState(false);
 
   // Locked (read-only display)
   const [email, setEmail] = useState("");
@@ -94,6 +109,32 @@ export default function ProfileEditForm({ lang }: Props) {
       [key]: typeof value === "string" ? sanitizeField(key, value) : value,
     }));
 
+  const handleCategoryChange = (category: UserCategory) => {
+    setFormData((prev) => ({
+      ...prev,
+      category,
+      // Hidden category fields must not linger — clear them on switch.
+      university: "",
+      faculty: "",
+      major: "",
+      schoolName: "",
+      guardianName: "",
+    }));
+    setStillInSchool(false);
+  };
+
+  const handleStillInSchoolChange = (checked: boolean) => {
+    setStillInSchool(checked);
+    setFormData((prev) => ({
+      ...prev,
+      // One path is submitted: clear the group being hidden.
+      university: checked ? "" : prev.university,
+      faculty: checked ? "" : prev.faculty,
+      major: checked ? "" : prev.major,
+      schoolName: checked ? prev.schoolName : "",
+    }));
+  };
+
   useEffect(() => {
     let cancelled = false;
 
@@ -110,6 +151,10 @@ export default function ProfileEditForm({ lang }: Props) {
           dojo: p.dojo,
           faculty: p.faculty ?? "",
           major: p.major ?? "",
+          category: p.category,
+          university: p.university ?? "",
+          schoolName: p.school_name ?? "",
+          guardianName: p.guardian_name ?? "",
           rank: p.rank,
           lastGradingDate: p.last_grading_date,
           medicalConditions: p.medical_conditions,
@@ -118,6 +163,7 @@ export default function ProfileEditForm({ lang }: Props) {
           whatsapp: p.whatsapp ?? "",
           consentMarketing: p.consent_marketing,
         });
+        setStillInSchool(Boolean(p.school_name));
         setEmail(p.email);
         setConsentDatastore(p.consent_datastore);
       } else if (result.status === 401) {
@@ -146,6 +192,10 @@ export default function ProfileEditForm({ lang }: Props) {
       dojo,
       faculty,
       major,
+      category,
+      university,
+      schoolName,
+      guardianName,
       rank,
       lastGradingDate,
       medicalConditions,
@@ -155,7 +205,8 @@ export default function ProfileEditForm({ lang }: Props) {
 
     // Backend ignores empty strings (partial update on `!= ""`), so clearing an
     // optional field that had a value would silently no-op. Block it up front
-    // (plan decision (a): no "clear" affordance).
+    // (plan decision (a): no "clear" affordance). The category block is exempt:
+    // it is submitted atomically, so clearing is legal there.
     const cannotClear = (orig: string | undefined | null, cur: string) =>
       (orig ?? "").trim() !== "" && cur.trim() === "";
     if (cannotClear(profile.whatsapp, whatsapp))
@@ -164,10 +215,6 @@ export default function ProfileEditForm({ lang }: Props) {
       errors.date_of_birth = t("edit_profile_error_cannot_clear");
     if (cannotClear(profile.dojo, dojo))
       errors.dojo = t("edit_profile_error_cannot_clear");
-    if (cannotClear(profile.faculty, faculty))
-      errors.faculty = t("edit_profile_error_cannot_clear");
-    if (cannotClear(profile.major, major))
-      errors.major = t("edit_profile_error_cannot_clear");
     if (cannotClear(profile.rank, rank))
       errors.rank = t("edit_profile_error_cannot_clear");
     if (cannotClear(profile.last_grading_date, lastGradingDate))
@@ -192,12 +239,27 @@ export default function ProfileEditForm({ lang }: Props) {
       errors.faculty = t("edit_profile_error_too_long");
     if (major.length > EDIT_MAX_LENGTHS.major)
       errors.major = t("edit_profile_error_too_long");
+    if (university.length > EDIT_MAX_LENGTHS.university)
+      errors.university = t("edit_profile_error_too_long");
+    if (schoolName.length > EDIT_MAX_LENGTHS.schoolName)
+      errors.school_name = t("edit_profile_error_too_long");
+    if (guardianName.length > EDIT_MAX_LENGTHS.guardianName)
+      errors.guardian_name = t("edit_profile_error_too_long");
 
-    // UI campus members must keep both filled (mirrors the backend rule).
-    if (isUIDojo(dojo) && !faculty.trim())
-      errors.faculty = t("edit_profile_error_required");
-    if (isUIDojo(dojo) && !major.trim())
-      errors.major = t("edit_profile_error_required");
+    // Category block (submitted atomically): required/forbidden fields per
+    // category — same shared rule as RegisterForm and the backend.
+    if (!(USER_CATEGORIES as readonly string[]).includes(category))
+      errors.category = t("error_category_invalid");
+    else if (
+      categoryFieldsMissing(category, {
+        university,
+        faculty,
+        major,
+        schoolName,
+        guardianName,
+      })
+    )
+      errors.category = t(`error_category_fields_${category}`);
 
     if (rank && !VALID_RANKS.includes(rank))
       errors.rank = t("edit_profile_error_invalid_rank");
@@ -241,6 +303,12 @@ export default function ProfileEditForm({ lang }: Props) {
       dojo: sanitizeTextInputForSubmission(formData.dojo),
       faculty: sanitizeTextInputForSubmission(formData.faculty),
       major: sanitizeTextInputForSubmission(formData.major),
+      // Category block is atomic: present category makes the whole block
+      // authoritative (empty strings clear the column server-side).
+      category: formData.category,
+      university: sanitizeTextInputForSubmission(formData.university),
+      school_name: sanitizeTextInputForSubmission(formData.schoolName),
+      guardian_name: sanitizeTextInputForSubmission(formData.guardianName),
       rank: sanitizeTextInputForSubmission(formData.rank),
       last_grading_date: sanitizeDateInput(formData.lastGradingDate),
       medical_conditions: sanitizeTextInputForSubmission(
@@ -434,6 +502,220 @@ export default function ProfileEditForm({ lang }: Props) {
             )}
           </div>
 
+          {/* Category — atomic block, independent of dojo */}
+          <fieldset
+            aria-describedby={
+              fieldErrors.category ? "category-error" : undefined
+            }
+          >
+            <legend className="block text-sm font-medium mb-1">
+              {t("category")}
+            </legend>
+            <div className="flex flex-wrap gap-3">
+              {USER_CATEGORIES.map((c) => (
+                <label key={c} className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="category"
+                    value={c}
+                    checked={formData.category === c}
+                    onChange={() => handleCategoryChange(c)}
+                    disabled={saving}
+                    className="h-4 w-4 border-gray-300 text-ai focus:ring-ai"
+                  />
+                  <span className="text-sm">{t(`category_${c}`)}</span>
+                </label>
+              ))}
+            </div>
+            {fieldErrors.category && (
+              <p
+                id="category-error"
+                className="mt-1 text-sm text-red-600"
+                role="alert"
+              >
+                {fieldErrors.category}
+              </p>
+            )}
+          </fieldset>
+
+          {/* Student: university group, or school name if still in school */}
+          {formData.category === "student" && (
+            <>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={stillInSchool}
+                  onChange={(e) => handleStillInSchoolChange(e.target.checked)}
+                  disabled={saving}
+                  className="h-4 w-4 rounded-sm border-gray-300 text-ai focus:ring-ai"
+                />
+                <span className="text-sm">{t("student_still_in_school")}</span>
+              </label>
+
+              {stillInSchool ? (
+                <div>
+                  <label
+                    htmlFor="school_name"
+                    className="block text-sm font-medium mb-1"
+                  >
+                    {t("school_name")}
+                  </label>
+                  <input
+                    id="school_name"
+                    type="text"
+                    value={formData.schoolName}
+                    onChange={(e) => setField("schoolName", e.target.value)}
+                    maxLength={EDIT_MAX_LENGTHS.schoolName}
+                    disabled={saving}
+                    aria-invalid={!!fieldErrors.school_name}
+                    aria-describedby={
+                      fieldErrors.school_name ? "school_name-error" : undefined
+                    }
+                    className={fieldClass(!!fieldErrors.school_name)}
+                  />
+                  {fieldErrors.school_name && (
+                    <p
+                      id="school_name-error"
+                      className="mt-1 text-sm text-red-600"
+                      role="alert"
+                    >
+                      {fieldErrors.school_name}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <label
+                      htmlFor="university"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      {t("university")}
+                    </label>
+                    <input
+                      id="university"
+                      type="text"
+                      value={formData.university}
+                      onChange={(e) => setField("university", e.target.value)}
+                      maxLength={EDIT_MAX_LENGTHS.university}
+                      disabled={saving}
+                      aria-invalid={!!fieldErrors.university}
+                      aria-describedby={
+                        fieldErrors.university ? "university-error" : undefined
+                      }
+                      className={fieldClass(!!fieldErrors.university)}
+                    />
+                    {fieldErrors.university && (
+                      <p
+                        id="university-error"
+                        className="mt-1 text-sm text-red-600"
+                        role="alert"
+                      >
+                        {fieldErrors.university}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="faculty"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      {t("profile_faculty")}
+                    </label>
+                    <input
+                      id="faculty"
+                      type="text"
+                      value={formData.faculty}
+                      onChange={(e) => setField("faculty", e.target.value)}
+                      maxLength={EDIT_MAX_LENGTHS.faculty}
+                      disabled={saving}
+                      aria-invalid={!!fieldErrors.faculty}
+                      aria-describedby={
+                        fieldErrors.faculty ? "faculty-error" : undefined
+                      }
+                      className={fieldClass(!!fieldErrors.faculty)}
+                    />
+                    {fieldErrors.faculty && (
+                      <p
+                        id="faculty-error"
+                        className="mt-1 text-sm text-red-600"
+                        role="alert"
+                      >
+                        {fieldErrors.faculty}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="major"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      {t("profile_major")}
+                    </label>
+                    <input
+                      id="major"
+                      type="text"
+                      value={formData.major}
+                      onChange={(e) => setField("major", e.target.value)}
+                      maxLength={EDIT_MAX_LENGTHS.major}
+                      disabled={saving}
+                      aria-invalid={!!fieldErrors.major}
+                      aria-describedby={
+                        fieldErrors.major ? "major-error" : undefined
+                      }
+                      className={fieldClass(!!fieldErrors.major)}
+                    />
+                    {fieldErrors.major && (
+                      <p
+                        id="major-error"
+                        className="mt-1 text-sm text-red-600"
+                        role="alert"
+                      >
+                        {fieldErrors.major}
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
+            </>
+          )}
+
+          {/* Kids: parent/guardian name */}
+          {formData.category === "kids" && (
+            <div>
+              <label
+                htmlFor="guardian_name"
+                className="block text-sm font-medium mb-1"
+              >
+                {t("guardian_name")}
+              </label>
+              <input
+                id="guardian_name"
+                type="text"
+                value={formData.guardianName}
+                onChange={(e) => setField("guardianName", e.target.value)}
+                maxLength={EDIT_MAX_LENGTHS.guardianName}
+                disabled={saving}
+                aria-invalid={!!fieldErrors.guardian_name}
+                aria-describedby={
+                  fieldErrors.guardian_name ? "guardian_name-error" : undefined
+                }
+                className={fieldClass(!!fieldErrors.guardian_name)}
+              />
+              {fieldErrors.guardian_name && (
+                <p
+                  id="guardian_name-error"
+                  className="mt-1 text-sm text-red-600"
+                  role="alert"
+                >
+                  {fieldErrors.guardian_name}
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Dojo */}
           <div>
             <label htmlFor="dojo" className="block text-sm font-medium mb-1">
@@ -457,68 +739,6 @@ export default function ProfileEditForm({ lang }: Props) {
                 role="alert"
               >
                 {fieldErrors.dojo}
-              </p>
-            )}
-          </div>
-
-          {/* Faculty */}
-          <div>
-            <label htmlFor="faculty" className="block text-sm font-medium mb-1">
-              {t("profile_faculty")}
-              {isUIDojo(formData.dojo) && (
-                <span className="text-red-500"> *</span>
-              )}
-            </label>
-            <input
-              id="faculty"
-              type="text"
-              value={formData.faculty}
-              onChange={(e) => setField("faculty", e.target.value)}
-              maxLength={EDIT_MAX_LENGTHS.faculty}
-              disabled={saving}
-              aria-invalid={!!fieldErrors.faculty}
-              aria-describedby={
-                fieldErrors.faculty ? "faculty-error" : undefined
-              }
-              className={fieldClass(!!fieldErrors.faculty)}
-            />
-            {fieldErrors.faculty && (
-              <p
-                id="faculty-error"
-                className="mt-1 text-sm text-red-600"
-                role="alert"
-              >
-                {fieldErrors.faculty}
-              </p>
-            )}
-          </div>
-
-          {/* Major */}
-          <div>
-            <label htmlFor="major" className="block text-sm font-medium mb-1">
-              {t("profile_major")}
-              {isUIDojo(formData.dojo) && (
-                <span className="text-red-500"> *</span>
-              )}
-            </label>
-            <input
-              id="major"
-              type="text"
-              value={formData.major}
-              onChange={(e) => setField("major", e.target.value)}
-              maxLength={EDIT_MAX_LENGTHS.major}
-              disabled={saving}
-              aria-invalid={!!fieldErrors.major}
-              aria-describedby={fieldErrors.major ? "major-error" : undefined}
-              className={fieldClass(!!fieldErrors.major)}
-            />
-            {fieldErrors.major && (
-              <p
-                id="major-error"
-                className="mt-1 text-sm text-red-600"
-                role="alert"
-              >
-                {fieldErrors.major}
               </p>
             )}
           </div>

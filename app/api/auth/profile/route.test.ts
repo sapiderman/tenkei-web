@@ -297,6 +297,39 @@ describe("PUT /api/auth/profile", () => {
     expect(sentBody.whatsapp).toBe("08123456789");
   });
 
+  it("forwards the atomic category block (empty strings included)", async () => {
+    const mockFetch = vi.fn(
+      async () => new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
+    );
+    vi.stubGlobal("fetch", mockFetch);
+
+    const PUT = await importPut();
+    await PUT(
+      putRequest(
+        {
+          category: "regular",
+          university: "",
+          faculty: "",
+          major: "",
+          school_name: "",
+          guardian_name: "",
+        },
+        "tenkei_session=abc123",
+      ),
+    );
+
+    const [, init] = mockFetch.mock.calls[0] as unknown[];
+    const sentBody = JSON.parse((init as RequestInit).body as string);
+    expect(sentBody).toEqual({
+      category: "regular",
+      university: "",
+      faculty: "",
+      major: "",
+      school_name: "",
+      guardian_name: "",
+    });
+  });
+
   it("2xx: passes status + body through unchanged (backend returns {status:ok})", async () => {
     const mockFetch = vi.fn(
       async () =>

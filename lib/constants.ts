@@ -16,13 +16,6 @@ export const VALID_RANKS = [
   "Godan (5th Dan)",
 ];
 
-/**
- * Canonical name of the Universitas Indonesia campus dojo — must match the Go
- * backend's types.UIDojo exactly. Members of this dojo must record faculty
- * and major; the rule is enforced in the form, the BFF proxy, and the backend.
- * The university brands itself "Universitas Indonesia" in every language.
- */
-export const UI_DOJO = "Tenkei Universitas Indonesia";
-
-/** True when the dojo is the UI campus — faculty/major become mandatory. */
-export const isUIDojo = (dojo: string): boolean => dojo === UI_DOJO;
+/** User categories (new-category.prd) — one per member, dojo-independent. */
+export const USER_CATEGORIES = ["regular", "student", "kids"] as const;
+export type UserCategory = (typeof USER_CATEGORIES)[number];

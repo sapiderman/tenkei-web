@@ -13,6 +13,10 @@ export interface ProfileResponse {
   dojo: string;
   faculty?: string;
   major?: string;
+  category: string;
+  university?: string;
+  school_name?: string;
+  guardian_name?: string;
   rank: string;
   date_of_birth: string;
   join_date: string;
@@ -45,6 +49,7 @@ export interface UserSummary {
   email: string;
   whatsapp: string;
   dojo: string;
+  category: string; // UserCategory
   role: string; // UserRole
 }
 
