@@ -70,6 +70,16 @@ describe("TwoFactorSettings", () => {
     await waitFor(() => expect(container).toBeEmptyDOMElement());
   });
 
+  it("enroll 409 (already enabled) shows disable panel with enabled badge", async () => {
+    enrollMock.mockResolvedValue({ ok: false, status: 409 });
+    render(<TwoFactorSettings lang="en" enabled={false} />);
+
+    expect(
+      await screen.findByRole("button", { name: "twofa_disable_button" }),
+    ).toBeVisible();
+    expect(screen.getByText("twofa_status_enabled")).toBeVisible();
+  });
+
   it("disable 404 (kill switch off) hides the page", async () => {
     disableMock.mockResolvedValue({ ok: false, reason: "unavailable" });
     const { container } = render(

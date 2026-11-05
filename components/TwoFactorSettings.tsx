@@ -69,8 +69,10 @@ export default function TwoFactorSettings({
       return;
     }
     if (result.status === 409) {
-      // Stale enabled state (e.g. old profile payload) — fall back.
+      // Stale enabled state (e.g. old profile payload) — the server says
+      // 2FA is already on: sync the badge, then show the disable form.
       resetForm();
+      setEnabledState(true);
       setStage("disable");
       return;
     }
