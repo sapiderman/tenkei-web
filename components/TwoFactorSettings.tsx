@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { useTranslation } from "@/app/i18n/client";
@@ -13,17 +13,17 @@ import {
 import PasswordInput from "@/components/PasswordInput";
 
 /**
- * Two-factor (TOTP) management section on the profile page.
+ * Two-factor (TOTP) management, full page under /profile/twofactor.
  *
  * `enabled` comes from the profile payload (`totp_enabled`). On backends
- * that don't send it yet it is undefined → treated as not-enabled; the 409
- * fallback in handleManage keeps the disable panel reachable either way.
- * A 404 from enroll/disable means the server-side kill switch is off — the
- * section disappears.
+ * that don't send it yet it is undefined → treated as not-enabled and
+ * enrollment starts on mount; the 409 fallback in startSetup keeps the
+ * disable panel reachable either way. A 404 from enroll/disable means the
+ * server-side kill switch is off — the page renders nothing.
  */
 type Stage =
-  | "idle"
-  | "setup" // enrollment started: QR + confirm form
+  | "loading" // enrollment in flight on mount
+  | "setup" // QR + confirm form
   | "disable" // 2FA is on: disable form
   | "enabled-notice"
   | "disabled-notice"
@@ -40,7 +40,9 @@ export default function TwoFactorSettings({
   const router = useRouter();
 
   const [enabledState, setEnabledState] = useState(enabled);
-  const [stage, setStage] = useState<Stage>("idle");
+  const [stage, setStage] = useState<Stage>(
+    enabled ? "disable" : "loading",
+  );
   const [secret, setSecret] = useState("");
   const [otpauthUrl, setOtpauthUrl] = useState("");
   const [code, setCode] = useState("");
@@ -54,13 +56,8 @@ export default function TwoFactorSettings({
     setError(null);
   }
 
-  async function handleManage() {
-    // Already armed → go straight to the disable panel, no enroll probe.
-    if (enabledState) {
-      resetForm();
-      setStage("disable");
-      return;
-    }
+  /** Arms enrollment and reveals the QR; runs once on mount. */
+  async function startSetup() {
     setBusy(true);
     setError(null);
     const result = await enroll2FA();
@@ -88,6 +85,17 @@ export default function TwoFactorSettings({
     setError(t("twofa_error"));
   }
 
+  // The page is the whole flow: enrollment starts on mount so the QR shows
+  // without an extra click. The ref keeps React Strict Mode's double-invoked
+  // effect from issuing two enrollment secrets.
+  const started = useRef(false);
+  useEffect(() => {
+    if (started.current || enabledState) return;
+    started.current = true;
+    void startSetup();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /** Maps confirm/disable failures to a message; resolves when done. */
   function mutationError(result: TotpMutationResult): string | null {
     if (result.ok) return null;
@@ -99,7 +107,7 @@ export default function TwoFactorSettings({
     }
     if (result.reason === "unavailable") {
       // Kill switch turned off mid-session (404) — same as enroll's 404:
-      // the section disappears (see header comment).
+      // the page renders nothing (see header comment).
       setStage("unavailable");
       return null;
     }
@@ -150,34 +158,17 @@ export default function TwoFactorSettings({
     "w-full px-3 py-2 border border-ink/20 rounded-sharp focus:outline-hidden focus:ring-2 focus:ring-ai disabled:opacity-50";
 
   return (
-    <section className="mt-8 border border-gray-200 rounded-sm p-4">
-      <h2 className="text-lg font-semibold">
+    <section className="border border-gray-200 rounded-sm p-4">
+      <h1 className="text-2xl font-bold">
         {t("twofa_title")}
         {enabledState && (
           <span className="ml-2 inline-flex items-center rounded-full border border-green-300 bg-green-50 px-2 py-0.5 align-middle text-xs font-normal text-green-800">
             {t("twofa_status_enabled")}
           </span>
         )}
-      </h2>
+      </h1>
 
-      {stage === "idle" && (
-        <div className="mt-2">
-          {!enabledState && (
-            <p className="text-sm text-gray-600 mb-3">
-              {t("twofa_description")}
-            </p>
-          )}
-          <button
-            type="button"
-            onClick={handleManage}
-            disabled={busy}
-            className="px-4 py-2 bg-ai text-paper rounded-sharp hover:bg-ai-deep disabled:opacity-50 transition-colors"
-          >
-            {busy ? t("twofa_verifying") : t("twofa_manage")}
-          </button>
-          {error && <ErrorBox message={error} />}
-        </div>
-      )}
+      {stage === "loading" && error && <ErrorBox message={error} />}
 
       {stage === "setup" && (
         <div className="mt-3 space-y-4">
@@ -250,12 +241,9 @@ export default function TwoFactorSettings({
               <button
                 type="button"
                 onClick={() => {
-                  // Enrollment is only armed by confirm — abandoning here
+                  // Enrollment is only armed by confirm — leaving here
                   // simply discards the shown-once secret.
-                  resetForm();
-                  setSecret("");
-                  setOtpauthUrl("");
-                  setStage("idle");
+                  router.push(`/${lang}/profile`);
                 }}
                 className="px-4 py-2 text-sm text-ai hover:underline"
               >
@@ -322,10 +310,7 @@ export default function TwoFactorSettings({
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  resetForm();
-                  setStage("idle");
-                }}
+                onClick={() => router.push(`/${lang}/profile`)}
                 className="px-4 py-2 text-sm text-ai hover:underline"
               >
                 {t("twofa_cancel")}
@@ -348,10 +333,10 @@ export default function TwoFactorSettings({
           </div>
           <button
             type="button"
-            onClick={() => setStage("idle")}
+            onClick={() => router.push(`/${lang}/profile`)}
             className="mt-3 px-4 py-2 bg-ink/10 text-ink rounded-sharp hover:bg-ink/20 transition-colors text-sm"
           >
-            {t("twofa_manage")}
+            {t("twofa_done")}
           </button>
         </div>
       )}

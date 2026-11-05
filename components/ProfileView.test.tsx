@@ -30,11 +30,6 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-// Tested separately — ProfileView only forwards `enabled`.
-vi.mock("@/components/TwoFactorSettings", () => ({
-  default: () => null,
-}));
-
 const getProfileMock = vi.fn();
 const logoutMock = vi.fn();
 vi.mock("@/lib/api-client", () => ({

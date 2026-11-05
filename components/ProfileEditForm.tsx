@@ -20,6 +20,7 @@ import {
   sanitizeTextInputForSubmission,
 } from "@/lib/sanitize";
 import { VALID_RANKS, USER_CATEGORIES, type UserCategory } from "@/lib/constants";
+import DashboardShell from "@/components/DashboardShell";
 
 interface Props {
   lang: string;
@@ -388,9 +389,9 @@ export default function ProfileEditForm({ lang }: Props) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center p-4 md:p-24">
+    <DashboardShell lang={lang} role={profile.role} active="edit">
       <div className="w-full max-w-lg">
-        <h1 className="text-2xl font-bold mb-6 text-center">
+        <h1 className="text-2xl font-bold mb-6">
           {t("edit_profile_heading")}
         </h1>
 
@@ -982,6 +983,6 @@ export default function ProfileEditForm({ lang }: Props) {
           </div>
         </form>
       </div>
-    </div>
+    </DashboardShell>
   );
 }

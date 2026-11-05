@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useTranslation } from "@/app/i18n/client";
 import { useAdminRole } from "@/app/[lang]/admin/AdminRoleContext";
+import DashboardShell from "@/components/DashboardShell";
 import {
   adminGetUser,
   adminUpdateUser,
@@ -316,39 +316,27 @@ export default function AdminUserDetailView({
 
   if (notFound) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center p-4 gap-4">
+      <DashboardShell lang={lang} role={viewerRole} active="members">
         <div
           className="p-4 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-sm max-w-md text-center"
           role="status"
         >
           {t("admin_user_not_found")}
         </div>
-        <Link
-          href={`/${lang}/admin/users`}
-          className="text-blue-600 hover:underline"
-        >
-          {t("admin_back_to_list")}
-        </Link>
-      </div>
+      </DashboardShell>
     );
   }
 
   if (loadError) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center p-4 gap-4">
+      <DashboardShell lang={lang} role={viewerRole} active="members">
         <div
           className="p-4 bg-red-50 border border-red-300 text-red-700 rounded-sm max-w-md text-center"
           role="alert"
         >
           {t("admin_user_load_failed")}
         </div>
-        <Link
-          href={`/${lang}/admin/users`}
-          className="text-blue-600 hover:underline"
-        >
-          {t("admin_back_to_list")}
-        </Link>
-      </div>
+      </DashboardShell>
     );
   }
 
@@ -359,16 +347,10 @@ export default function AdminUserDetailView({
   const labelCls = "block text-sm font-medium text-gray-700 mb-1";
 
   return (
-    <div className="flex min-h-screen flex-col items-center p-4 md:p-12">
+    <DashboardShell lang={lang} role={viewerRole} active="members">
       <div className="w-full max-w-2xl">
         <div className="mb-6">
-          <Link
-            href={`/${lang}/admin/users`}
-            className="text-sm text-blue-600 hover:underline"
-          >
-            ← {t("admin_back_to_list")}
-          </Link>
-          <h1 className="text-2xl font-bold mt-2">{t("admin_user_heading")}</h1>
+          <h1 className="text-2xl font-bold">{t("admin_user_heading")}</h1>
         </div>
 
         {/* Read-only identity */}
@@ -737,6 +719,6 @@ export default function AdminUserDetailView({
           </button>
         </form>
       </div>
-    </div>
+    </DashboardShell>
   );
 }
