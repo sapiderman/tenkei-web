@@ -171,6 +171,11 @@ export default function TwoFactorSettings({
       </h1>
 
       {stage === "loading" && error && <ErrorBox message={error} />}
+      {stage === "loading" && !error && (
+        <p className="mt-3 text-sm text-gray-600" role="status">
+          {t("twofa_loading")}
+        </p>
+      )}
 
       {stage === "setup" && (
         <div className="mt-3 space-y-4">

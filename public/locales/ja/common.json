@@ -314,6 +314,7 @@
   "twofa_error": "エラーが発生しました。もう一度お試しください。",
   "twofa_qr_alt": "認証アプリのセットアップキーを含むQRコード",
   "twofa_status_enabled": "二段階認証は有効",
+  "twofa_loading": "準備中…",
   "twofa_page_title": "二段階認証",
   "twofa_page_description": "Tenkei Aikidojoアカウントの二段階認証を設定・管理します。",
   "home_dojos_heading": "ジャカルタとデポックの4つの道場",

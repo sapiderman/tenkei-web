@@ -314,6 +314,7 @@
   "twofa_error": "Terjadi kesalahan. Silakan coba lagi.",
   "twofa_qr_alt": "Kode QR berisi kunci penyiapan untuk aplikasi autentikator Anda",
   "twofa_status_enabled": "Autentikasi dua faktor aktif",
+  "twofa_loading": "Menyiapkan pengaturan…",
   "twofa_page_title": "Autentikasi Dua Faktor",
   "twofa_page_description": "Atur atau kelola autentikasi dua faktor untuk akun Tenkei Aikidojo Anda.",
   "home_dojos_heading": "Empat dojo di Jakarta dan Depok",
