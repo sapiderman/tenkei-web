@@ -36,7 +36,7 @@ afterEach(cleanup);
 describe("DashboardShell", () => {
   it("offers two-factor authentication in the left menu", () => {
     render(
-      <DashboardShell lang="en" role="member" active="profile">
+      <DashboardShell lang="en" role="user" active="profile">
         <p>content</p>
       </DashboardShell>,
     );
