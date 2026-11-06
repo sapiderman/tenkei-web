@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import "@testing-library/jest-dom/vitest";
 
@@ -8,8 +9,13 @@ vi.mock("@/app/i18n/client", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
+const { pushMock, replaceMock } = vi.hoisted(() => ({
+  pushMock: vi.fn(),
+  replaceMock: vi.fn(),
+}));
+
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
+  useRouter: () => ({ push: pushMock, replace: replaceMock }),
 }));
 
 vi.mock("next/link", () => ({
@@ -40,8 +46,23 @@ describe("DashboardShell", () => {
         <p>content</p>
       </DashboardShell>,
     );
-    expect(
-      screen.getByRole("link", { name: "twofa_title" }),
-    ).toHaveAttribute("href", "/en/profile/twofactor");
+    expect(screen.getByRole("link", { name: "twofa_title" })).toHaveAttribute(
+      "href",
+      "/en/profile/twofactor",
+    );
+  });
+
+  it("signs out with replace so Back cannot restore the portal", async () => {
+    const user = userEvent.setup();
+    render(
+      <DashboardShell lang="en" role="user" active="profile">
+        <p>content</p>
+      </DashboardShell>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "sign_out" }));
+
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en"));
+    expect(pushMock).not.toHaveBeenCalled();
   });
 });

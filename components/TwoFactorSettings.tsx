@@ -40,9 +40,7 @@ export default function TwoFactorSettings({
   const router = useRouter();
 
   const [enabledState, setEnabledState] = useState(enabled);
-  const [stage, setStage] = useState<Stage>(
-    enabled ? "disable" : "loading",
-  );
+  const [stage, setStage] = useState<Stage>(enabled ? "disable" : "loading");
   const [secret, setSecret] = useState("");
   const [otpauthUrl, setOtpauthUrl] = useState("");
   const [code, setCode] = useState("");
@@ -170,7 +168,18 @@ export default function TwoFactorSettings({
         )}
       </h1>
 
-      {stage === "loading" && error && <ErrorBox message={error} />}
+      {stage === "loading" && error && (
+        <div className="mt-3 space-y-3">
+          <ErrorBox message={error} />
+          <button
+            type="button"
+            onClick={() => void startSetup()}
+            className="px-4 py-2 bg-ai text-paper rounded-sharp hover:bg-ai-deep transition-colors"
+          >
+            {t("twofa_retry")}
+          </button>
+        </div>
+      )}
       {stage === "loading" && !error && (
         <p className="mt-3 text-sm text-gray-600" role="status">
           {t("twofa_loading")}

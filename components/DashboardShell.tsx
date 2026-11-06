@@ -27,7 +27,9 @@ export default function DashboardShell({
 
   async function handleLogout() {
     await logout();
-    router.push(`/${lang}`);
+    // replace: keep the signed-out portal page out of history so Back can't
+    // restore it from bfcache.
+    router.replace(`/${lang}`);
   }
 
   const isAdminLike = role === "admin" || role === "superuser";

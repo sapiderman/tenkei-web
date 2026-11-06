@@ -312,6 +312,7 @@
   "twofa_disabling": "無効化中…",
   "twofa_disabled_notice": "二段階認証を無効にしました。",
   "twofa_error": "エラーが発生しました。もう一度お試しください。",
+  "twofa_retry": "もう一度試す",
   "twofa_qr_alt": "認証アプリのセットアップキーを含むQRコード",
   "twofa_status_enabled": "二段階認証は有効",
   "twofa_loading": "準備中…",

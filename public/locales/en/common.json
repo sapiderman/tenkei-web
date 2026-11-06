@@ -312,6 +312,7 @@
   "twofa_disabling": "Disabling…",
   "twofa_disabled_notice": "Two-factor authentication has been disabled.",
   "twofa_error": "Something went wrong. Please try again.",
+  "twofa_retry": "Try again",
   "twofa_qr_alt": "QR code containing the setup key for your authenticator app",
   "twofa_status_enabled": "Two-factor authentication is on",
   "twofa_loading": "Preparing setup…",

@@ -143,6 +143,6 @@ describe("ProfileView", () => {
     await user.click(screen.getByRole("button", { name: "sign_out" }));
 
     await waitFor(() => expect(logoutMock).toHaveBeenCalledOnce());
-    expect(mockRouter.push).toHaveBeenCalledWith("/en");
+    expect(mockRouter.replace).toHaveBeenCalledWith("/en");
   });
 });

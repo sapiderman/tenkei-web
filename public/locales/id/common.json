@@ -312,6 +312,7 @@
   "twofa_disabling": "Mematikan…",
   "twofa_disabled_notice": "Autentikasi dua faktor telah dimatikan.",
   "twofa_error": "Terjadi kesalahan. Silakan coba lagi.",
+  "twofa_retry": "Coba lagi",
   "twofa_qr_alt": "Kode QR berisi kunci penyiapan untuk aplikasi autentikator Anda",
   "twofa_status_enabled": "Autentikasi dua faktor aktif",
   "twofa_loading": "Menyiapkan pengaturan…",

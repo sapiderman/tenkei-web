@@ -80,6 +80,26 @@ describe("TwoFactorSettings", () => {
     expect(screen.getByText("twofa_status_enabled")).toBeVisible();
   });
 
+  it("enroll error: retry re-arms enrollment", async () => {
+    enrollMock
+      .mockResolvedValueOnce({ ok: false, status: 500 })
+      .mockResolvedValueOnce({
+        ok: true,
+        secret: "JBSWY3DPEHPK3PXP",
+        otpauthUrl: "otpauth://totp/Tenkei%20Aikidojo:member@dojo.example",
+      });
+    render(<TwoFactorSettings lang="en" enabled={false} />);
+
+    const user = userEvent.setup();
+    const retry = await screen.findByRole("button", { name: "twofa_retry" });
+    expect(screen.getByRole("alert")).toHaveTextContent("twofa_error");
+
+    await user.click(retry);
+
+    expect(await screen.findByText("twofa_setup_scan")).toBeVisible();
+    expect(enrollMock).toHaveBeenCalledTimes(2);
+  });
+
   it("disable 404 (kill switch off) hides the page", async () => {
     disableMock.mockResolvedValue({ ok: false, reason: "unavailable" });
     const { container } = render(
