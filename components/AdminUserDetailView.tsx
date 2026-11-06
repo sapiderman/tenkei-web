@@ -520,7 +520,10 @@ export default function AdminUserDetailView({
             <legend className={labelCls}>{t("category")}</legend>
             <div className="flex flex-wrap gap-3">
               {USER_CATEGORIES.map((c) => (
-                <label key={c} className="flex items-center gap-2 cursor-pointer">
+                <label
+                  key={c}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
                   <input
                     type="radio"
                     name="category"

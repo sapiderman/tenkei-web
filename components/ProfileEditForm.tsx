@@ -19,7 +19,11 @@ import {
   sanitizeTextInput,
   sanitizeTextInputForSubmission,
 } from "@/lib/sanitize";
-import { VALID_RANKS, USER_CATEGORIES, type UserCategory } from "@/lib/constants";
+import {
+  VALID_RANKS,
+  USER_CATEGORIES,
+  type UserCategory,
+} from "@/lib/constants";
 import DashboardShell from "@/components/DashboardShell";
 
 interface Props {
@@ -391,9 +395,7 @@ export default function ProfileEditForm({ lang }: Props) {
   return (
     <DashboardShell lang={lang} role={profile.role} active="edit">
       <div className="w-full max-w-lg">
-        <h1 className="text-2xl font-bold mb-6">
-          {t("edit_profile_heading")}
-        </h1>
+        <h1 className="text-2xl font-bold mb-6">{t("edit_profile_heading")}</h1>
 
         {serverError && (
           <div
@@ -514,7 +516,10 @@ export default function ProfileEditForm({ lang }: Props) {
             </legend>
             <div className="flex flex-wrap gap-3">
               {USER_CATEGORIES.map((c) => (
-                <label key={c} className="flex items-center gap-2 cursor-pointer">
+                <label
+                  key={c}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
                   <input
                     type="radio"
                     name="category"

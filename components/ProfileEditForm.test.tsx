@@ -114,7 +114,9 @@ describe("ProfileEditForm category block", () => {
     expect(screen.getByLabelText(/profile_faculty/)).toHaveValue(
       "Fakultas Teknik",
     );
-    expect(screen.getByLabelText(/profile_major/)).toHaveValue("Teknik Elektro");
+    expect(screen.getByLabelText(/profile_major/)).toHaveValue(
+      "Teknik Elektro",
+    );
     expect(screen.queryByLabelText(/school_name/)).toBeNull();
     expect(screen.queryByLabelText(/guardian_name/)).toBeNull();
     expect(
@@ -136,9 +138,7 @@ describe("ProfileEditForm category block", () => {
     expect(screen.queryByLabelText(/school_name/)).toBeNull();
     expect(screen.queryByLabelText(/guardian_name/)).toBeNull();
 
-    await user.click(
-      screen.getByRole("button", { name: "edit_profile_save" }),
-    );
+    await user.click(screen.getByRole("button", { name: "edit_profile_save" }));
 
     await waitFor(() => expect(updateProfileMock).toHaveBeenCalledOnce());
     const payload = updateProfileMock.mock.calls[0][0] as Record<
@@ -206,9 +206,7 @@ describe("ProfileEditForm category block", () => {
     render(<ProfileEditForm lang="en" />);
 
     await screen.findByLabelText(/profile_name/);
-    await user.click(
-      screen.getByRole("button", { name: "edit_profile_save" }),
-    );
+    await user.click(screen.getByRole("button", { name: "edit_profile_save" }));
 
     expect(
       await screen.findByText("fields do not match the selected category"),

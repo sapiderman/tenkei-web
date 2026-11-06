@@ -299,7 +299,8 @@ describe("PUT /api/auth/profile", () => {
 
   it("forwards the atomic category block (empty strings included)", async () => {
     const mockFetch = vi.fn(
-      async () => new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
+      async () =>
+        new Response(JSON.stringify({ status: "ok" }), { status: 200 }),
     );
     vi.stubGlobal("fetch", mockFetch);
 

@@ -58,9 +58,11 @@ function okFetch() {
  *  Unique IP per call: the in-memory per-IP limiter would otherwise 429
  *  once a shared address crosses the default cap of 10 requests. */
 let ipCounter = 1;
-async function post(
-  payload: Record<string, unknown>,
-): Promise<{ status: number; error: string; mockFetch: ReturnType<typeof okFetch> }> {
+async function post(payload: Record<string, unknown>): Promise<{
+  status: number;
+  error: string;
+  mockFetch: ReturnType<typeof okFetch>;
+}> {
   const mockFetch = okFetch();
   vi.stubGlobal("fetch", mockFetch);
   const POST = await importRoute();
@@ -83,7 +85,9 @@ function forwardedBody(mockFetch: ReturnType<typeof okFetch>) {
 
 describe("POST /api/register — user category rule", () => {
   it("no category → happy path, forwarded as regular with an empty block", async () => {
-    const { status, mockFetch } = await post(validPayload({ dojo: "Tenkei Mayapada" }));
+    const { status, mockFetch } = await post(
+      validPayload({ dojo: "Tenkei Mayapada" }),
+    );
 
     expect(status).toBe(201);
     expect(String((mockFetch.mock.calls[0] as unknown[])[0])).toBe(

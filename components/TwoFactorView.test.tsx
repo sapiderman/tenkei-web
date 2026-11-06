@@ -78,9 +78,10 @@ describe("TwoFactorView", () => {
     render(<TwoFactorView lang="en" />);
 
     expect(await screen.findByText("twofa-probe-enabled")).toBeVisible();
-    expect(
-      screen.getByRole("link", { name: "twofa_title" }),
-    ).toHaveAttribute("href", "/en/profile/twofactor");
+    expect(screen.getByRole("link", { name: "twofa_title" })).toHaveAttribute(
+      "href",
+      "/en/profile/twofactor",
+    );
   });
 
   it("401 redirects to login with ?expired=1", async () => {
