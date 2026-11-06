@@ -47,7 +47,12 @@ const tests: Array<[string, string, CategoryFields, boolean]> = [
   [
     "student university path",
     "student",
-    { ...empty, university: "UI", faculty: "Fakultas Teknik", major: "Teknik Elektro" },
+    {
+      ...empty,
+      university: "UI",
+      faculty: "Fakultas Teknik",
+      major: "Teknik Elektro",
+    },
     false,
   ],
   [
@@ -87,7 +92,13 @@ const tests: Array<[string, string, CategoryFields, boolean]> = [
   [
     "student university path with guardian",
     "student",
-    { ...empty, university: "UI", faculty: "Fakultas Teknik", major: "Teknik Elektro", guardianName: "Ibu Sri" },
+    {
+      ...empty,
+      university: "UI",
+      faculty: "Fakultas Teknik",
+      major: "Teknik Elektro",
+      guardianName: "Ibu Sri",
+    },
     true,
   ],
   [
@@ -100,14 +111,19 @@ const tests: Array<[string, string, CategoryFields, boolean]> = [
   // kids: guardian set, all student fields empty.
   ["kids with guardian", "kids", guardianOnly, false],
   ["kids missing guardian", "kids", empty, true],
+  ["kids with university", "kids", { ...guardianOnly, university: "UI" }, true],
   [
-    "kids with university",
+    "kids with school",
     "kids",
-    { ...guardianOnly, university: "UI" },
+    { ...guardianOnly, schoolName: "SMA Negeri 1" },
     true,
   ],
-  ["kids with school", "kids", { ...guardianOnly, schoolName: "SMA Negeri 1" }, true],
-  ["kids guardian only via full struct", "kids", { ...empty, guardianName: "Ibu Sri" }, false],
+  [
+    "kids guardian only via full struct",
+    "kids",
+    { ...empty, guardianName: "Ibu Sri" },
+    false,
+  ],
 
   // unknown/empty category: fail-closed.
   ["unknown category", "alumni", empty, true],

@@ -8,6 +8,7 @@ import {
   fireEvent,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { ReactNode } from "react";
 import "@testing-library/jest-dom/vitest";
 import type { ProfileResponse } from "@/lib/types";
 
@@ -20,6 +21,21 @@ vi.mock("@/app/i18n/client", () => ({
 const mockRouter = { push: vi.fn(), replace: vi.fn() };
 vi.mock("next/navigation", () => ({
   useRouter: () => mockRouter,
+}));
+
+vi.mock("next/link", () => ({
+  default: ({
+    href,
+    children,
+    ...rest
+  }: {
+    href: string;
+    children: ReactNode;
+  }) => (
+    <a href={href} {...rest}>
+      {children}
+    </a>
+  ),
 }));
 
 const getProfileMock = vi.fn();
@@ -98,7 +114,9 @@ describe("ProfileEditForm category block", () => {
     expect(screen.getByLabelText(/profile_faculty/)).toHaveValue(
       "Fakultas Teknik",
     );
-    expect(screen.getByLabelText(/profile_major/)).toHaveValue("Teknik Elektro");
+    expect(screen.getByLabelText(/profile_major/)).toHaveValue(
+      "Teknik Elektro",
+    );
     expect(screen.queryByLabelText(/school_name/)).toBeNull();
     expect(screen.queryByLabelText(/guardian_name/)).toBeNull();
     expect(
@@ -120,9 +138,7 @@ describe("ProfileEditForm category block", () => {
     expect(screen.queryByLabelText(/school_name/)).toBeNull();
     expect(screen.queryByLabelText(/guardian_name/)).toBeNull();
 
-    await user.click(
-      screen.getByRole("button", { name: "edit_profile_save" }),
-    );
+    await user.click(screen.getByRole("button", { name: "edit_profile_save" }));
 
     await waitFor(() => expect(updateProfileMock).toHaveBeenCalledOnce());
     const payload = updateProfileMock.mock.calls[0][0] as Record<
@@ -190,9 +206,7 @@ describe("ProfileEditForm category block", () => {
     render(<ProfileEditForm lang="en" />);
 
     await screen.findByLabelText(/profile_name/);
-    await user.click(
-      screen.getByRole("button", { name: "edit_profile_save" }),
-    );
+    await user.click(screen.getByRole("button", { name: "edit_profile_save" }));
 
     expect(
       await screen.findByText("fields do not match the selected category"),

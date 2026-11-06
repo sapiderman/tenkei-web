@@ -740,7 +740,8 @@ export default function RegisterForm() {
                         htmlFor="university"
                         className="block text-sm font-medium text-gray-700"
                       >
-                        {t("university")} <span className="text-red-500">*</span>
+                        {t("university")}{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"

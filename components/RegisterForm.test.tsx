@@ -153,12 +153,17 @@ describe("RegisterForm category validation", () => {
     render(<RegisterForm />);
 
     await user.click(screen.getByRole("radio", { name: "category_student" }));
-    await user.type(screen.getByLabelText(/^university/), "Universitas Indonesia");
+    await user.type(
+      screen.getByLabelText(/^university/),
+      "Universitas Indonesia",
+    );
     await user.type(screen.getByLabelText(/^major/), "Teknik Elektro");
     await fillRequired(user);
     await user.click(submitButton());
 
-    expect(await screen.findByText("error_category_fields_student")).toBeVisible();
+    expect(
+      await screen.findByText("error_category_fields_student"),
+    ).toBeVisible();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
