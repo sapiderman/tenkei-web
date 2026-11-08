@@ -32,6 +32,7 @@ export default function LoginForm({ lang }: { lang: string }) {
 
   useEffect(() => {
     if (sessionStorage.getItem("tenkei_2fa_pending") === "1") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration hint; a lazy useState initializer would mismatch SSR
       setAwaiting2fa(true);
     }
   }, []);
