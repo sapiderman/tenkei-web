@@ -30,11 +30,6 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-// Tested separately — ProfileView only forwards `enabled`.
-vi.mock("@/components/TwoFactorSettings", () => ({
-  default: () => null,
-}));
-
 const getProfileMock = vi.fn();
 const logoutMock = vi.fn();
 vi.mock("@/lib/api-client", () => ({
@@ -148,6 +143,6 @@ describe("ProfileView", () => {
     await user.click(screen.getByRole("button", { name: "sign_out" }));
 
     await waitFor(() => expect(logoutMock).toHaveBeenCalledOnce());
-    expect(mockRouter.push).toHaveBeenCalledWith("/en");
+    expect(mockRouter.replace).toHaveBeenCalledWith("/en");
   });
 });

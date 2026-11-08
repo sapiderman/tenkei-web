@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/app/i18n/client";
-import { getProfile, logout } from "@/lib/api-client";
+import { getProfile } from "@/lib/api-client";
 import type { ProfileResponse } from "@/lib/types";
-import TwoFactorSettings from "@/components/TwoFactorSettings";
+import DashboardShell from "@/components/DashboardShell";
 
 export default function ProfileView({
   lang,
@@ -47,11 +46,6 @@ export default function ProfileView({
     };
   }, [lang, router]);
 
-  async function handleLogout() {
-    await logout();
-    router.push(`/${lang}`);
-  }
-
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
@@ -76,7 +70,6 @@ export default function ProfileView({
 
   if (!profile) return null;
 
-  const isAdminLike = profile.role === "admin" || profile.role === "superuser";
   const isPending = profile.role === "new";
 
   const fields: { label: string; value: string | boolean }[] = [
@@ -112,17 +105,9 @@ export default function ProfileView({
   ];
 
   return (
-    <div className="flex min-h-screen flex-col items-center p-4 md:p-24">
+    <DashboardShell lang={lang} role={profile.role} active="profile">
       <div className="w-full max-w-lg">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">{t("profile_heading")}</h1>
-          <Link
-            href={`/${lang}/profile/edit`}
-            className="text-sm text-ai hover:text-ai-deep underline"
-          >
-            {t("edit_profile")}
-          </Link>
-        </div>
+        <h1 className="text-2xl font-bold mb-6">{t("profile_heading")}</h1>
 
         {showSaved && (
           <div
@@ -152,17 +137,6 @@ export default function ProfileView({
           </div>
         )}
 
-        {isAdminLike && (
-          <div className="mb-6 text-center">
-            <Link
-              href={`/${lang}/admin/users`}
-              className="inline-block px-4 py-2 bg-ai text-paper rounded-sharp hover:bg-ai-deep transition-colors"
-            >
-              {t("admin_manage_users")}
-            </Link>
-          </div>
-        )}
-
         <dl className="space-y-3">
           {fields.map(({ label, value }) => (
             <div
@@ -178,17 +152,7 @@ export default function ProfileView({
             </div>
           ))}
         </dl>
-
-        <TwoFactorSettings lang={lang} enabled={profile.totp_enabled} />
-
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="mt-8 w-full py-2 px-4 bg-ink/10 text-ink rounded-sharp hover:bg-ink/20 transition-colors"
-        >
-          {t("sign_out")}
-        </button>
       </div>
-    </div>
+    </DashboardShell>
   );
 }
