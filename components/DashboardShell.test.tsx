@@ -52,6 +52,17 @@ describe("DashboardShell", () => {
     );
   });
 
+  it("offers account deletion in the left menu for every member", () => {
+    render(
+      <DashboardShell lang="en" role="user" active="profile">
+        <p>content</p>
+      </DashboardShell>,
+    );
+    expect(
+      screen.getByRole("link", { name: "delete_account_nav" }),
+    ).toHaveAttribute("href", "/en/profile/delete");
+  });
+
   it("signs out with replace so Back cannot restore the portal", async () => {
     const user = userEvent.setup();
     render(
