@@ -54,12 +54,12 @@ export async function forwardTotpPost(
   }
 }
 
-const RELAYED_STATUSES = new Set([200, 400, 401, 403, 404, 409]);
+const RELAYED_STATUSES = new Set([200, 400, 401, 403, 404, 409, 429]);
 
 /**
  * Forwards the request and relays the backend's response: 2xx bodies pass
- * through verbatim (enroll's secret/otpauth_url must reach the client), the
- * documented 4xx error bodies pass through (the UI maps them by status code),
+ * through verbatim, the documented error statuses pass through (the UI maps
+ * them by status code — 429 included, the backend limiter is authoritative),
  * everything else becomes a generic 500 — backend internals never leak.
  */
 export async function relayTotpResponse(
