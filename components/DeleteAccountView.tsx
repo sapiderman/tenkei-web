@@ -104,6 +104,9 @@ export default function DeleteAccountView({ lang }: { lang: string }) {
 
   function handleOpenConfirm(e: React.FormEvent) {
     e.preventDefault();
+    // Native pattern validation covers Enter-submits in real browsers; this
+    // guard covers engines with quirky implicit submission.
+    if (code.trim().length !== 6) return;
     setConfirmOpen(true);
   }
 
@@ -207,6 +210,7 @@ export default function DeleteAccountView({ lang }: { lang: string }) {
                   type="text"
                   inputMode="numeric"
                   autoComplete="one-time-code"
+                  pattern="[0-9]{6}"
                   maxLength={6}
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}

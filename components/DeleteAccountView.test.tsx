@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import { render, screen, cleanup, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import "@testing-library/jest-dom/vitest";
@@ -193,5 +193,19 @@ describe("DeleteAccountView", () => {
     await waitFor(() =>
       expect(mockRouter.replace).toHaveBeenCalledWith("/en/login?expired=1"),
     );
+  });
+
+  it("an incomplete code cannot open the confirm modal via form submit", async () => {
+    getProfileMock.mockResolvedValue({ ok: true, profile: PROFILE_2FA });
+    render(<DeleteAccountView lang="en" />);
+
+    const user = userEvent.setup();
+    const input = await screen.findByLabelText("delete_code_label");
+    await user.type(input, "123");
+
+    fireEvent.submit(input.closest("form") as HTMLFormElement);
+
+    expect(screen.queryByText("delete_confirm_title")).toBeNull();
+    expect(deleteAccountMock).not.toHaveBeenCalled();
   });
 });
