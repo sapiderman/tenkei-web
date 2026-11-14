@@ -27,9 +27,11 @@ const TEASER_LINK =
 
 export default async function HomePage(props: {
   params: Promise<{ lang: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const params = await props.params;
   const { lang } = params;
+  const sp = await props.searchParams;
   const { t } = await getT(lang, "common");
 
   const classes = [
@@ -62,6 +64,17 @@ export default async function HomePage(props: {
         }}
       />
       <main>
+        {sp.deleted === "1" && (
+          <div
+            className="mx-auto w-full max-w-6xl px-4 pt-4 sm:px-6"
+            role="status"
+            aria-live="polite"
+          >
+            <div className="p-3 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-sm text-sm">
+              {t("delete_success_farewell")}
+            </div>
+          </div>
+        )}
         {/* Hero */}
         <section className="relative flex min-h-[calc(100vh-4rem)] items-center overflow-hidden">
           <div className="seigaiha absolute inset-0" aria-hidden="true" />

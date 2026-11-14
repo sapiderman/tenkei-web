@@ -187,6 +187,32 @@ export function disable2FA(
 }
 
 // ---------------------------------------------------------------------------
+// Account deletion
+// ---------------------------------------------------------------------------
+
+/** Asks the backend to email a 6-digit deletion code (2FA-off users only). */
+export async function requestDeletionCode(): Promise<{
+  ok: boolean;
+  status: number;
+}> {
+  const res = await fetch("/api/auth/delete/request", { method: "POST" });
+  return { ok: res.ok, status: res.status };
+}
+
+/** Deletes the account with the 6-digit verification code (TOTP or emailed). */
+export async function deleteAccount(code: string): Promise<{
+  ok: boolean;
+  status: number;
+}> {
+  const res = await fetch("/api/auth/delete", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+  });
+  return { ok: res.ok, status: res.status };
+}
+
+// ---------------------------------------------------------------------------
 // Forgot / reset password
 // ---------------------------------------------------------------------------
 

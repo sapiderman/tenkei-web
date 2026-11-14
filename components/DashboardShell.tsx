@@ -19,7 +19,7 @@ export default function DashboardShell({
 }: {
   lang: string;
   role: string;
-  active: "profile" | "edit" | "twofactor" | "members";
+  active: "profile" | "edit" | "twofactor" | "delete" | "members";
   children: React.ReactNode;
 }) {
   const { t } = useTranslation(lang, "common");
@@ -62,6 +62,16 @@ export default function DashboardShell({
             className={itemCls(active === "twofactor")}
           >
             {t("twofa_title")}
+          </Link>
+          <Link
+            href={`/${lang}/profile/delete`}
+            className={`whitespace-nowrap rounded-sharp px-3 py-2 text-sm transition-colors ${
+              active === "delete"
+                ? "bg-red-50 font-medium text-red-700"
+                : "text-red-700 hover:bg-red-50 hover:text-red-800"
+            }`}
+          >
+            {t("delete_account_nav")}
           </Link>
           {isAdminLike && (
             <Link
