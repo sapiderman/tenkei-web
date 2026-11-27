@@ -15,6 +15,7 @@ import {
   sanitizeToken,
 } from "@/lib/sanitize";
 import {
+  DOJO_OPTIONS,
   VALID_RANKS as RANK_OPTIONS,
   USER_CATEGORIES,
   type UserCategory,
@@ -49,13 +50,6 @@ interface RegisterFormData {
   consent_datastore: boolean;
   consent_marketing: boolean;
 }
-
-const DOJO_OPTIONS = [
-  "Tenkei Universitas Indonesia",
-  "Tenkei Mayapada",
-  "Tenkei Taman Menteng",
-  "Tenkei Natsu Aikidojo",
-];
 
 const buildSanitizedPayload = (data: RegisterFormData) => ({
   name: sanitizeTextInputForSubmission(data.name),

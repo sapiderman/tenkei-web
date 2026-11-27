@@ -63,6 +63,47 @@ describe("DashboardShell", () => {
     ).toHaveAttribute("href", "/en/profile/delete");
   });
 
+  it("offers attendance to verified members and hides it from unverified ones", () => {
+    const { unmount } = render(
+      <DashboardShell lang="en" role="user" active="attendance">
+        <p>content</p>
+      </DashboardShell>,
+    );
+    expect(
+      screen.getByRole("link", { name: "attendance_nav" }),
+    ).toHaveAttribute("href", "/en/attendance");
+    unmount();
+
+    render(
+      <DashboardShell lang="en" role="new" active="profile">
+        <p>content</p>
+      </DashboardShell>,
+    );
+    expect(screen.queryByRole("link", { name: "attendance_nav" })).toBeNull();
+  });
+
+  it("marks the attendance item active", () => {
+    render(
+      <DashboardShell lang="en" role="user" active="attendance">
+        <p>content</p>
+      </DashboardShell>,
+    );
+    expect(screen.getByRole("link", { name: "attendance_nav" })).toHaveClass(
+      "font-medium",
+    );
+  });
+
+  it("gives admins a second attendance link under the admin section", () => {
+    render(
+      <DashboardShell lang="en" role="admin" active="adminAttendance">
+        <p>content</p>
+      </DashboardShell>,
+    );
+    expect(
+      screen.getByRole("link", { name: "admin_attendance_nav" }),
+    ).toHaveAttribute("href", "/en/admin/attendance");
+  });
+
   it("signs out with replace so Back cannot restore the portal", async () => {
     const user = userEvent.setup();
     render(

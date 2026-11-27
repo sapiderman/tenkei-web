@@ -1,4 +1,11 @@
-import type { ProfileResponse, UserListResponse } from "@/lib/types";
+import type {
+  AdminAttendanceListResponse,
+  AttendanceListResponse,
+  AttendanceLogResponse,
+  InstructorListResponse,
+  ProfileResponse,
+  UserListResponse,
+} from "@/lib/types";
 
 // ---------------------------------------------------------------------------
 // Login
@@ -487,6 +494,135 @@ export function adminChangeRole(
   role: string,
 ): Promise<AdminMutationResult> {
   return adminMutate(`/api/admin/users/${id}/role`, "PUT", { role });
+}
+
+// ---------------------------------------------------------------------------
+// Attendance (prd/attendance.prd)
+// ---------------------------------------------------------------------------
+
+export type AttendanceLogBody = {
+  dojo: string;
+  instructor: string;
+  latitude?: number;
+  longitude?: number;
+  location_accuracy_m?: number;
+};
+
+export type AttendanceLogResult =
+  | { ok: true; record: AttendanceLogResponse }
+  | { ok: false; status: number };
+
+export type AttendanceListResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; status: number };
+
+/** POST /api/attendance — logs a dojo visit; the status code drives the message. */
+export async function logAttendance(
+  body: AttendanceLogBody,
+): Promise<AttendanceLogResult> {
+  try {
+    const res = await fetch("/api/attendance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.status === 201) {
+      return { ok: true, record: (await res.json()) as AttendanceLogResponse };
+    }
+    return { ok: false, status: res.status };
+  } catch {
+    return { ok: false, status: 0 };
+  }
+}
+
+/** GET /api/attendance — own history, newest first, without coordinates. */
+export async function getMyAttendance(
+  params: { page?: number; size?: number } = {},
+): Promise<AttendanceListResult<AttendanceListResponse>> {
+  const search = new URLSearchParams();
+  if (params.page) search.set("page", String(params.page));
+  if (params.size) search.set("size", String(params.size));
+  try {
+    const res = await fetch(`/api/attendance?${search}`);
+    if (res.ok) {
+      return {
+        ok: true,
+        data: (await res.json()) as AttendanceListResponse,
+      };
+    }
+    return { ok: false, status: res.status };
+  } catch {
+    return { ok: false, status: 0 };
+  }
+}
+
+/** GET /api/attendance/instructors — roster for the log dialog (shared + per dojo). */
+export async function getInstructors(): Promise<
+  { ok: true; data: InstructorListResponse } | { ok: false; status: number }
+> {
+  try {
+    const res = await fetch("/api/attendance/instructors");
+    if (res.ok) {
+      const body = (await res.json()) as InstructorListResponse;
+      return { ok: true, data: body };
+    }
+    return { ok: false, status: res.status };
+  } catch {
+    return { ok: false, status: 0 };
+  }
+}
+
+export interface AdminAttendanceListParams {
+  page?: number;
+  size?: number;
+  dojo?: string;
+  q?: string;
+  status?: string;
+  from?: string;
+  to?: string;
+}
+
+/** GET /api/admin/attendance — every member's rows, with coordinates. */
+export async function adminListAttendance(
+  params: AdminAttendanceListParams = {},
+): Promise<AttendanceListResult<AdminAttendanceListResponse>> {
+  const search = new URLSearchParams();
+  for (const key of [
+    "page",
+    "size",
+    "dojo",
+    "q",
+    "status",
+    "from",
+    "to",
+  ] as const) {
+    const value = params[key];
+    if (value) search.set(key, String(value));
+  }
+  try {
+    const res = await fetch(`/api/admin/attendance?${search}`);
+    if (res.ok) {
+      return {
+        ok: true,
+        data: (await res.json()) as AdminAttendanceListResponse,
+      };
+    }
+    return { ok: false, status: res.status };
+  } catch {
+    return { ok: false, status: 0 };
+  }
+}
+
+export function adminConfirmAttendance(
+  id: number,
+): Promise<AdminMutationResult> {
+  return adminMutate(`/api/admin/attendance/${id}/confirm`, "PUT");
+}
+
+export function adminRejectAttendance(
+  id: number,
+): Promise<AdminMutationResult> {
+  return adminMutate(`/api/admin/attendance/${id}/reject`, "PUT");
 }
 
 // ---------------------------------------------------------------------------

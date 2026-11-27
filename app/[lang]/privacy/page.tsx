@@ -87,6 +87,14 @@ export default async function PrivacyPolicy(props: {
               {t("privacy_contact_text")}
             </p>
           </section>
+          <section className="space-y-4">
+            <h2 className="font-display text-2xl font-bold">
+              {t("privacy_attendance_title")}
+            </h2>
+            <p className="text-ink/70 leading-relaxed">
+              {t("privacy_attendance_text")}
+            </p>
+          </section>
         </div>
       </main>
     </>
