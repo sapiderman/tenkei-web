@@ -5,13 +5,13 @@ import { i18n } from "./i18n.config";
 
 /** Page paths (locale prefix stripped) that get the strict nonce CSP. */
 const PORTAL_PATHS =
-  /^\/(login|register|profile|admin|forgot-password|reset-password)(\/|$)/;
+  /^\/(login|register|profile|attendance|admin|forgot-password|reset-password)(\/|$)/;
 
 function securityHeaders(response: NextResponse, csp: string): NextResponse {
   response.headers.set("Content-Security-Policy", csp);
   response.headers.set(
     "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=(), interest-cohort=()",
+    "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=(), interest-cohort=()",
   );
   response.headers.set(
     "Strict-Transport-Security",

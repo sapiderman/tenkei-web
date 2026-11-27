@@ -7,7 +7,7 @@ import { logout } from "@/lib/api-client";
 
 /**
  * Left-sidebar shell for every logged-in portal page (profile, profile edit,
- * admin member list/detail). All navigation and account actions live in the
+ * attendance, admin member list/detail). All navigation and account actions live in the
  * sidebar so page content stays focused on the task at hand. `role` is
  * UX-only gating — the backend re-authorizes every request.
  */
@@ -19,7 +19,14 @@ export default function DashboardShell({
 }: {
   lang: string;
   role: string;
-  active: "profile" | "edit" | "twofactor" | "delete" | "members";
+  active:
+      | "profile"
+      | "edit"
+      | "twofactor"
+      | "attendance"
+      | "delete"
+      | "members"
+      | "adminAttendance";
   children: React.ReactNode;
 }) {
   const { t } = useTranslation(lang, "common");
@@ -63,6 +70,14 @@ export default function DashboardShell({
           >
             {t("twofa_title")}
           </Link>
+          {role !== "new" && (
+            <Link
+              href={`/${lang}/attendance`}
+              className={itemCls(active === "attendance")}
+            >
+              {t("attendance_nav")}
+            </Link>
+          )}
           <Link
             href={`/${lang}/profile/delete`}
             className={`whitespace-nowrap rounded-sharp px-3 py-2 text-sm transition-colors ${
@@ -79,6 +94,14 @@ export default function DashboardShell({
               className={itemCls(active === "members")}
             >
               {t("admin_manage_users")}
+            </Link>
+          )}
+          {isAdminLike && (
+            <Link
+              href={`/${lang}/admin/attendance`}
+              className={itemCls(active === "adminAttendance")}
+            >
+              {t("admin_attendance_nav")}
             </Link>
           )}
           <button
